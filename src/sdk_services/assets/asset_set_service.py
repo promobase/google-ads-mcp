@@ -44,8 +44,8 @@ class AssetSetService:
         ctx: Context,
         customer_id: str,
         name: str,
-        asset_set_type: str,
-        status: str = "ENABLED",
+        asset_set_type: AssetSetTypeEnum.AssetSetType,
+        status: AssetSetStatusEnum.AssetSetStatus = AssetSetStatusEnum.AssetSetStatus.ENABLED,
     ) -> Dict[str, Any]:
         """Create a new asset set.
 
@@ -65,8 +65,8 @@ class AssetSetService:
             # Create asset set
             asset_set = AssetSet()
             asset_set.name = name
-            asset_set.type_ = getattr(AssetSetTypeEnum.AssetSetType, asset_set_type)
-            asset_set.status = getattr(AssetSetStatusEnum.AssetSetStatus, status)
+            asset_set.type_ = asset_set_type
+            asset_set.status = status
 
             # Create operation
             operation = AssetSetOperation()
@@ -99,7 +99,7 @@ class AssetSetService:
         customer_id: str,
         asset_set_id: str,
         name: Optional[str] = None,
-        status: Optional[str] = None,
+        status: Optional[AssetSetStatusEnum.AssetSetStatus] = None,
     ) -> Dict[str, Any]:
         """Update an asset set.
 
@@ -129,7 +129,7 @@ class AssetSetService:
                 update_mask_paths.append("name")
 
             if status is not None:
-                asset_set.status = getattr(AssetSetStatusEnum.AssetSetStatus, status)
+                asset_set.status = status
                 update_mask_paths.append("status")
 
             # Create operation
@@ -330,12 +330,16 @@ def create_asset_set_tools(
         Returns:
             Created asset set details including resource_name and asset_set_id
         """
+        # Convert string enums to proper enum types
+        asset_set_type_enum = getattr(AssetSetTypeEnum.AssetSetType, asset_set_type)
+        status_enum = getattr(AssetSetStatusEnum.AssetSetStatus, status)
+
         return await service.create_asset_set(
             ctx=ctx,
             customer_id=customer_id,
             name=name,
-            asset_set_type=asset_set_type,
-            status=status,
+            asset_set_type=asset_set_type_enum,
+            status=status_enum,
         )
 
     async def update_asset_set(
@@ -356,12 +360,17 @@ def create_asset_set_tools(
         Returns:
             Updated asset set details with list of updated fields
         """
+        # Convert string enum to proper enum type if provided
+        status_enum = (
+            getattr(AssetSetStatusEnum.AssetSetStatus, status) if status else None
+        )
+
         return await service.update_asset_set(
             ctx=ctx,
             customer_id=customer_id,
             asset_set_id=asset_set_id,
             name=name,
-            status=status,
+            status=status_enum,
         )
 
     async def list_asset_sets(

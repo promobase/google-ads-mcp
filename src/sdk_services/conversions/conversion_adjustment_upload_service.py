@@ -19,7 +19,7 @@ from google.ads.googleads.v20.enums.types.conversion_adjustment_type import (
 from google.ads.googleads.errors import GoogleAdsException
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger
+from src.utils import format_customer_id, get_logger, serialize_proto_message
 
 logger = get_logger(__name__)
 
@@ -143,45 +143,12 @@ class ConversionAdjustmentUploadService:
                 self.client.upload_conversion_adjustments(request=request)
             )
 
-            # Process results
-            results = {
-                "job_id": response.job_id if response.job_id else None,
-                "partial_failure_error": str(response.partial_failure_error)
-                if response.partial_failure_error
-                else None,
-            }
-
-            # Count successful and failed adjustments
-            successful_count = len(
-                [adj for adj in adjustments if True]
-            )  # All attempted
-            failed_count = 0
-
-            if response.partial_failure_error:
-                # Parse partial failure error for failed count
-                error_details = str(response.partial_failure_error)
-                results["error_details"] = error_details
-                # This is a simplified count - in practice you'd parse the actual errors
-                failed_count = (
-                    error_details.count("error") if "error" in error_details else 0
-                )
-                successful_count = len(adjustments) - failed_count
-
-            results.update(
-                {
-                    "total_adjustments": len(adjustments),
-                    "successful_adjustments": successful_count,
-                    "failed_adjustments": failed_count,
-                    "validate_only": validate_only,
-                }
-            )
-
             await ctx.log(
                 level="info",
-                message=f"Uploaded {successful_count}/{len(adjustments)} conversion adjustments",
+                message=f"Uploaded {len(adjustments)} conversion adjustments",
             )
 
-            return results
+            return serialize_proto_message(response)
 
         except GoogleAdsException as e:
             error_msg = f"Google Ads API error: {e.failure}"

@@ -77,9 +77,9 @@ class BiddingStrategyService:
             # Create bidding strategy
             bidding_strategy = BiddingStrategy()
             bidding_strategy.name = name
-            bidding_strategy.status = BiddingStrategyStatusEnum.BiddingStrategyStatus[
-                status
-            ]
+            bidding_strategy.status = getattr(
+                BiddingStrategyStatusEnum.BiddingStrategyStatus, status
+            )
             bidding_strategy.type_ = (
                 BiddingStrategyTypeEnum.BiddingStrategyType.TARGET_CPA
             )
@@ -145,9 +145,9 @@ class BiddingStrategyService:
             # Create bidding strategy
             bidding_strategy = BiddingStrategy()
             bidding_strategy.name = name
-            bidding_strategy.status = BiddingStrategyStatusEnum.BiddingStrategyStatus[
-                status
-            ]
+            bidding_strategy.status = getattr(
+                BiddingStrategyStatusEnum.BiddingStrategyStatus, status
+            )
             bidding_strategy.type_ = (
                 BiddingStrategyTypeEnum.BiddingStrategyType.TARGET_ROAS
             )
@@ -213,9 +213,9 @@ class BiddingStrategyService:
             # Create bidding strategy
             bidding_strategy = BiddingStrategy()
             bidding_strategy.name = name
-            bidding_strategy.status = BiddingStrategyStatusEnum.BiddingStrategyStatus[
-                status
-            ]
+            bidding_strategy.status = getattr(
+                BiddingStrategyStatusEnum.BiddingStrategyStatus, status
+            )
             bidding_strategy.type_ = (
                 BiddingStrategyTypeEnum.BiddingStrategyType.MAXIMIZE_CONVERSIONS
             )
@@ -286,19 +286,17 @@ class BiddingStrategyService:
             # Create bidding strategy
             bidding_strategy = BiddingStrategy()
             bidding_strategy.name = name
-            bidding_strategy.status = BiddingStrategyStatusEnum.BiddingStrategyStatus[
-                status
-            ]
+            bidding_strategy.status = getattr(
+                BiddingStrategyStatusEnum.BiddingStrategyStatus, status
+            )
             bidding_strategy.type_ = (
                 BiddingStrategyTypeEnum.BiddingStrategyType.TARGET_IMPRESSION_SHARE
             )
 
             # Configure Target Impression Share
             target_impression_share = TargetImpressionShare()
-            target_impression_share.location = (
-                TargetImpressionShareLocationEnum.TargetImpressionShareLocation[
-                    location
-                ]
+            target_impression_share.location = getattr(
+                TargetImpressionShareLocationEnum.TargetImpressionShareLocation, location
             )
             target_impression_share.location_fraction_micros = location_fraction_micros
 

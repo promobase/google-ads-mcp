@@ -21,7 +21,7 @@ from google.ads.googleads.v20.services.types.conversion_upload_service import (
 )
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger
+from src.utils import format_customer_id, get_logger, serialize_proto_message
 
 logger = get_logger(__name__)
 
@@ -149,46 +149,12 @@ class ConversionUploadService:
                 self.client.upload_click_conversions(request=request)
             )
 
-            # Process results
-            results: Dict[str, Any] = {
-                "job_id": response.job_id if hasattr(response, "job_id") else None,
-                "successful_conversions": 0,
-                "failed_conversions": 0,
-                "results": [],
-            }
-
-            for i, result in enumerate(response.results):
-                if result.conversion_action:
-                    results["successful_conversions"] += 1
-                    results["results"].append(
-                        {
-                            "index": i,
-                            "status": "SUCCESS",
-                            "gclid": conversions[i]["gclid"],
-                            "conversion_action": result.conversion_action,
-                            "conversion_date_time": result.conversion_date_time,
-                        }
-                    )
-                else:
-                    results["failed_conversions"] += 1
-                    results["results"].append(
-                        {
-                            "index": i,
-                            "status": "FAILED",
-                            "gclid": conversions[i]["gclid"],
-                        }
-                    )
-
-            # Check for partial failure errors
-            if response.partial_failure_error:
-                results["partial_failure_error"] = str(response.partial_failure_error)
-
             await ctx.log(
                 level="info",
-                message=f"Uploaded {results['successful_conversions']} click conversions",
+                message=f"Uploaded {len(conversions)} click conversions",
             )
 
-            return results
+            return serialize_proto_message(response)
 
         except GoogleAdsException as e:
             error_msg = f"Google Ads API error: {e.failure}"
@@ -254,45 +220,12 @@ class ConversionUploadService:
                 self.client.upload_call_conversions(request=request)
             )
 
-            # Process results
-            results: Dict[str, Any] = {
-                "successful_conversions": 0,
-                "failed_conversions": 0,
-                "results": [],
-            }
-
-            for i, result in enumerate(response.results):
-                if result.conversion_action:
-                    results["successful_conversions"] += 1
-                    results["results"].append(
-                        {
-                            "index": i,
-                            "status": "SUCCESS",
-                            "caller_id": conversions[i]["caller_id"],
-                            "conversion_action": result.conversion_action,
-                            "conversion_date_time": result.conversion_date_time,
-                        }
-                    )
-                else:
-                    results["failed_conversions"] += 1
-                    results["results"].append(
-                        {
-                            "index": i,
-                            "status": "FAILED",
-                            "caller_id": conversions[i]["caller_id"],
-                        }
-                    )
-
-            # Check for partial failure errors
-            if response.partial_failure_error:
-                results["partial_failure_error"] = str(response.partial_failure_error)
-
             await ctx.log(
                 level="info",
-                message=f"Uploaded {results['successful_conversions']} call conversions",
+                message=f"Uploaded {len(conversions)} call conversions",
             )
 
-            return results
+            return serialize_proto_message(response)
 
         except GoogleAdsException as e:
             error_msg = f"Google Ads API error: {e.failure}"

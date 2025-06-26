@@ -48,7 +48,7 @@ class KeywordPlanIdeaService:
         keywords: List[str],
         language: str,
         geo_target_constants: List[str],
-        keyword_plan_network: str = "GOOGLE_SEARCH_AND_PARTNERS",
+        keyword_plan_network: KeywordPlanNetworkEnum.KeywordPlanNetwork = KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH_AND_PARTNERS,
         include_adult_keywords: bool = False,
         page_size: int = 100,
     ) -> List[Dict[str, Any]]:
@@ -76,9 +76,7 @@ class KeywordPlanIdeaService:
             request.include_adult_keywords = include_adult_keywords
             request.page_size = page_size
             # Set keyword plan network using enum
-            request.keyword_plan_network = getattr(
-                KeywordPlanNetworkEnum.KeywordPlanNetwork, keyword_plan_network
-            )
+            request.keyword_plan_network = keyword_plan_network
 
             # Create keyword seed
             keyword_seed = KeywordSeed()
@@ -116,7 +114,7 @@ class KeywordPlanIdeaService:
         page_url: str,
         language: str,
         geo_target_constants: List[str],
-        keyword_plan_network: str = "GOOGLE_SEARCH_AND_PARTNERS",
+        keyword_plan_network: KeywordPlanNetworkEnum.KeywordPlanNetwork = KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH_AND_PARTNERS,
         include_adult_keywords: bool = False,
         page_size: int = 100,
     ) -> List[Dict[str, Any]]:
@@ -144,9 +142,7 @@ class KeywordPlanIdeaService:
             request.include_adult_keywords = include_adult_keywords
             request.page_size = page_size
             # Set keyword plan network using enum
-            request.keyword_plan_network = getattr(
-                KeywordPlanNetworkEnum.KeywordPlanNetwork, keyword_plan_network
-            )
+            request.keyword_plan_network = keyword_plan_network
 
             # Create URL seed
             url_seed = UrlSeed()
@@ -184,7 +180,7 @@ class KeywordPlanIdeaService:
         site_url: str,
         language: str,
         geo_target_constants: List[str],
-        keyword_plan_network: str = "GOOGLE_SEARCH_AND_PARTNERS",
+        keyword_plan_network: KeywordPlanNetworkEnum.KeywordPlanNetwork = KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH_AND_PARTNERS,
         include_adult_keywords: bool = False,
         page_size: int = 100,
     ) -> List[Dict[str, Any]]:
@@ -212,9 +208,7 @@ class KeywordPlanIdeaService:
             request.include_adult_keywords = include_adult_keywords
             request.page_size = page_size
             # Set keyword plan network using enum
-            request.keyword_plan_network = getattr(
-                KeywordPlanNetworkEnum.KeywordPlanNetwork, keyword_plan_network
-            )
+            request.keyword_plan_network = keyword_plan_network
 
             # Create site seed
             site_seed = SiteSeed()
@@ -253,7 +247,7 @@ class KeywordPlanIdeaService:
         page_url: str,
         language: str,
         geo_target_constants: List[str],
-        keyword_plan_network: str = "GOOGLE_SEARCH_AND_PARTNERS",
+        keyword_plan_network: KeywordPlanNetworkEnum.KeywordPlanNetwork = KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH_AND_PARTNERS,
         include_adult_keywords: bool = False,
         page_size: int = 100,
     ) -> List[Dict[str, Any]]:
@@ -282,9 +276,7 @@ class KeywordPlanIdeaService:
             request.include_adult_keywords = include_adult_keywords
             request.page_size = page_size
             # Set keyword plan network using enum
-            request.keyword_plan_network = getattr(
-                KeywordPlanNetworkEnum.KeywordPlanNetwork, keyword_plan_network
-            )
+            request.keyword_plan_network = keyword_plan_network
 
             # Create keyword and URL seed
             keyword_and_url_seed = KeywordAndUrlSeed()
@@ -384,7 +376,7 @@ def create_keyword_plan_idea_tools(
         keywords: List[str],
         language: str,
         geo_target_constants: List[str],
-        keyword_plan_network: str = "GOOGLE_SEARCH_AND_PARTNERS",
+        keyword_plan_network: KeywordPlanNetworkEnum.KeywordPlanNetwork = KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH_AND_PARTNERS,
         include_adult_keywords: bool = False,
         page_size: int = 100,
     ) -> List[Dict[str, Any]]:
@@ -405,13 +397,18 @@ def create_keyword_plan_idea_tools(
             - keyword_idea_metrics: Metrics including avg_monthly_searches, competition, bid estimates
             - keyword_annotations: Conceptual categories for the keyword
         """
+        # Convert string enum to proper enum type
+        keyword_plan_network_enum = getattr(
+            KeywordPlanNetworkEnum.KeywordPlanNetwork, keyword_plan_network
+        )
+        
         return await service.generate_keyword_ideas_from_keywords(
             ctx=ctx,
             customer_id=customer_id,
             keywords=keywords,
             language=language,
             geo_target_constants=geo_target_constants,
-            keyword_plan_network=keyword_plan_network,
+            keyword_plan_network=keyword_plan_network_enum,
             include_adult_keywords=include_adult_keywords,
             page_size=page_size,
         )
@@ -422,7 +419,7 @@ def create_keyword_plan_idea_tools(
         page_url: str,
         language: str,
         geo_target_constants: List[str],
-        keyword_plan_network: str = "GOOGLE_SEARCH_AND_PARTNERS",
+        keyword_plan_network: KeywordPlanNetworkEnum.KeywordPlanNetwork = KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH_AND_PARTNERS,
         include_adult_keywords: bool = False,
         page_size: int = 100,
     ) -> List[Dict[str, Any]]:
@@ -457,7 +454,7 @@ def create_keyword_plan_idea_tools(
         site_url: str,
         language: str,
         geo_target_constants: List[str],
-        keyword_plan_network: str = "GOOGLE_SEARCH_AND_PARTNERS",
+        keyword_plan_network: KeywordPlanNetworkEnum.KeywordPlanNetwork = KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH_AND_PARTNERS,
         include_adult_keywords: bool = False,
         page_size: int = 100,
     ) -> List[Dict[str, Any]]:
@@ -493,7 +490,7 @@ def create_keyword_plan_idea_tools(
         page_url: str,
         language: str,
         geo_target_constants: List[str],
-        keyword_plan_network: str = "GOOGLE_SEARCH_AND_PARTNERS",
+        keyword_plan_network: KeywordPlanNetworkEnum.KeywordPlanNetwork = KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH_AND_PARTNERS,
         include_adult_keywords: bool = False,
         page_size: int = 100,
     ) -> List[Dict[str, Any]]:

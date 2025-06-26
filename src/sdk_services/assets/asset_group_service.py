@@ -48,7 +48,7 @@ class AssetGroupService:
         final_mobile_urls: Optional[List[str]] = None,
         path1: Optional[str] = None,
         path2: Optional[str] = None,
-        status: str = "ENABLED",
+        status: AssetGroupStatusEnum.AssetGroupStatus = AssetGroupStatusEnum.AssetGroupStatus.ENABLED,
     ) -> Dict[str, Any]:
         """Create a new asset group for Performance Max campaigns.
 
@@ -84,7 +84,7 @@ class AssetGroupService:
             if path2:
                 asset_group.path2 = path2
 
-            asset_group.status = getattr(AssetGroupStatusEnum.AssetGroupStatus, status)
+            asset_group.status = status
 
             # Create operation
             operation = AssetGroupOperation()
@@ -126,7 +126,7 @@ class AssetGroupService:
         final_mobile_urls: Optional[List[str]] = None,
         path1: Optional[str] = None,
         path2: Optional[str] = None,
-        status: Optional[str] = None,
+        status: Optional[AssetGroupStatusEnum.AssetGroupStatus] = None,
     ) -> Dict[str, Any]:
         """Update an asset group.
 
@@ -178,9 +178,7 @@ class AssetGroupService:
                 update_mask_paths.append("path2")
 
             if status is not None:
-                asset_group.status = getattr(
-                    AssetGroupStatusEnum.AssetGroupStatus, status
-                )
+                asset_group.status = status
                 update_mask_paths.append("status")
 
             # Create operation
@@ -393,6 +391,9 @@ def create_asset_group_tools(
         Returns:
             Created asset group details including resource_name and asset_group_id
         """
+        # Convert string enum to proper enum type
+        status_enum = getattr(AssetGroupStatusEnum.AssetGroupStatus, status)
+
         return await service.create_asset_group(
             ctx=ctx,
             customer_id=customer_id,
@@ -402,7 +403,7 @@ def create_asset_group_tools(
             final_mobile_urls=final_mobile_urls,
             path1=path1,
             path2=path2,
-            status=status,
+            status=status_enum,
         )
 
     async def update_asset_group(
@@ -431,6 +432,11 @@ def create_asset_group_tools(
         Returns:
             Updated asset group details with list of updated fields
         """
+        # Convert string enum to proper enum type if provided
+        status_enum = (
+            getattr(AssetGroupStatusEnum.AssetGroupStatus, status) if status else None
+        )
+
         return await service.update_asset_group(
             ctx=ctx,
             customer_id=customer_id,
@@ -440,7 +446,7 @@ def create_asset_group_tools(
             final_mobile_urls=final_mobile_urls,
             path1=path1,
             path2=path2,
-            status=status,
+            status=status_enum,
         )
 
     async def list_asset_groups(

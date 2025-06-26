@@ -26,6 +26,8 @@ from google.ads.googleads.v20.common.types.criteria import (
 from google.ads.googleads.v20.enums.types.audience_insights_dimension import (
     AudienceInsightsDimensionEnum,
 )
+from google.ads.googleads.v20.enums.types.age_range_type import AgeRangeTypeEnum
+from google.ads.googleads.v20.enums.types.gender_type import GenderTypeEnum
 from google.ads.googleads.errors import GoogleAdsException
 
 from src.sdk_client import get_sdk_client
@@ -96,14 +98,14 @@ class AudienceInsightsService:
             if baseline_audience_ages:
                 for age_range in baseline_audience_ages:
                     age_info = AgeRangeInfo()
-                    age_info.type_ = age_info.AgeRangeType[age_range]
+                    age_info.type_ = getattr(AgeRangeTypeEnum.AgeRangeType, age_range)
                     baseline_audience.age_ranges.append(age_info)
 
             # Add genders if provided
             if baseline_audience_genders:
                 for gender in baseline_audience_genders:
                     gender_info = GenderInfo()
-                    gender_info.type_ = gender_info.GenderType[gender]
+                    gender_info.type_ = getattr(GenderTypeEnum.GenderType, gender)
                     baseline_audience.genders.append(gender_info)
 
             # Create specific audience
@@ -119,14 +121,14 @@ class AudienceInsightsService:
             if specific_audience_ages:
                 for age_range in specific_audience_ages:
                     age_info = AgeRangeInfo()
-                    age_info.type_ = age_info.AgeRangeType[age_range]
+                    age_info.type_ = getattr(AgeRangeTypeEnum.AgeRangeType, age_range)
                     specific_audience.age_ranges.append(age_info)
 
             # Add genders if provided
             if specific_audience_genders:
                 for gender in specific_audience_genders:
                     gender_info = GenderInfo()
-                    gender_info.type_ = gender_info.GenderType[gender]
+                    gender_info.type_ = getattr(GenderTypeEnum.GenderType, gender)
                     specific_audience.genders.append(gender_info)
 
             # Add user interests if provided
@@ -148,7 +150,7 @@ class AudienceInsightsService:
             # Add dimensions
             for dimension in dimensions:
                 request.dimensions.append(
-                    AudienceInsightsDimensionEnum.AudienceInsightsDimension[dimension]
+                    getattr(AudienceInsightsDimensionEnum.AudienceInsightsDimension, dimension)
                 )
 
             # Make the API call
@@ -215,13 +217,13 @@ class AudienceInsightsService:
             if audience_ages:
                 for age_range in audience_ages:
                     age_info = AgeRangeInfo()
-                    age_info.type_ = age_info.AgeRangeType[age_range]
+                    age_info.type_ = getattr(AgeRangeTypeEnum.AgeRangeType, age_range)
                     audience.age_ranges.append(age_info)
 
             if audience_genders:
                 for gender in audience_genders:
                     gender_info = GenderInfo()
-                    gender_info.type_ = gender_info.GenderType[gender]
+                    gender_info.type_ = getattr(GenderTypeEnum.GenderType, gender)
                     audience.genders.append(gender_info)
 
             if audience_user_interests:
@@ -250,7 +252,7 @@ class AudienceInsightsService:
             # Add dimensions
             for dimension in dimensions:
                 request.dimensions.append(
-                    AudienceInsightsDimensionEnum.AudienceInsightsDimension[dimension]
+                    getattr(AudienceInsightsDimensionEnum.AudienceInsightsDimension, dimension)
                 )
 
             # Make the API call
@@ -313,13 +315,13 @@ class AudienceInsightsService:
             if audience_ages:
                 for age_range in audience_ages:
                     age_info = AgeRangeInfo()
-                    age_info.type_ = age_info.AgeRangeType[age_range]
+                    age_info.type_ = getattr(AgeRangeTypeEnum.AgeRangeType, age_range)
                     audience.age_ranges.append(age_info)
 
             if audience_genders:
                 for gender in audience_genders:
                     gender_info = GenderInfo()
-                    gender_info.type_ = gender_info.GenderType[gender]
+                    gender_info.type_ = getattr(GenderTypeEnum.GenderType, gender)
                     audience.genders.append(gender_info)
 
             if audience_user_interests:

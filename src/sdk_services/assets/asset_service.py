@@ -65,7 +65,7 @@ class AssetService:
 
             # Create asset
             asset = Asset()
-            asset.type_ = getattr(AssetTypeEnum.AssetType, "TEXT")
+            asset.type_ = AssetTypeEnum.AssetType.TEXT
 
             # Set name if provided
             if name:
@@ -125,7 +125,7 @@ class AssetService:
 
             # Create asset
             asset = Asset()
-            asset.type_ = getattr(AssetTypeEnum.AssetType, "IMAGE")
+            asset.type_ = AssetTypeEnum.AssetType.IMAGE
             asset.name = name
 
             # Create image asset
