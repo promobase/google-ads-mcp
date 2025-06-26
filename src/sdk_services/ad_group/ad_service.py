@@ -82,13 +82,14 @@ class AdService:
             ad = Ad()
             ad.final_urls.extend(final_urls)
 
-            if path1:
-                ad.display_url_path1 = path1
-            if path2:
-                ad.display_url_path2 = path2
-
             # Create responsive search ad info
             responsive_search_ad = ResponsiveSearchAdInfo()
+            
+            # Set display URL paths on the ad info
+            if path1:
+                responsive_search_ad.path1 = path1
+            if path2:
+                responsive_search_ad.path2 = path2
 
             # Add headlines
             for headline_text in headlines:
@@ -182,13 +183,14 @@ class AdService:
             ad = Ad()
             ad.final_urls.extend(final_urls)
 
-            if path1:
-                ad.display_url_path1 = path1
-            if path2:
-                ad.display_url_path2 = path2
-
             # Create expanded text ad info
             expanded_text_ad = ExpandedTextAdInfo()
+            
+            # Set display URL paths on the ad info
+            if path1:
+                expanded_text_ad.path1 = path1
+            if path2:
+                expanded_text_ad.path2 = path2
             expanded_text_ad.headline_part1 = headline1
             expanded_text_ad.headline_part2 = headline2
             if headline3:

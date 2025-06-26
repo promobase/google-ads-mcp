@@ -5,6 +5,7 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
 from google.ads.googleads.v20.enums.types.ad_group_ad_status import AdGroupAdStatusEnum
+from google.ads.googleads.v20.resources.types.ad import Ad
 from google.ads.googleads.v20.resources.types.ad_group_ad import AdGroupAd
 from google.ads.googleads.v20.services.services.ad_group_ad_service import (
     AdGroupAdServiceClient,
@@ -68,7 +69,11 @@ class AdGroupAdService:
             # Create ad group ad
             ad_group_ad = AdGroupAd()
             ad_group_ad.ad_group = ad_group_resource
-            ad_group_ad.ad = ad_resource_name  # type: ignore
+            
+            # Create ad with resource name
+            ad = Ad()
+            ad.resource_name = ad_resource_name
+            ad_group_ad.ad = ad
             ad_group_ad.status = status
 
             # Create operation
