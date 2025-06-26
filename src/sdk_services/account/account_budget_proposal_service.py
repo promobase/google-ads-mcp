@@ -50,65 +50,57 @@ class AccountBudgetProposalService:
         self,
         ctx: Context,
         customer_id: str,
-        proposal_type: str,
+        proposal_type: AccountBudgetProposalTypeEnum.AccountBudgetProposalType,
         billing_setup: str,
         proposed_name: str,
-        proposed_start_time_type: str,
-        proposed_spending_limit_type: str = "INFINITE",
+        proposed_start_time_type: TimeTypeEnum.TimeType,
+        proposed_spending_limit_type: SpendingLimitTypeEnum.SpendingLimitType = SpendingLimitTypeEnum.SpendingLimitType.INFINITE,
         proposed_spending_limit_micros: Optional[int] = None,
         proposed_start_date_time: Optional[str] = None,
         proposed_end_date_time: Optional[str] = None,
-        proposed_end_time_type: Optional[str] = None,
+        proposed_end_time_type: Optional[TimeTypeEnum.TimeType] = None,
     ) -> Dict[str, Any]:
         """Create an account budget proposal.
 
         Args:
             ctx: FastMCP context
             customer_id: The customer ID
-            proposal_type: Type of proposal (CREATE, UPDATE, REMOVE)
+            proposal_type: Type of proposal enum value
             billing_setup: Resource name of the billing setup
             proposed_name: Proposed name for the account budget
-            proposed_start_time_type: Start time type (NOW, FOREVER)
-            proposed_spending_limit_type: Spending limit type (UNSPECIFIED, UNKNOWN, INFINITE)
+            proposed_start_time_type: Start time type enum value
+            proposed_spending_limit_type: Spending limit type enum value
             proposed_spending_limit_micros: Spending limit in micros (required if FINITE)
             proposed_start_date_time: Start date/time (YYYY-MM-DD HH:MM:SS)
             proposed_end_date_time: End date/time (YYYY-MM-DD HH:MM:SS)
-            proposed_end_time_type: End time type (NEVER, FOREVER)
+            proposed_end_time_type: End time type enum value
 
         Returns:
-            Created account budget proposal details
+            Mutation result dictionary
         """
         try:
             customer_id = format_customer_id(customer_id)
 
             # Create account budget proposal
             proposal = AccountBudgetProposal()
-            proposal.proposal_type = getattr(
-                AccountBudgetProposalTypeEnum.AccountBudgetProposalType, proposal_type
-            )
+            proposal.proposal_type = proposal_type
             proposal.billing_setup = billing_setup
             proposal.proposed_name = proposed_name
 
             # Set start time
-            proposal.proposed_start_time_type = getattr(
-                TimeTypeEnum.TimeType, proposed_start_time_type
-            )
+            proposal.proposed_start_time_type = proposed_start_time_type
 
             if proposed_start_date_time:
                 proposal.proposed_start_date_time = proposed_start_date_time
 
             # Set spending limit
-            proposal.proposed_spending_limit_type = getattr(
-                SpendingLimitTypeEnum.SpendingLimitType, proposed_spending_limit_type
-            )
+            proposal.proposed_spending_limit_type = proposed_spending_limit_type
             if proposed_spending_limit_micros is not None:
                 proposal.proposed_spending_limit_micros = proposed_spending_limit_micros
 
             # Set end time if provided
             if proposed_end_time_type:
-                proposal.proposed_end_time_type = getattr(
-                    TimeTypeEnum.TimeType, proposed_end_time_type
-                )
+                proposal.proposed_end_time_type = proposed_end_time_type
 
             if proposed_end_date_time:
                 proposal.proposed_end_date_time = proposed_end_date_time
@@ -132,7 +124,6 @@ class AccountBudgetProposalService:
                 message=f"Created account budget proposal: {proposed_name}",
             )
 
-            # Return serialized response
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
@@ -164,7 +155,7 @@ class AccountBudgetProposalService:
             proposed_end_date_time: Optional new end date/time
 
         Returns:
-            Updated account budget proposal details
+            Mutation result dictionary
         """
         try:
             customer_id = format_customer_id(customer_id)
@@ -208,7 +199,6 @@ class AccountBudgetProposalService:
                 message="Updated account budget proposal",
             )
 
-            # Return serialized response
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
@@ -232,7 +222,7 @@ class AccountBudgetProposalService:
             customer_id: The customer ID
 
         Returns:
-            List of account budget proposals
+            List of account budget proposal dictionaries
         """
         try:
             customer_id = format_customer_id(customer_id)
@@ -268,28 +258,7 @@ class AccountBudgetProposalService:
             proposals = []
             for row in response:
                 proposal = row.account_budget_proposal
-
-                proposal_dict = {
-                    "resource_name": proposal.resource_name,
-                    "id": str(proposal.id),
-                    "billing_setup": proposal.billing_setup,
-                    "account_budget": proposal.account_budget,
-                    "proposal_type": proposal.proposal_type.name
-                    if proposal.proposal_type
-                    else "UNKNOWN",
-                    "status": proposal.status.name if proposal.status else "UNKNOWN",
-                    "proposed_name": proposal.proposed_name,
-                    "proposed_start_date_time": proposal.proposed_start_date_time,
-                    "proposed_end_date_time": proposal.proposed_end_date_time,
-                    "proposed_spending_limit_type": proposal.proposed_spending_limit_type.name
-                    if proposal.proposed_spending_limit_type
-                    else "UNKNOWN",
-                    "proposed_spending_limit_micros": proposal.proposed_spending_limit_micros,
-                    "creation_date_time": proposal.creation_date_time,
-                    "approval_date_time": proposal.approval_date_time,
-                }
-
-                proposals.append(proposal_dict)
+                proposals.append(serialize_proto_message(proposal))
 
             await ctx.log(
                 level="info",
@@ -317,7 +286,7 @@ class AccountBudgetProposalService:
             proposal_resource_name: Resource name of the proposal to remove
 
         Returns:
-            Removal result
+            Mutation result dictionary
         """
         try:
             customer_id = format_customer_id(customer_id)
@@ -339,7 +308,6 @@ class AccountBudgetProposalService:
                 message="Removed account budget proposal",
             )
 
-            # Return serialized response
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
@@ -392,18 +360,32 @@ def create_account_budget_proposal_tools(
         Returns:
             Created account budget proposal details with resource_name
         """
+        # Convert string enums to proper enum types
+        proposal_type_enum = getattr(
+            AccountBudgetProposalTypeEnum.AccountBudgetProposalType, proposal_type
+        )
+        start_time_enum = getattr(TimeTypeEnum.TimeType, proposed_start_time_type)
+        spending_limit_enum = getattr(
+            SpendingLimitTypeEnum.SpendingLimitType, proposed_spending_limit_type
+        )
+        end_time_enum = (
+            getattr(TimeTypeEnum.TimeType, proposed_end_time_type)
+            if proposed_end_time_type
+            else None
+        )
+
         return await service.create_account_budget_proposal(
             ctx=ctx,
             customer_id=customer_id,
-            proposal_type=proposal_type,
+            proposal_type=proposal_type_enum,
             billing_setup=billing_setup,
             proposed_name=proposed_name,
-            proposed_start_time_type=proposed_start_time_type,
-            proposed_spending_limit_type=proposed_spending_limit_type,
+            proposed_start_time_type=start_time_enum,
+            proposed_spending_limit_type=spending_limit_enum,
             proposed_spending_limit_micros=proposed_spending_limit_micros,
             proposed_start_date_time=proposed_start_date_time,
             proposed_end_date_time=proposed_end_date_time,
-            proposed_end_time_type=proposed_end_time_type,
+            proposed_end_time_type=end_time_enum,
         )
 
     async def update_account_budget_proposal(

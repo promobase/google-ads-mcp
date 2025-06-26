@@ -48,18 +48,18 @@ class AccountLinkService:
         self,
         ctx: Context,
         customer_id: str,
-        linked_account_type: str,
+        linked_account_type: LinkedAccountTypeEnum.LinkedAccountType,
         linked_account_id: str,
-        status: str = "ENABLED",
+        status: AccountLinkStatusEnum.AccountLinkStatus = AccountLinkStatusEnum.AccountLinkStatus.ENABLED,
     ) -> Dict[str, Any]:
         """Create an account link.
 
         Args:
             ctx: FastMCP context
             customer_id: The customer ID
-            linked_account_type: Type of linked account (GOOGLE_ADS, HOTEL_CENTER, etc.)
+            linked_account_type: Type of linked account enum value
             linked_account_id: ID of the account to link
-            status: Link status (ENABLED, REMOVED)
+            status: Link status enum value
 
         Returns:
             Created account link details
@@ -69,13 +69,9 @@ class AccountLinkService:
 
             # Create account link
             account_link = AccountLink()
-            account_link.type_ = getattr(
-                LinkedAccountTypeEnum.LinkedAccountType, linked_account_type
-            )
+            account_link.type_ = linked_account_type
             account_link.linked_account = linked_account_id
-            account_link.status = getattr(
-                AccountLinkStatusEnum.AccountLinkStatus, status
-            )
+            account_link.status = status
 
             # Create request
             request = CreateAccountLinkRequest()
@@ -109,7 +105,7 @@ class AccountLinkService:
         ctx: Context,
         customer_id: str,
         account_link_resource_name: str,
-        status: Optional[str] = None,
+        status: Optional[AccountLinkStatusEnum.AccountLinkStatus] = None,
     ) -> Dict[str, Any]:
         """Update an account link.
 
@@ -117,7 +113,7 @@ class AccountLinkService:
             ctx: FastMCP context
             customer_id: The customer ID
             account_link_resource_name: Resource name of the account link to update
-            status: Optional new status (ENABLED, REMOVED)
+            status: Optional new status enum value
 
         Returns:
             Updated account link details
@@ -133,9 +129,7 @@ class AccountLinkService:
             update_mask_paths = []
 
             if status is not None:
-                account_link.status = getattr(
-                    AccountLinkStatusEnum.AccountLinkStatus, status
-                )
+                account_link.status = status
                 update_mask_paths.append("status")
 
             # Create operation
@@ -215,20 +209,7 @@ class AccountLinkService:
             account_links = []
             for row in response:
                 account_link = row.account_link
-
-                link_dict = {
-                    "resource_name": account_link.resource_name,
-                    "account_link_id": str(account_link.account_link_id),
-                    "status": account_link.status.name
-                    if account_link.status
-                    else "UNKNOWN",
-                    "type": account_link.type_.name
-                    if account_link.type_
-                    else "UNKNOWN",
-                    "linked_account": account_link.linked_account,
-                }
-
-                account_links.append(link_dict)
+                account_links.append(serialize_proto_message(account_link))
 
             await ctx.log(
                 level="info",
@@ -318,12 +299,18 @@ def create_account_link_tools(
         Returns:
             Created account link details with resource_name
         """
+        # Convert string enums to proper enum types
+        type_enum = getattr(
+            LinkedAccountTypeEnum.LinkedAccountType, linked_account_type
+        )
+        status_enum = getattr(AccountLinkStatusEnum.AccountLinkStatus, status)
+
         return await service.create_account_link(
             ctx=ctx,
             customer_id=customer_id,
-            linked_account_type=linked_account_type,
+            linked_account_type=type_enum,
             linked_account_id=linked_account_id,
-            status=status,
+            status=status_enum,
         )
 
     async def update_account_link(
@@ -342,11 +329,16 @@ def create_account_link_tools(
         Returns:
             Updated account link details with list of updated fields
         """
+        # Convert string enum to proper enum type if provided
+        status_enum = (
+            getattr(AccountLinkStatusEnum.AccountLinkStatus, status) if status else None
+        )
+
         return await service.update_account_link(
             ctx=ctx,
             customer_id=customer_id,
             account_link_resource_name=account_link_resource_name,
-            status=status,
+            status=status_enum,
         )
 
     async def list_account_links(
