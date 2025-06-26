@@ -11,6 +11,7 @@ from google.ads.googleads.v20.common.types.criteria import (
     IncomeRangeInfo,
     KeywordInfo,
     ParentalStatusInfo,
+    UserListInfo,
 )
 from google.ads.googleads.v20.enums.types.ad_group_criterion_status import (
     AdGroupCriterionStatusEnum,
@@ -170,12 +171,12 @@ class AdGroupCriterionService:
                 if bid_modifier is not None:
                     ad_group_criterion.bid_modifier = bid_modifier
 
-                # Create audience info
-                audience_info = AudienceInfo()
-                audience_info.user_list = (
+                # Create user list info
+                user_list_info = UserListInfo()
+                user_list_info.user_list = (
                     f"customers/{customer_id}/userLists/{user_list_id}"
                 )
-                ad_group_criterion.audience = audience_info
+                ad_group_criterion.user_list = user_list_info
 
                 # Create operation
                 operation = AdGroupCriterionOperation()
