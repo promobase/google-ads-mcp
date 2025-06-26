@@ -41,7 +41,7 @@ class InvoiceService:
         customer_id: str,
         billing_setup: str,
         issue_year: str,
-        issue_month: str,
+        issue_month: MonthOfYearEnum.MonthOfYear,
     ) -> Dict[str, Any]:
         """List invoices for a specific billing setup and date range.
 
@@ -50,7 +50,7 @@ class InvoiceService:
             customer_id: The customer ID
             billing_setup: Resource name of the billing setup
             issue_year: Year of invoice issue (YYYY format)
-            issue_month: Month of invoice issue (e.g., "JANUARY", "FEBRUARY", etc.)
+            issue_month: Month of invoice issue enum value
 
         Returns:
             List of invoices with details
@@ -63,7 +63,7 @@ class InvoiceService:
             request.customer_id = customer_id
             request.billing_setup = billing_setup
             request.issue_year = issue_year
-            request.issue_month = MonthOfYearEnum.MonthOfYear[issue_month.upper()]
+            request.issue_month = issue_month
 
             # Make the API call
             response: ListInvoicesResponse = self.client.list_invoices(request=request)
@@ -113,12 +113,15 @@ def create_invoice_tools(
         Returns:
             List invoices response with comprehensive details including amounts, dates, and account summaries
         """
+        # Convert string enum to proper enum type
+        month_enum = MonthOfYearEnum.MonthOfYear[issue_month.upper()]
+
         return await service.list_invoices(
             ctx=ctx,
             customer_id=customer_id,
             billing_setup=billing_setup,
             issue_year=issue_year,
-            issue_month=issue_month,
+            issue_month=month_enum,
         )
 
     tools.extend([list_invoices])

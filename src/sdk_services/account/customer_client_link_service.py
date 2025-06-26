@@ -47,7 +47,7 @@ class CustomerClientLinkService:
         ctx: Context,
         customer_id: str,
         client_customer: str,
-        status: str = "PENDING",
+        status: ManagerLinkStatusEnum.ManagerLinkStatus = ManagerLinkStatusEnum.ManagerLinkStatus.PENDING,
         hidden: bool = False,
     ) -> Dict[str, Any]:
         """Create a customer client link between manager and client accounts.
@@ -56,7 +56,7 @@ class CustomerClientLinkService:
             ctx: FastMCP context
             customer_id: The manager customer ID
             client_customer: Resource name of the client customer
-            status: Link status (PENDING, ACTIVE, CANCELLED, REJECTED)
+            status: Link status enum value
             hidden: Whether the link is hidden from the client
 
         Returns:
@@ -68,7 +68,7 @@ class CustomerClientLinkService:
             # Create customer client link
             link = CustomerClientLink()
             link.client_customer = client_customer
-            link.status = getattr(ManagerLinkStatusEnum.ManagerLinkStatus, status)
+            link.status = status
             link.hidden = hidden
 
             # Create operation
@@ -101,7 +101,7 @@ class CustomerClientLinkService:
         ctx: Context,
         customer_id: str,
         link_resource_name: str,
-        status: Optional[str] = None,
+        status: Optional[ManagerLinkStatusEnum.ManagerLinkStatus] = None,
         hidden: Optional[bool] = None,
     ) -> Dict[str, Any]:
         """Update a customer client link.
@@ -110,7 +110,7 @@ class CustomerClientLinkService:
             ctx: FastMCP context
             customer_id: The manager customer ID
             link_resource_name: Resource name of the link to update
-            status: Optional new status (PENDING, ACTIVE, CANCELLED, REJECTED)
+            status: Optional new status enum value
             hidden: Optional new hidden status
 
         Returns:
@@ -127,7 +127,7 @@ class CustomerClientLinkService:
             update_mask_paths = []
 
             if status is not None:
-                link.status = getattr(ManagerLinkStatusEnum.ManagerLinkStatus, status)
+                link.status = status
                 update_mask_paths.append("status")
 
             if hidden is not None:
@@ -217,27 +217,12 @@ class CustomerClientLinkService:
             # Process results
             links = []
             for row in response:
-                link = row.customer_client_link
-                client = row.customer_client
-
-                link_dict = {
-                    "resource_name": link.resource_name,
-                    "client_customer": link.client_customer,
-                    "manager_link_id": str(link.manager_link_id),
-                    "status": link.status.name if link.status else "UNKNOWN",
-                    "hidden": link.hidden,
-                    "client_details": {
-                        "descriptive_name": client.descriptive_name,
-                        "manager": client.manager,
-                        "test_account": client.test_account,
-                        "auto_tagging_enabled": client.auto_tagging_enabled,
-                        "id": str(client.id),
-                        "time_zone": client.time_zone,
-                        "currency_code": client.currency_code,
-                    },
-                }
-
-                links.append(link_dict)
+                # Serialize both link and client details
+                link_data = serialize_proto_message(row.customer_client_link)
+                link_data["client_details"] = serialize_proto_message(
+                    row.customer_client
+                )
+                links.append(link_data)
 
             await ctx.log(
                 level="info",
@@ -280,11 +265,14 @@ def create_customer_client_link_tools(
         Returns:
             Created customer client link details with resource_name and status
         """
+        # Convert string enum to proper enum type
+        status_enum = getattr(ManagerLinkStatusEnum.ManagerLinkStatus, status)
+
         return await service.create_customer_client_link(
             ctx=ctx,
             customer_id=customer_id,
             client_customer=client_customer,
-            status=status,
+            status=status_enum,
             hidden=hidden,
         )
 
@@ -306,11 +294,16 @@ def create_customer_client_link_tools(
         Returns:
             Updated customer client link details with list of updated fields
         """
+        # Convert string enum to proper enum type if provided
+        status_enum = (
+            getattr(ManagerLinkStatusEnum.ManagerLinkStatus, status) if status else None
+        )
+
         return await service.update_customer_client_link(
             ctx=ctx,
             customer_id=customer_id,
             link_resource_name=link_resource_name,
-            status=status,
+            status=status_enum,
             hidden=hidden,
         )
 

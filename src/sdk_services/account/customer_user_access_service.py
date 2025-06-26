@@ -45,7 +45,7 @@ class CustomerUserAccessService:
         ctx: Context,
         customer_id: str,
         email_address: str,
-        access_role: str,
+        access_role: AccessRoleEnum.AccessRole,
     ) -> Dict[str, Any]:
         """Grant access to a user for a customer account.
 
@@ -53,7 +53,7 @@ class CustomerUserAccessService:
             ctx: FastMCP context
             customer_id: The customer ID
             email_address: Email address of the user to grant access to
-            access_role: Access role (ADMIN, STANDARD, READ_ONLY, EMAIL_ONLY)
+            access_role: Access role enum value
 
         Returns:
             Created user access details
@@ -64,7 +64,7 @@ class CustomerUserAccessService:
             # Create customer user access
             user_access = CustomerUserAccess()
             user_access.email_address = email_address
-            user_access.access_role = getattr(AccessRoleEnum.AccessRole, access_role)
+            user_access.access_role = access_role
 
             # Create operation
             operation = CustomerUserAccessOperation()
@@ -101,7 +101,7 @@ class CustomerUserAccessService:
         ctx: Context,
         customer_id: str,
         user_access_resource_name: str,
-        access_role: Optional[str] = None,
+        access_role: Optional[AccessRoleEnum.AccessRole] = None,
     ) -> Dict[str, Any]:
         """Update user access permissions.
 
@@ -109,7 +109,7 @@ class CustomerUserAccessService:
             ctx: FastMCP context
             customer_id: The customer ID
             user_access_resource_name: Resource name of the user access to update
-            access_role: Optional new access role
+            access_role: Optional new access role enum value
 
         Returns:
             Updated user access details
@@ -125,9 +125,7 @@ class CustomerUserAccessService:
             update_mask_paths = []
 
             if access_role is not None:
-                user_access.access_role = getattr(
-                    AccessRoleEnum.AccessRole, access_role
-                )
+                user_access.access_role = access_role
                 update_mask_paths.append("access_role")
 
             # Create operation
@@ -202,21 +200,7 @@ class CustomerUserAccessService:
             user_accesses = []
             for row in response:
                 user_access = row.customer_user_access
-
-                access_dict = {
-                    "resource_name": user_access.resource_name,
-                    "user_id": str(user_access.user_id)
-                    if user_access.user_id
-                    else None,
-                    "email_address": user_access.email_address,
-                    "access_role": user_access.access_role.name
-                    if user_access.access_role
-                    else "UNKNOWN",
-                    "access_creation_date_time": user_access.access_creation_date_time,
-                    "inviter_user_email_address": user_access.inviter_user_email_address,
-                }
-
-                user_accesses.append(access_dict)
+                user_accesses.append(serialize_proto_message(user_access))
 
             await ctx.log(
                 level="info",
@@ -304,11 +288,14 @@ def create_customer_user_access_tools(
         Returns:
             Created user access details with resource_name
         """
+        # Convert string enum to proper enum type
+        role_enum = getattr(AccessRoleEnum.AccessRole, access_role)
+
         return await service.grant_user_access(
             ctx=ctx,
             customer_id=customer_id,
             email_address=email_address,
-            access_role=access_role,
+            access_role=role_enum,
         )
 
     async def update_user_access(
@@ -327,11 +314,16 @@ def create_customer_user_access_tools(
         Returns:
             Updated user access details with list of updated fields
         """
+        # Convert string enum to proper enum type if provided
+        role_enum = (
+            getattr(AccessRoleEnum.AccessRole, access_role) if access_role else None
+        )
+
         return await service.update_user_access(
             ctx=ctx,
             customer_id=customer_id,
             user_access_resource_name=user_access_resource_name,
-            access_role=access_role,
+            access_role=role_enum,
         )
 
     async def list_user_access(
