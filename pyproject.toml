@@ -1,0 +1,113 @@
+[project]
+name = "google-ads-mcp"
+version = "0.1.0"
+description = "MCP server for Google Ads API"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiohttp>=3.12.13",
+    "fastmcp>=2.9.0",
+    "google-ads>=27.0.0",
+    "google-auth>=2.40.3",
+    "pyyaml>=6.0",
+    "requests>=2.32.4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.8.0",
+    "types-protobuf>=5.29.0.20241127",
+    "pytest>=8.4.1",
+    "pytest-asyncio",
+    "pyright>=1.1.402",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+indent-width = 4
+fix = true # Enable autofix
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+]
+
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+ignore = [
+    "E501", # line too long (handled by formatter)
+    "F401", # unused imports (during development)
+]
+
+fixable = ["ALL"]
+unfixable = []
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"] # Allow unused imports in __init__ files
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = false
+docstring-code-line-length = "dynamic"
+
+[dependency-groups]
+dev = ["pytest-asyncio>=1.0.0"]
+
+[tool.pyright]
+include = ["src", "tests", "main.py"]
+exclude = [".venv", "**/__pycache__", "**/node_modules", "build", "dist"]
+pythonVersion = "3.12"
+pythonPlatform = "All"
+typeCheckingMode = "strict"
+useLibraryCodeForTypes = true
+reportMissingImports = true
+reportMissingTypeStubs = false
+reportMissingModuleSource = false
+# Suppress "partially unknown" warnings for FastMCP and Google Ads SDK types
+reportUnknownMemberType = "none"
+reportUnknownArgumentType = "none"
+reportUnknownVariableType = "none"
+reportUnknownLambdaType = "none"
+reportUnknownParameterType = "none"
+reportMissingParameterType = "error"
+reportMissingTypeArgument = "error"
+reportInvalidTypeForm = "error"
+reportUntypedFunctionDecorator = "warning"
+reportUntypedClassDecorator = "warning"
+reportUntypedBaseClass = "warning"
+reportImplicitOverride = "warning"
+stubPath = "typings"
+venvPath = "."
+venv = ".venv"

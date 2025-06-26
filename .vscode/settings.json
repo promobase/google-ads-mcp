@@ -1,0 +1,52 @@
+{
+  // Python settings
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  
+  // Ruff settings
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    },
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  
+  // Disable other Python formatters/linters
+  "python.formatting.provider": "none",
+  "python.linting.enabled": false,
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": false,
+  "python.linting.mypyEnabled": false,
+  
+  // Ruff extension settings
+  "ruff.enable": true,
+  "ruff.lint": {
+    "enable": true,
+    "args": []
+  },
+  "ruff.format": {
+    "enable": true,
+    "args": []
+  },
+  "ruff.fixAll": true,
+  "ruff.organizeImports": true,
+  
+  // Optional: Show Ruff output for debugging
+  "ruff.trace.server": "off",
+  
+  // Optional: File associations
+  "files.associations": {
+    "*.py": "python",
+    "pyproject.toml": "toml"
+  },
+  
+  // Optional: Auto save
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  
+  // Optional: Trim trailing whitespace
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true
+}

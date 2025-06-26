@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    // Ruff - Python linter and formatter
+    "charliermarsh.ruff",
+    
+    // Python language support
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    
+    // Optional but useful
+    "ms-python.debugpy",
+    "tamasfe.even-better-toml",
+    "njpwerner.autodocstring"
+  ]
+}
