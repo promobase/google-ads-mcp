@@ -62,7 +62,7 @@ class AdGroupCriterionService:
         ad_group_id: str,
         keywords: List[Dict[str, Any]],
         negative: bool = False,
-    ) -> List[Dict[str, Any]]:
+    ) -> Dict[str, Any]:
         """Add keyword criteria to an ad group.
 
         Args:
@@ -117,32 +117,12 @@ class AdGroupCriterionService:
                 self.client.mutate_ad_group_criteria(request=request)
             )
 
-            # Process results
-            results = []
-            for i, result in enumerate(response.results):
-                criterion_resource = result.resource_name
-                criterion_id = (
-                    criterion_resource.split("/")[-1] if criterion_resource else ""
-                )
-                keyword = keywords[i]
-                results.append(
-                    {
-                        "resource_name": criterion_resource,
-                        "criterion_id": criterion_id,
-                        "type": "KEYWORD",
-                        "negative": negative,
-                        "keyword_text": keyword["text"],
-                        "match_type": keyword["match_type"],
-                        "cpc_bid_micros": keyword.get("cpc_bid_micros"),
-                    }
-                )
-
             await ctx.log(
                 level="info",
-                message=f"Added {len(results)} keywords to ad group {ad_group_id}",
+                message=f"Added {len(response.results)} keywords to ad group {ad_group_id}",
             )
 
-            return results
+            return serialize_proto_message(response)
 
         except GoogleAdsException as e:
             error_msg = f"Google Ads API error: {e.failure}"
@@ -492,7 +472,7 @@ def create_ad_group_criterion_tools(
         ad_group_id: str,
         keywords: List[Dict[str, Any]],
         negative: bool = False,
-    ) -> List[Dict[str, Any]]:
+    ) -> Dict[str, Any]:
         """Add keyword criteria to an ad group.
 
         Args:
@@ -505,7 +485,7 @@ def create_ad_group_criterion_tools(
             negative: Whether these are negative keywords
 
         Returns:
-            List of created ad group criteria with resource names and IDs
+            Response with created ad group criteria details
         """
         return await service.add_keywords(
             ctx=ctx,

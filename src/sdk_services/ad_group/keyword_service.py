@@ -53,7 +53,7 @@ class KeywordService:
         ad_group_id: str,
         keywords: List[Dict[str, str]],
         default_cpc_bid_micros: Optional[int] = None,
-    ) -> List[Dict[str, Any]]:
+    ) -> Dict[str, Any]:
         """Add keywords to an ad group.
 
         Args:
@@ -64,7 +64,7 @@ class KeywordService:
             default_cpc_bid_micros: Default CPC bid for keywords in micros
 
         Returns:
-            List of created keyword details
+            Response with created keyword details
         """
         try:
             customer_id = format_customer_id(customer_id)
@@ -113,25 +113,12 @@ class KeywordService:
                 self.client.mutate_ad_group_criteria(request=request)
             )
 
-            # Extract results
-            results = []
-            for result in response.results:
-                resource_name = result.resource_name
-                criterion_id = resource_name.split("~")[-1] if resource_name else ""
-                results.append(
-                    {
-                        "resource_name": resource_name,
-                        "criterion_id": criterion_id,
-                        "ad_group_id": ad_group_id,
-                    }
-                )
-
             await ctx.log(
                 level="info",
-                message=f"Added {len(results)} keywords to ad group {ad_group_id}",
+                message=f"Added {len(response.results)} keywords to ad group {ad_group_id}",
             )
 
-            return results
+            return serialize_proto_message(response)
 
         except GoogleAdsException as e:
             error_msg = f"Google Ads API error: {e.failure}"
@@ -273,7 +260,7 @@ def create_keyword_tools(
         ad_group_id: str,
         keywords: List[Dict[str, str]],
         default_cpc_bid_micros: Optional[int] = None,
-    ) -> List[Dict[str, Any]]:
+    ) -> Dict[str, Any]:
         """Add keywords to an ad group.
 
         Args:
@@ -286,7 +273,7 @@ def create_keyword_tools(
             default_cpc_bid_micros: Default CPC bid for keywords without individual bids
 
         Returns:
-            List of created keyword details
+            Response with created keyword details
         """
         return await service.add_keywords(
             ctx=ctx,

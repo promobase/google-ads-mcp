@@ -44,7 +44,7 @@ class AdGroupAdService:
         customer_id: str,
         ad_group_id: str,
         ad_resource_name: str,
-        status: str = "ENABLED",
+        status: AdGroupAdStatusEnum.AdGroupAdStatus = AdGroupAdStatusEnum.AdGroupAdStatus.ENABLED,
     ) -> Dict[str, Any]:
         """Create a new ad group ad (associate an ad with an ad group).
 
@@ -53,7 +53,7 @@ class AdGroupAdService:
             customer_id: The customer ID
             ad_group_id: The ad group ID
             ad_resource_name: The resource name of the ad to add
-            status: Ad group ad status (ENABLED, PAUSED, REMOVED)
+            status: Ad group ad status enum value
 
         Returns:
             Created ad group ad details
@@ -66,7 +66,7 @@ class AdGroupAdService:
             ad_group_ad = AdGroupAd()
             ad_group_ad.ad_group = ad_group_resource
             ad_group_ad.ad = ad_resource_name  # type: ignore
-            ad_group_ad.status = getattr(AdGroupAdStatusEnum.AdGroupAdStatus, status)
+            ad_group_ad.status = status
 
             # Create operation
             operation = AdGroupAdOperation()
@@ -98,7 +98,7 @@ class AdGroupAdService:
         ctx: Context,
         customer_id: str,
         ad_group_ad_resource_name: str,
-        status: str,
+        status: AdGroupAdStatusEnum.AdGroupAdStatus,
     ) -> Dict[str, Any]:
         """Update the status of an ad group ad.
 
@@ -106,7 +106,7 @@ class AdGroupAdService:
             ctx: FastMCP context
             customer_id: The customer ID
             ad_group_ad_resource_name: The resource name of the ad group ad
-            status: New status (ENABLED, PAUSED, REMOVED)
+            status: New status enum value
 
         Returns:
             Updated ad group ad details
@@ -117,7 +117,7 @@ class AdGroupAdService:
             # Create ad group ad with updated status
             ad_group_ad = AdGroupAd()
             ad_group_ad.resource_name = ad_group_ad_resource_name
-            ad_group_ad.status = getattr(AdGroupAdStatusEnum.AdGroupAdStatus, status)
+            ad_group_ad.status = status
 
             # Create operation
             operation = AdGroupAdOperation()
@@ -210,34 +210,11 @@ class AdGroupAdService:
             # Process results
             ad_group_ads = []
             for row in response:
-                ad_group_ad = row.ad_group_ad
-                ad = ad_group_ad.ad
-                ad_group = row.ad_group
-
-                ad_dict = {
-                    "resource_name": ad_group_ad.resource_name,
-                    "ad_group": ad_group_ad.ad_group,
-                    "ad_group_id": str(ad_group.id),
-                    "ad_group_name": ad_group.name,
-                    "ad_id": str(ad.id),
-                    "ad_name": ad.name,
-                    "ad_type": ad.type_.name if ad.type_ else "UNKNOWN",
-                    "status": ad_group_ad.status.name
-                    if ad_group_ad.status
-                    else "UNKNOWN",
-                }
-
-                if include_policy_data and ad_group_ad.policy_summary:
-                    ad_dict["policy_summary"] = {
-                        "approval_status": ad_group_ad.policy_summary.approval_status.name
-                        if ad_group_ad.policy_summary.approval_status
-                        else "UNKNOWN",
-                        "review_status": ad_group_ad.policy_summary.review_status.name
-                        if ad_group_ad.policy_summary.review_status
-                        else "UNKNOWN",
-                    }
-
-                ad_group_ads.append(ad_dict)
+                ad_group_ad_data = serialize_proto_message(row.ad_group_ad)
+                ad_group_ad_data["ad_group_details"] = serialize_proto_message(
+                    row.ad_group
+                )
+                ad_group_ads.append(ad_group_ad_data)
 
             await ctx.log(
                 level="info",
@@ -327,12 +304,15 @@ def create_ad_group_ad_tools(
         Returns:
             Created ad group ad details including resource_name and status
         """
+        # Convert string enum to proper enum type
+        status_enum = getattr(AdGroupAdStatusEnum.AdGroupAdStatus, status)
+
         return await service.create_ad_group_ad(
             ctx=ctx,
             customer_id=customer_id,
             ad_group_id=ad_group_id,
             ad_resource_name=ad_resource_name,
-            status=status,
+            status=status_enum,
         )
 
     async def update_ad_group_ad_status(
@@ -351,11 +331,14 @@ def create_ad_group_ad_tools(
         Returns:
             Updated ad group ad details
         """
+        # Convert string enum to proper enum type
+        status_enum = getattr(AdGroupAdStatusEnum.AdGroupAdStatus, status)
+
         return await service.update_ad_group_ad_status(
             ctx=ctx,
             customer_id=customer_id,
             ad_group_ad_resource_name=ad_group_ad_resource_name,
-            status=status,
+            status=status_enum,
         )
 
     async def list_ad_group_ads(

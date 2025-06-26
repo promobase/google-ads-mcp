@@ -45,8 +45,8 @@ class AdGroupService:
         customer_id: str,
         campaign_id: str,
         name: str,
-        status: str = "ENABLED",
-        type: str = "SEARCH_STANDARD",
+        status: AdGroupStatusEnum.AdGroupStatus = AdGroupStatusEnum.AdGroupStatus.ENABLED,
+        type: AdGroupTypeEnum.AdGroupType = AdGroupTypeEnum.AdGroupType.SEARCH_STANDARD,
         cpc_bid_micros: Optional[int] = None,
         cpm_bid_micros: Optional[int] = None,
     ) -> Dict[str, Any]:
@@ -57,8 +57,8 @@ class AdGroupService:
             customer_id: The customer ID
             campaign_id: The campaign ID
             name: Ad group name
-            status: Ad group status (ENABLED, PAUSED, REMOVED)
-            type: Ad group type (SEARCH_STANDARD, DISPLAY_STANDARD, etc.)
+            status: Ad group status enum value
+            type: Ad group type enum value
             cpc_bid_micros: Cost per click bid in micros (1 million micros = 1 unit)
             cpm_bid_micros: Cost per thousand impressions bid in micros
 
@@ -75,10 +75,10 @@ class AdGroupService:
             ad_group.campaign = campaign_resource_name
 
             # Set status
-            ad_group.status = getattr(AdGroupStatusEnum.AdGroupStatus, status)
+            ad_group.status = status
 
             # Set type
-            ad_group.type_ = getattr(AdGroupTypeEnum.AdGroupType, type)
+            ad_group.type_ = type
 
             # Set bidding if provided
             if cpc_bid_micros is not None:
@@ -122,7 +122,7 @@ class AdGroupService:
         customer_id: str,
         ad_group_id: str,
         name: Optional[str] = None,
-        status: Optional[str] = None,
+        status: Optional[AdGroupStatusEnum.AdGroupStatus] = None,
         cpc_bid_micros: Optional[int] = None,
         cpm_bid_micros: Optional[int] = None,
     ) -> Dict[str, Any]:
@@ -133,7 +133,7 @@ class AdGroupService:
             customer_id: The customer ID
             ad_group_id: The ad group ID to update
             name: New ad group name (optional)
-            status: New ad group status (optional)
+            status: New ad group status enum value (optional)
             cpc_bid_micros: New CPC bid in micros (optional)
             cpm_bid_micros: New CPM bid in micros (optional)
 
@@ -156,7 +156,7 @@ class AdGroupService:
                 update_mask_fields.append("name")
 
             if status is not None:
-                ad_group.status = getattr(AdGroupStatusEnum.AdGroupStatus, status)
+                ad_group.status = status
                 update_mask_fields.append("status")
 
             if cpc_bid_micros is not None:
@@ -233,13 +233,17 @@ def create_ad_group_tools(
         Returns:
             Created ad group details
         """
+        # Convert string enums to proper enum types
+        status_enum = getattr(AdGroupStatusEnum.AdGroupStatus, status)
+        type_enum = getattr(AdGroupTypeEnum.AdGroupType, type)
+
         return await service.create_ad_group(
             ctx=ctx,
             customer_id=customer_id,
             campaign_id=campaign_id,
             name=name,
-            status=status,
-            type=type,
+            status=status_enum,
+            type=type_enum,
             cpc_bid_micros=cpc_bid_micros,
             cpm_bid_micros=cpm_bid_micros,
         )
@@ -266,12 +270,17 @@ def create_ad_group_tools(
         Returns:
             Updated ad group details
         """
+        # Convert string enum to proper enum type if provided
+        status_enum = (
+            getattr(AdGroupStatusEnum.AdGroupStatus, status) if status else None
+        )
+
         return await service.update_ad_group(
             ctx=ctx,
             customer_id=customer_id,
             ad_group_id=ad_group_id,
             name=name,
-            status=status,
+            status=status_enum,
             cpc_bid_micros=cpc_bid_micros,
             cpm_bid_micros=cpm_bid_micros,
         )

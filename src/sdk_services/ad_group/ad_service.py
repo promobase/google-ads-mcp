@@ -56,7 +56,7 @@ class AdService:
         final_urls: List[str],
         path1: Optional[str] = None,
         path2: Optional[str] = None,
-        status: str = "PAUSED",
+        status: AdGroupAdStatusEnum.AdGroupAdStatus = AdGroupAdStatusEnum.AdGroupAdStatus.PAUSED,
     ) -> Dict[str, Any]:
         """Create a responsive search ad.
 
@@ -69,7 +69,7 @@ class AdService:
             final_urls: List of landing page URLs
             path1: First path component for display URL
             path2: Second path component for display URL
-            status: Ad status (ENABLED, PAUSED, REMOVED)
+            status: Ad status enum value
 
         Returns:
             Created ad details
@@ -108,7 +108,7 @@ class AdService:
             ad_group_ad = AdGroupAd()
             ad_group_ad.ad_group = ad_group_resource_name
             ad_group_ad.ad = ad
-            ad_group_ad.status = AdGroupAdStatusEnum.AdGroupAdStatus[status]
+            ad_group_ad.status = status
 
             # Create operation
             operation = AdGroupAdOperation()
@@ -153,7 +153,7 @@ class AdService:
         final_urls: List[str],
         path1: Optional[str] = None,
         path2: Optional[str] = None,
-        status: str = "PAUSED",
+        status: AdGroupAdStatusEnum.AdGroupAdStatus = AdGroupAdStatusEnum.AdGroupAdStatus.PAUSED,
     ) -> Dict[str, Any]:
         """Create an expanded text ad.
 
@@ -169,7 +169,7 @@ class AdService:
             final_urls: List of landing page URLs
             path1: First path component for display URL
             path2: Second path component for display URL
-            status: Ad status (ENABLED, PAUSED, REMOVED)
+            status: Ad status enum value
 
         Returns:
             Created ad details
@@ -204,7 +204,7 @@ class AdService:
             ad_group_ad = AdGroupAd()
             ad_group_ad.ad_group = ad_group_resource_name
             ad_group_ad.ad = ad
-            ad_group_ad.status = AdGroupAdStatusEnum.AdGroupAdStatus[status]
+            ad_group_ad.status = status
 
             # Create operation
             operation = AdGroupAdOperation()
@@ -242,7 +242,7 @@ class AdService:
         customer_id: str,
         ad_group_id: str,
         ad_id: str,
-        status: str,
+        status: AdGroupAdStatusEnum.AdGroupAdStatus,
     ) -> Dict[str, Any]:
         """Update the status of an ad.
 
@@ -251,7 +251,7 @@ class AdService:
             customer_id: The customer ID
             ad_group_id: The ad group ID
             ad_id: The ad ID
-            status: New ad status (ENABLED, PAUSED, REMOVED)
+            status: New ad status enum value
 
         Returns:
             Updated ad details
@@ -263,7 +263,7 @@ class AdService:
             # Create ad group ad with resource name
             ad_group_ad = AdGroupAd()
             ad_group_ad.resource_name = resource_name
-            ad_group_ad.status = AdGroupAdStatusEnum.AdGroupAdStatus[status]
+            ad_group_ad.status = status
 
             # Create the operation
             operation = AdGroupAdOperation()
@@ -329,6 +329,9 @@ def create_ad_tools(service: AdService) -> List[Callable[..., Awaitable[Any]]]:
         Returns:
             Created ad details
         """
+        # Convert string enum to proper enum type
+        status_enum = getattr(AdGroupAdStatusEnum.AdGroupAdStatus, status)
+
         return await service.create_responsive_search_ad(
             ctx=ctx,
             customer_id=customer_id,
@@ -338,7 +341,7 @@ def create_ad_tools(service: AdService) -> List[Callable[..., Awaitable[Any]]]:
             final_urls=final_urls,
             path1=path1,
             path2=path2,
-            status=status,
+            status=status_enum,
         )
 
     async def create_expanded_text_ad(
@@ -373,6 +376,9 @@ def create_ad_tools(service: AdService) -> List[Callable[..., Awaitable[Any]]]:
         Returns:
             Created ad details
         """
+        # Convert string enum to proper enum type
+        status_enum = getattr(AdGroupAdStatusEnum.AdGroupAdStatus, status)
+
         return await service.create_expanded_text_ad(
             ctx=ctx,
             customer_id=customer_id,
@@ -385,7 +391,7 @@ def create_ad_tools(service: AdService) -> List[Callable[..., Awaitable[Any]]]:
             final_urls=final_urls,
             path1=path1,
             path2=path2,
-            status=status,
+            status=status_enum,
         )
 
     async def update_ad_status(
@@ -406,12 +412,15 @@ def create_ad_tools(service: AdService) -> List[Callable[..., Awaitable[Any]]]:
         Returns:
             Updated ad details
         """
+        # Convert string enum to proper enum type
+        status_enum = getattr(AdGroupAdStatusEnum.AdGroupAdStatus, status)
+
         return await service.update_ad_status(
             ctx=ctx,
             customer_id=customer_id,
             ad_group_id=ad_group_id,
             ad_id=ad_id,
-            status=status,
+            status=status_enum,
         )
 
     tools.extend(
