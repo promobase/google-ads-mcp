@@ -20,6 +20,9 @@ from google.ads.googleads.v20.resources.types.custom_audience import (
 from google.ads.googleads.v20.services.services.custom_audience_service import (
     CustomAudienceServiceClient,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.ads.googleads.v20.services.types.custom_audience_service import (
     CustomAudienceOperation,
     MutateCustomAudiencesRequest,
@@ -294,7 +297,9 @@ class CustomAudienceService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """
@@ -325,17 +330,7 @@ class CustomAudienceService:
             # Process results
             custom_audiences = []
             for row in response:
-                ca = row.custom_audience
-                custom_audiences.append(
-                    {
-                        "custom_audience_id": str(ca.id),
-                        "name": ca.name,
-                        "description": ca.description,
-                        "type": ca.type_.name if ca.type_ else "UNKNOWN",
-                        "status": ca.status.name if ca.status else "UNKNOWN",
-                        "resource_name": ca.resource_name,
-                    }
-                )
+                custom_audiences.append(serialize_proto_message(row))
 
             await ctx.log(
                 level="info",
@@ -370,7 +365,9 @@ class CustomAudienceService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = f"""

@@ -10,6 +10,9 @@ from google.ads.googleads.v20.resources.types.remarketing_action import (
 from google.ads.googleads.v20.services.services.remarketing_action_service import (
     RemarketingActionServiceClient,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.ads.googleads.v20.services.types.remarketing_action_service import (
     MutateRemarketingActionsRequest,
     MutateRemarketingActionsResponse,
@@ -111,7 +114,9 @@ class RemarketingActionService:
         try:
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = f"""
@@ -231,7 +236,9 @@ class RemarketingActionService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """
@@ -249,14 +256,7 @@ class RemarketingActionService:
             # Process results
             remarketing_actions = []
             for row in response:
-                ra = row.remarketing_action
-                remarketing_actions.append(
-                    {
-                        "remarketing_action_id": str(ra.id),
-                        "name": ra.name,
-                        "resource_name": ra.resource_name,
-                    }
-                )
+                remarketing_actions.append(serialize_proto_message(row))
 
             await ctx.log(
                 level="info",

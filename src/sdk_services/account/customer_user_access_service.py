@@ -11,6 +11,9 @@ from google.ads.googleads.v20.resources.types.customer_user_access import (
 from google.ads.googleads.v20.services.services.customer_user_access_service import (
     CustomerUserAccessServiceClient,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.ads.googleads.v20.services.types.customer_user_access_service import (
     CustomerUserAccessOperation,
     MutateCustomerUserAccessRequest,
@@ -178,7 +181,9 @@ class CustomerUserAccessService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """

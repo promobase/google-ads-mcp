@@ -18,6 +18,9 @@ from google.ads.googleads.v20.resources.types.customer_negative_criterion import
 from google.ads.googleads.v20.services.services.customer_negative_criterion_service import (
     CustomerNegativeCriterionServiceClient,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.ads.googleads.v20.services.types.customer_negative_criterion_service import (
     CustomerNegativeCriterionOperation,
     MutateCustomerNegativeCriteriaRequest,
@@ -316,7 +319,9 @@ class CustomerNegativeCriterionService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """

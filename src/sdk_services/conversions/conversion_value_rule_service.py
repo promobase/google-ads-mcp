@@ -9,6 +9,9 @@ from google.ads.googleads.errors import GoogleAdsException
 from google.ads.googleads.v20.services.services.conversion_value_rule_service import (
     ConversionValueRuleServiceClient,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 
 from src.sdk_client import get_sdk_client
 from src.utils import format_customer_id, get_logger
@@ -139,7 +142,9 @@ class ConversionValueRuleService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """

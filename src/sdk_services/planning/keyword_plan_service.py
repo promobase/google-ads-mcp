@@ -11,6 +11,15 @@ from google.ads.googleads.v20.resources.types.keyword_plan import KeywordPlan
 from google.ads.googleads.v20.services.services.keyword_plan_service import (
     KeywordPlanServiceClient,
 )
+from google.ads.googleads.v20.services.services.keyword_plan_idea_service import (
+    KeywordPlanIdeaServiceClient,
+)
+from google.ads.googleads.v20.services.services.keyword_plan_campaign_service import (
+    KeywordPlanCampaignServiceClient,
+)
+from google.ads.googleads.v20.services.services.keyword_plan_ad_group_keyword_service import (
+    KeywordPlanAdGroupKeywordServiceClient,
+)
 from google.ads.googleads.v20.services.types.keyword_plan_service import (
     KeywordPlanOperation,
     MutateKeywordPlansRequest,
@@ -134,7 +143,9 @@ class KeywordPlanService:
 
             # Use KeywordPlanIdeaService
             sdk_client = get_sdk_client()
-            idea_service = sdk_client.client.get_service("KeywordPlanIdeaService")
+            idea_service: KeywordPlanIdeaServiceClient = sdk_client.client.get_service(
+                "KeywordPlanIdeaService"
+            )
 
             from google.ads.googleads.v20.services.types.keyword_plan_idea_service import (
                 GenerateKeywordIdeasRequest,
@@ -173,16 +184,7 @@ class KeywordPlanService:
             for idea in response:
                 if count >= limit:
                     break
-
-                idea_dict = {
-                    "text": idea.text,
-                    "avg_monthly_searches": idea.keyword_idea_metrics.avg_monthly_searches,
-                    "competition": idea.keyword_idea_metrics.competition.name,
-                    "competition_index": idea.keyword_idea_metrics.competition_index,
-                    "low_top_of_page_bid_micros": idea.keyword_idea_metrics.low_top_of_page_bid_micros,
-                    "high_top_of_page_bid_micros": idea.keyword_idea_metrics.high_top_of_page_bid_micros,
-                }
-                ideas.append(idea_dict)
+                ideas.append(serialize_proto_message(idea))
                 count += 1
 
             await ctx.log(
@@ -226,8 +228,8 @@ class KeywordPlanService:
 
             # Use KeywordPlanCampaignService
             sdk_client = get_sdk_client()
-            campaign_service = sdk_client.client.get_service(
-                "KeywordPlanCampaignService"
+            campaign_service: KeywordPlanCampaignServiceClient = (
+                sdk_client.client.get_service("KeywordPlanCampaignService")
             )
 
             from google.ads.googleads.v20.resources.types.keyword_plan_campaign import (
@@ -311,8 +313,8 @@ class KeywordPlanService:
 
             # Use KeywordPlanAdGroupKeywordService
             sdk_client = get_sdk_client()
-            keyword_service = sdk_client.client.get_service(
-                "KeywordPlanAdGroupKeywordService"
+            keyword_service: KeywordPlanAdGroupKeywordServiceClient = (
+                sdk_client.client.get_service("KeywordPlanAdGroupKeywordService")
             )
 
             from google.ads.googleads.v20.enums.types.keyword_match_type import (

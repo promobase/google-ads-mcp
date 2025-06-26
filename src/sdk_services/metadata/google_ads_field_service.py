@@ -11,10 +11,13 @@ from google.ads.googleads.v20.services.types.google_ads_field_service import (
     SearchGoogleAdsFieldsRequest,
 )
 from google.ads.googleads.v20.resources.types.google_ads_field import GoogleAdsField
+from google.ads.googleads.v20.enums.types.google_ads_field_category import (
+    GoogleAdsFieldCategoryEnum,
+)
 from google.ads.googleads.errors import GoogleAdsException
 
 from src.sdk_client import get_sdk_client
-from src.utils import get_logger
+from src.utils import get_logger, serialize_proto_message
 
 logger = get_logger(__name__)
 
@@ -57,29 +60,12 @@ class GoogleAdsFieldService:
             # Make the API call
             field: GoogleAdsField = self.client.get_google_ads_field(request=request)
 
-            # Process result
-            field_dict = {
-                "name": field.name,
-                "category": field.category.name if field.category else "UNKNOWN",
-                "data_type": field.data_type.name if field.data_type else "UNKNOWN",
-                "is_repeated": field.is_repeated,
-                "selectable": field.selectable,
-                "filterable": field.filterable,
-                "sortable": field.sortable,
-                "attribute_resources": list(field.attribute_resources),
-                "metrics": list(field.metrics),
-                "segments": list(field.segments),
-                "selectable_with": list(field.selectable_with),
-                "type_url": field.type_url,
-                "enum_values": list(field.enum_values),
-            }
-
             await ctx.log(
                 level="info",
                 message=f"Retrieved metadata for field: {field_name}",
             )
 
-            return field_dict
+            return serialize_proto_message(field)
 
         except GoogleAdsException as e:
             error_msg = f"Google Ads API error: {e.failure}"
@@ -94,7 +80,9 @@ class GoogleAdsFieldService:
         self,
         ctx: Context,
         query: Optional[str] = None,
-        category_filter: Optional[str] = None,
+        category_filter: Optional[
+            GoogleAdsFieldCategoryEnum.GoogleAdsFieldCategory
+        ] = None,
         selectable_only: bool = False,
         limit: int = 100,
     ) -> List[Dict[str, Any]]:
@@ -118,7 +106,7 @@ class GoogleAdsFieldService:
                 conditions.append(f"({query})")
 
             if category_filter:
-                conditions.append(f"category = '{category_filter}'")
+                conditions.append(f"category = '{category_filter.name}'")
 
             if selectable_only:
                 conditions.append("selectable = true")
@@ -137,22 +125,7 @@ class GoogleAdsFieldService:
             # Process results
             fields = []
             for field in pager:
-                fields.append(
-                    {
-                        "name": field.name,
-                        "category": field.category.name
-                        if field.category
-                        else "UNKNOWN",
-                        "data_type": field.data_type.name
-                        if field.data_type
-                        else "UNKNOWN",
-                        "is_repeated": field.is_repeated,
-                        "selectable": field.selectable,
-                        "filterable": field.filterable,
-                        "sortable": field.sortable,
-                        "type_url": field.type_url,
-                    }
-                )
+                fields.append(serialize_proto_message(field))
 
             await ctx.log(
                 level="info",
@@ -202,7 +175,7 @@ class GoogleAdsFieldService:
 
             # Get metrics if requested
             if include_metrics:
-                metric_query = f"name LIKE 'metrics.%' AND category = 'METRIC'"
+                metric_query = "name LIKE 'metrics.%' AND category = 'METRIC'"
                 metric_fields = await self.search_fields(
                     ctx=ctx, query=metric_query, limit=200
                 )
@@ -210,7 +183,7 @@ class GoogleAdsFieldService:
 
             # Get segments if requested
             if include_segments:
-                segment_query = f"name LIKE 'segments.%' AND category = 'SEGMENT'"
+                segment_query = "name LIKE 'segments.%' AND category = 'SEGMENT'"
                 segment_fields = await self.search_fields(
                     ctx=ctx, query=segment_query, limit=100
                 )
@@ -258,12 +231,12 @@ class GoogleAdsFieldService:
                     field_metadata = await self.get_field_metadata(ctx, field_name)
                     validation_result["fields"][field_name] = {
                         "valid": True,
-                        "selectable": field_metadata["selectable"],
-                        "data_type": field_metadata["data_type"],
-                        "category": field_metadata["category"],
+                        "selectable": field_metadata.get("selectable", False),
+                        "data_type": field_metadata.get("dataType", "UNKNOWN"),
+                        "category": field_metadata.get("category", "UNKNOWN"),
                     }
 
-                    if not field_metadata["selectable"]:
+                    if not field_metadata.get("selectable", False):
                         validation_result["all_compatible"] = False
                         validation_result["issues"].append(
                             f"Field '{field_name}' is not selectable"
@@ -345,10 +318,17 @@ def create_google_ads_field_tools(
         Returns:
             List of field metadata matching the criteria
         """
+        # Convert string category_filter to enum if provided
+        category_filter_enum = None
+        if category_filter:
+            category_filter_enum = getattr(
+                GoogleAdsFieldCategoryEnum.GoogleAdsFieldCategory, category_filter
+            )
+
         return await service.search_fields(
             ctx=ctx,
             query=query,
-            category_filter=category_filter,
+            category_filter=category_filter_enum,
             selectable_only=selectable_only,
             limit=limit,
         )

@@ -14,6 +14,9 @@ from google.ads.googleads.v20.resources.types.account_link import AccountLink
 from google.ads.googleads.v20.services.services.account_link_service import (
     AccountLinkServiceClient,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.ads.googleads.v20.services.types.account_link_service import (
     AccountLinkOperation,
     CreateAccountLinkRequest,
@@ -184,7 +187,9 @@ class AccountLinkService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """

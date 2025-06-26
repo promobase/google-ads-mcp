@@ -10,6 +10,9 @@ from google.ads.googleads.v20.resources.types.experiment import Experiment
 from google.ads.googleads.v20.services.services.experiment_service import (
     ExperimentServiceClient,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.ads.googleads.v20.services.types.experiment_service import (
     EndExperimentRequest,
     ExperimentOperation,
@@ -286,7 +289,9 @@ class ExperimentService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """
@@ -323,21 +328,7 @@ class ExperimentService:
             # Process results
             experiments = []
             for row in response:
-                exp = row.experiment
-                experiments.append(
-                    {
-                        "experiment_id": str(exp.id),
-                        "name": exp.name,
-                        "description": exp.description,
-                        "status": exp.status.name if exp.status else "UNKNOWN",
-                        "type": exp.type_.name if exp.type_ else "UNKNOWN",
-                        "traffic_split_percent": exp.traffic_split_percent,
-                        "campaigns": list(exp.campaigns),
-                        "start_date": exp.start_date,
-                        "end_date": exp.end_date,
-                        "resource_name": exp.resource_name,
-                    }
-                )
+                experiments.append(serialize_proto_message(row))
 
             await ctx.log(
                 level="info",

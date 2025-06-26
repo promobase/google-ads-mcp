@@ -27,6 +27,9 @@ from google.ads.googleads.v20.resources.types.ad_group_bid_modifier import (
 from google.ads.googleads.v20.services.services.ad_group_bid_modifier_service import (
     AdGroupBidModifierServiceClient,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.ads.googleads.v20.services.types.ad_group_bid_modifier_service import (
     AdGroupBidModifierOperation,
     MutateAdGroupBidModifiersRequest,
@@ -370,7 +373,9 @@ class AdGroupBidModifierService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """

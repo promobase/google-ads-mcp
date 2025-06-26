@@ -8,6 +8,9 @@ from google.ads.googleads.v20.resources.types.campaign_label import CampaignLabe
 from google.ads.googleads.v20.services.services.campaign_label_service import (
     CampaignLabelServiceClient,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.ads.googleads.v20.services.types.campaign_label_service import (
     CampaignLabelOperation,
     MutateCampaignLabelsRequest,
@@ -245,7 +248,9 @@ class CampaignLabelService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """

@@ -25,6 +25,10 @@ from google.ads.googleads.v20.enums.types.advertising_channel_type import (
     AdvertisingChannelTypeEnum,
 )
 from google.ads.googleads.errors import GoogleAdsException
+
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.protobuf import field_mask_pb2
 
 from src.sdk_client import get_sdk_client
@@ -260,7 +264,9 @@ class BiddingDataExclusionService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """

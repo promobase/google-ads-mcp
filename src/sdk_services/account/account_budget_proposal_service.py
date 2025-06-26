@@ -17,6 +17,9 @@ from google.ads.googleads.v20.resources.types.account_budget_proposal import (
 from google.ads.googleads.v20.services.services.account_budget_proposal_service import (
     AccountBudgetProposalServiceClient,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.ads.googleads.v20.services.types.account_budget_proposal_service import (
     AccountBudgetProposalOperation,
     MutateAccountBudgetProposalRequest,
@@ -229,7 +232,9 @@ class AccountBudgetProposalService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """

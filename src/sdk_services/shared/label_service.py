@@ -10,6 +10,15 @@ from google.ads.googleads.v20.resources.types.label import Label
 from google.ads.googleads.v20.services.services.label_service import (
     LabelServiceClient,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
+from google.ads.googleads.v20.services.services.campaign_label_service import (
+    CampaignLabelServiceClient,
+)
+from google.ads.googleads.v20.services.services.ad_group_label_service import (
+    AdGroupLabelServiceClient,
+)
 from google.ads.googleads.v20.services.types.label_service import (
     LabelOperation,
     MutateLabelsRequest,
@@ -212,7 +221,9 @@ class LabelService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """
@@ -237,21 +248,7 @@ class LabelService:
             # Process results
             labels = []
             for row in response:
-                label = row.label
-                labels.append(
-                    {
-                        "label_id": str(label.id),
-                        "name": label.name,
-                        "status": label.status.name if label.status else "UNKNOWN",
-                        "description": label.text_label.description
-                        if label.text_label
-                        else None,
-                        "background_color": label.text_label.background_color
-                        if label.text_label
-                        else None,
-                        "resource_name": label.resource_name,
-                    }
-                )
+                labels.append(serialize_proto_message(row))
 
             await ctx.log(
                 level="info",
@@ -288,8 +285,8 @@ class LabelService:
 
             # Use CampaignLabelService
             sdk_client = get_sdk_client()
-            campaign_label_service = sdk_client.client.get_service(
-                "CampaignLabelService"
+            campaign_label_service: CampaignLabelServiceClient = (
+                sdk_client.client.get_service("CampaignLabelService")
             )
 
             from google.ads.googleads.v20.resources.types.campaign_label import (
@@ -366,8 +363,8 @@ class LabelService:
 
             # Use AdGroupLabelService
             sdk_client = get_sdk_client()
-            ad_group_label_service = sdk_client.client.get_service(
-                "AdGroupLabelService"
+            ad_group_label_service: AdGroupLabelServiceClient = (
+                sdk_client.client.get_service("AdGroupLabelService")
             )
 
             from google.ads.googleads.v20.resources.types.ad_group_label import (

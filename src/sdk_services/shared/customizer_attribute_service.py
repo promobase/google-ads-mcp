@@ -16,6 +16,9 @@ from google.ads.googleads.v20.resources.types.customizer_attribute import (
 from google.ads.googleads.v20.services.services.customizer_attribute_service import (
     CustomizerAttributeServiceClient,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.ads.googleads.v20.services.types.customizer_attribute_service import (
     CustomizerAttributeOperation,
     MutateCustomizerAttributesRequest,
@@ -189,7 +192,9 @@ class CustomizerAttributeService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """

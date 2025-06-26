@@ -9,6 +9,9 @@ from google.ads.googleads.v20.resources.types.campaign_asset import CampaignAsse
 from google.ads.googleads.v20.services.services.campaign_asset_service import (
     CampaignAssetServiceClient,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.ads.googleads.v20.services.types.campaign_asset_service import (
     CampaignAssetOperation,
     MutateCampaignAssetsRequest,
@@ -204,7 +207,9 @@ class CampaignAssetService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """

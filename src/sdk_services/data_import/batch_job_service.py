@@ -17,6 +17,9 @@ from google.ads.googleads.v20.services.types.batch_job_service import (
     MutateBatchJobResponse,
     RunBatchJobRequest,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.ads.googleads.v20.services.types.google_ads_service import MutateOperation
 
 from src.sdk_client import get_sdk_client
@@ -112,7 +115,9 @@ class BatchJobService:
 
             # Use GoogleAdsService for search instead of get_batch_job
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Extract batch job ID from resource name
             batch_job_id = batch_job_resource_name.split("/")[-1]
@@ -135,20 +140,14 @@ class BatchJobService:
 
             response = google_ads_service.search(customer_id=customer_id, query=query)
 
-            batch_job = None
             for row in response:
-                batch_job = row.batch_job
-                break
+                await ctx.log(
+                    level="info",
+                    message="Retrieved batch job details",
+                )
+                return serialize_proto_message(row)
 
-            if not batch_job:
-                raise Exception(f"Batch job with ID {batch_job_id} not found")
-
-            await ctx.log(
-                level="info",
-                message="Retrieved batch job details",
-            )
-
-            return serialize_proto_message(response)
+            raise Exception(f"Batch job with ID {batch_job_id} not found")
 
         except GoogleAdsException as e:
             error_msg = f"Google Ads API error: {e.failure}"
@@ -303,45 +302,11 @@ class BatchJobService:
                 request.page_token = page_token
 
             # Make the API call
-            response = self.client.list_batch_job_results(request=request)  # type: ignore
-
-            # Process results
-            results = []
-            for result in response.results:
-                result_dict = {
-                    "operation_index": result.operation_index,
-                    "status": "SUCCESS"
-                    if result.mutate_operation_response
-                    else "ERROR",
-                    "resource_name": None,
-                    "error": None,
-                }
-
-                if result.mutate_operation_response:
-                    # Extract resource name from the successful operation
-                    # This depends on the operation type
-                    if result.mutate_operation_response.campaign_result:
-                        result_dict["resource_name"] = (
-                            result.mutate_operation_response.campaign_result.resource_name
-                        )
-                    elif result.mutate_operation_response.ad_group_result:
-                        result_dict["resource_name"] = (
-                            result.mutate_operation_response.ad_group_result.resource_name
-                        )
-                    # Add more operation types as needed
-
-                if result.status:
-                    result_dict["error"] = {  # type: ignore
-                        "code": result.status.code,
-                        "message": result.status.message,
-                        "details": [str(detail) for detail in result.status.details],
-                    }
-
-                results.append(result_dict)
+            response = self.client.list_batch_job_results(request=request)
 
             await ctx.log(
                 level="info",
-                message=f"Retrieved {len(results)} batch job results",
+                message="Retrieved batch job results",
             )
 
             return serialize_proto_message(response)
@@ -376,7 +341,9 @@ class BatchJobService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """
@@ -403,35 +370,16 @@ class BatchJobService:
             response = google_ads_service.search(customer_id=customer_id, query=query)
 
             # Process results
-            batch_jobs = []
+            results = []
             for row in response:
-                batch_job = row.batch_job
-
-                job_dict = {
-                    "resource_name": batch_job.resource_name,
-                    "id": str(batch_job.id),
-                    "status": batch_job.status.name if batch_job.status else "UNKNOWN",
-                    "long_running_operation": batch_job.long_running_operation,
-                    "metadata": {
-                        "creation_date_time": batch_job.metadata.creation_date_time,
-                        "start_date_time": batch_job.metadata.start_date_time,
-                        "completion_date_time": batch_job.metadata.completion_date_time,
-                        "estimated_completion_ratio": batch_job.metadata.estimated_completion_ratio,
-                        "operation_count": batch_job.metadata.operation_count,
-                        "executed_operation_count": batch_job.metadata.executed_operation_count,
-                    }
-                    if batch_job.metadata
-                    else {},
-                }
-
-                batch_jobs.append(job_dict)
+                results.append(serialize_proto_message(row))
 
             await ctx.log(
                 level="info",
-                message=f"Found {len(batch_jobs)} batch jobs",
+                message=f"Found {len(results)} batch jobs",
             )
 
-            return batch_jobs
+            return results
 
         except Exception as e:
             error_msg = f"Failed to list batch jobs: {str(e)}"

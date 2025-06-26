@@ -18,6 +18,9 @@ from google.ads.googleads.v20.resources.types.offline_user_data_job import (
 from google.ads.googleads.v20.services.services.offline_user_data_job_service import (
     OfflineUserDataJobServiceClient,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.ads.googleads.v20.services.types.offline_user_data_job_service import (
     AddOfflineUserDataJobOperationsRequest,
     AddOfflineUserDataJobOperationsResponse,
@@ -296,7 +299,9 @@ class OfflineUserDataJobService:
 
             # Use GoogleAdsService to search for the job
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Extract job ID from resource name
             job_id = job_resource_name.split("/")[-1]
@@ -361,7 +366,9 @@ class OfflineUserDataJobService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """

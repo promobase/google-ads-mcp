@@ -7,8 +7,14 @@ from google.ads.googleads.errors import GoogleAdsException
 from google.ads.googleads.v20.enums.types.shared_set_status import SharedSetStatusEnum
 from google.ads.googleads.v20.enums.types.shared_set_type import SharedSetTypeEnum
 from google.ads.googleads.v20.resources.types.shared_set import SharedSet
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.ads.googleads.v20.services.services.shared_set_service import (
     SharedSetServiceClient,
+)
+from google.ads.googleads.v20.services.services.campaign_shared_set_service import (
+    CampaignSharedSetServiceClient,
 )
 from google.ads.googleads.v20.services.types.shared_set_service import (
     MutateSharedSetsRequest,
@@ -192,7 +198,9 @@ class SharedSetService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """
@@ -225,22 +233,7 @@ class SharedSetService:
             # Process results
             shared_sets = []
             for row in response:
-                shared_set = row.shared_set
-                shared_sets.append(
-                    {
-                        "shared_set_id": str(shared_set.id),
-                        "name": shared_set.name,
-                        "type": shared_set.type_.name
-                        if shared_set.type_
-                        else "UNKNOWN",
-                        "member_count": shared_set.member_count,
-                        "reference_count": shared_set.reference_count,
-                        "status": shared_set.status.name
-                        if shared_set.status
-                        else "UNKNOWN",
-                        "resource_name": shared_set.resource_name,
-                    }
-                )
+                shared_sets.append(serialize_proto_message(row))
 
             await ctx.log(
                 level="info",
@@ -277,8 +270,8 @@ class SharedSetService:
 
             # Use CampaignSharedSetService
             sdk_client = get_sdk_client()
-            campaign_shared_set_service = sdk_client.client.get_service(
-                "CampaignSharedSetService"
+            campaign_shared_set_service: CampaignSharedSetServiceClient = (
+                sdk_client.client.get_service("CampaignSharedSetService")
             )
 
             from google.ads.googleads.v20.resources.types.campaign_shared_set import (

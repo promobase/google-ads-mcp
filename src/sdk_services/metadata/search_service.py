@@ -4,12 +4,6 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.resources.types.campaign import Campaign
-from google.ads.googleads.v20.resources.types.campaign_budget import CampaignBudget
-from google.ads.googleads.v20.resources.types.ad_group import AdGroup
-from google.ads.googleads.v20.resources.types.ad_group_criterion import (
-    AdGroupCriterion,
-)
 from google.ads.googleads.v20.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
@@ -89,33 +83,17 @@ class SearchService:
             response = self.client.search(request=request)
 
             # Process results
-            campaigns: List[Dict[str, Any]] = []
+            results: List[Dict[str, Any]] = []
             row: GoogleAdsRow
             for row in response:
-                campaign: Campaign = row.campaign
-                campaign_budget: CampaignBudget = row.campaign_budget
-
-                campaigns.append(
-                    {
-                        "id": str(campaign.id),
-                        "name": campaign.name,
-                        "status": campaign.status.name,
-                        "advertising_channel_type": campaign.advertising_channel_type.name,
-                        "budget_resource_name": campaign.campaign_budget,
-                        "budget_amount_micros": campaign_budget.amount_micros
-                        if campaign_budget
-                        else None,
-                        "start_date": campaign.start_date,
-                        "end_date": campaign.end_date,
-                    }
-                )
+                results.append(serialize_proto_message(row))
 
             await ctx.log(
                 level="info",
-                message=f"Found {len(campaigns)} campaigns for customer {customer_id}",
+                message=f"Found {len(results)} campaigns for customer {customer_id}",
             )
 
-            return campaigns
+            return results
 
         except GoogleAdsException as e:
             error_msg = f"Google Ads API error: {e.failure}"
@@ -185,31 +163,17 @@ class SearchService:
             response = self.client.search(request=request)
 
             # Process results
-            ad_groups: List[Dict[str, Any]] = []
+            results: List[Dict[str, Any]] = []
             row: GoogleAdsRow
             for row in response:
-                ad_group: AdGroup = row.ad_group
-                campaign: Campaign = row.campaign
-
-                ad_groups.append(
-                    {
-                        "id": str(ad_group.id),
-                        "name": ad_group.name,
-                        "status": ad_group.status.name,
-                        "type": ad_group.type_.name,
-                        "campaign_id": str(campaign.id),
-                        "campaign_name": campaign.name,
-                        "cpc_bid_micros": ad_group.cpc_bid_micros,
-                        "cpm_bid_micros": ad_group.cpm_bid_micros,
-                    }
-                )
+                results.append(serialize_proto_message(row))
 
             await ctx.log(
                 level="info",
-                message=f"Found {len(ad_groups)} ad groups",
+                message=f"Found {len(results)} ad groups",
             )
 
-            return ad_groups
+            return results
 
         except GoogleAdsException as e:
             error_msg = f"Google Ads API error: {e.failure}"
@@ -277,34 +241,17 @@ class SearchService:
             response = self.client.search(request=request)
 
             # Process results
-            keywords: List[Dict[str, Any]] = []
+            results: List[Dict[str, Any]] = []
             row: GoogleAdsRow
             for row in response:
-                criterion: AdGroupCriterion = row.ad_group_criterion
-                ad_group: AdGroup = row.ad_group
-                campaign: Campaign = row.campaign
-
-                keywords.append(
-                    {
-                        "criterion_id": str(criterion.criterion_id),
-                        "text": criterion.keyword.text,
-                        "match_type": criterion.keyword.match_type.name,
-                        "status": criterion.status.name,
-                        "negative": criterion.negative,
-                        "cpc_bid_micros": criterion.cpc_bid_micros,
-                        "ad_group_id": str(ad_group.id),
-                        "ad_group_name": ad_group.name,
-                        "campaign_id": str(campaign.id),
-                        "campaign_name": campaign.name,
-                    }
-                )
+                results.append(serialize_proto_message(row))
 
             await ctx.log(
                 level="info",
-                message=f"Found {len(keywords)} keywords",
+                message=f"Found {len(results)} keywords",
             )
 
-            return keywords
+            return results
 
         except GoogleAdsException as e:
             error_msg = f"Google Ads API error: {e.failure}"

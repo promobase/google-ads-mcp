@@ -13,6 +13,9 @@ from google.ads.googleads.v20.resources.types.campaign_shared_set import (
 from google.ads.googleads.v20.services.services.campaign_shared_set_service import (
     CampaignSharedSetServiceClient,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.ads.googleads.v20.services.types.campaign_shared_set_service import (
     CampaignSharedSetOperation,
     MutateCampaignSharedSetsRequest,
@@ -110,7 +113,7 @@ class CampaignSharedSetService:
         ctx: Context,
         customer_id: str,
         attachments: List[Dict[str, Any]],
-    ) -> List[Dict[str, Any]]:
+    ) -> Dict[str, Any]:
         """Attach multiple shared sets to campaigns.
 
         Args:
@@ -159,25 +162,12 @@ class CampaignSharedSetService:
                 self.client.mutate_campaign_shared_sets(request=request)
             )
 
-            # Process results
-            results = []
-            for i, result in enumerate(response.results):
-                attachment = attachments[i]
-                results.append(
-                    {
-                        "resource_name": result.resource_name,
-                        "campaign_id": attachment["campaign_id"],
-                        "shared_set_id": attachment["shared_set_id"],
-                        "status": attachment.get("status", "ENABLED"),
-                    }
-                )
-
             await ctx.log(
                 level="info",
-                message=f"Attached {len(results)} shared sets to campaigns",
+                message=f"Attached {len(response.results)} shared sets to campaigns",
             )
 
-            return results
+            return serialize_proto_message(response)
 
         except GoogleAdsException as e:
             error_msg = f"Google Ads API error: {e.failure}"
@@ -274,7 +264,9 @@ class CampaignSharedSetService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """
@@ -309,39 +301,16 @@ class CampaignSharedSetService:
             response = google_ads_service.search(customer_id=customer_id, query=query)
 
             # Process results
-            campaign_shared_sets = []
+            results = []
             for row in response:
-                campaign_shared_set = row.campaign_shared_set
-                campaign = row.campaign
-                shared_set = row.shared_set
-
-                shared_set_dict = {
-                    "resource_name": campaign_shared_set.resource_name,
-                    "campaign_resource": campaign_shared_set.campaign,
-                    "shared_set_resource": campaign_shared_set.shared_set,
-                    "campaign_id": str(campaign.id),
-                    "campaign_name": campaign.name,
-                    "shared_set_id": str(shared_set.id),
-                    "shared_set_name": shared_set.name,
-                    "shared_set_type": shared_set.type_.name
-                    if shared_set.type_
-                    else "UNKNOWN",
-                    "shared_set_status": shared_set.status.name
-                    if shared_set.status
-                    else "UNKNOWN",
-                    "attachment_status": campaign_shared_set.status.name
-                    if campaign_shared_set.status
-                    else "UNKNOWN",
-                }
-
-                campaign_shared_sets.append(shared_set_dict)
+                results.append(serialize_proto_message(row))
 
             await ctx.log(
                 level="info",
-                message=f"Found {len(campaign_shared_sets)} campaign shared sets",
+                message=f"Found {len(results)} campaign shared sets",
             )
 
-            return campaign_shared_sets
+            return results
 
         except Exception as e:
             error_msg = f"Failed to list campaign shared sets: {str(e)}"
@@ -420,7 +389,9 @@ class CampaignSharedSetService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = f"""
@@ -442,25 +413,7 @@ class CampaignSharedSetService:
             # Process results
             campaigns = []
             for row in response:
-                campaign_shared_set = row.campaign_shared_set
-                campaign = row.campaign
-
-                campaign_dict = {
-                    "attachment_resource_name": campaign_shared_set.resource_name,
-                    "campaign_id": str(campaign.id),
-                    "campaign_name": campaign.name,
-                    "campaign_status": campaign.status.name
-                    if campaign.status
-                    else "UNKNOWN",
-                    "campaign_type": campaign.advertising_channel_type.name
-                    if campaign.advertising_channel_type
-                    else "UNKNOWN",
-                    "attachment_status": campaign_shared_set.status.name
-                    if campaign_shared_set.status
-                    else "UNKNOWN",
-                }
-
-                campaigns.append(campaign_dict)
+                campaigns.append(serialize_proto_message(row))
 
             await ctx.log(
                 level="info",
@@ -515,7 +468,7 @@ def create_campaign_shared_set_tools(
         ctx: Context,
         customer_id: str,
         attachments: List[Dict[str, Any]],
-    ) -> List[Dict[str, Any]]:
+    ) -> Dict[str, Any]:
         """Attach multiple shared sets to campaigns.
 
         Args:
@@ -526,7 +479,7 @@ def create_campaign_shared_set_tools(
                 - status: Optional status (defaults to ENABLED)
 
         Returns:
-            List of created campaign shared set attachments
+            Mutation response with results for each attachment
         """
         return await service.attach_shared_sets_to_campaigns(
             ctx=ctx,

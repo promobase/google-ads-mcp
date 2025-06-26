@@ -12,6 +12,10 @@ from google.ads.googleads.v20.services.types.geo_target_constant_service import 
 )
 from google.ads.googleads.errors import GoogleAdsException
 
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
+
 from src.sdk_client import get_sdk_client
 from src.utils import get_logger
 
@@ -203,7 +207,9 @@ class GeoTargetConstantService:
         try:
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build GAQL query
             gaql_query = f"""

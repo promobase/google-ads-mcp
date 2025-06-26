@@ -23,6 +23,9 @@ from google.ads.googleads.v20.resources.types.audience import Audience
 from google.ads.googleads.v20.services.services.audience_service import (
     AudienceServiceClient,
 )
+from google.ads.googleads.v20.services.services.google_ads_service import (
+    GoogleAdsServiceClient,
+)
 from google.ads.googleads.v20.services.types.audience_service import (
     AudienceOperation,
     MutateAudiencesRequest,
@@ -328,7 +331,9 @@ class AudienceService:
 
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
-            google_ads_service = sdk_client.client.get_service("GoogleAdsService")
+            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
+                "GoogleAdsService"
+            )
 
             # Build query
             query = """
