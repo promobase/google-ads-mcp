@@ -134,7 +134,7 @@ class AssetService:
             # Create image asset
             image_asset = ImageAsset()
             image_asset.data = image_data
-            image_asset.mime_type = self._get_mime_type_enum(mime_type)
+            image_asset.mime_type = self.get_mime_type_enum(mime_type)
             asset.image_asset = image_asset
 
             # Create operation
@@ -282,7 +282,7 @@ class AssetService:
                 if asset.type_ == AssetTypeEnum.AssetType.TEXT:
                     asset_dict["text"] = asset.text_asset.text
                 elif asset.type_ == AssetTypeEnum.AssetType.IMAGE:
-                    asset_dict["file_size"] = asset.image_asset.file_size
+                    asset_dict["file_size"] = str(asset.image_asset.file_size)
                 elif asset.type_ == AssetTypeEnum.AssetType.YOUTUBE_VIDEO:
                     asset_dict["youtube_video_id"] = (
                         asset.youtube_video_asset.youtube_video_id
@@ -302,7 +302,7 @@ class AssetService:
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
 
-    def _get_mime_type_enum(self, mime_type: str):
+    def get_mime_type_enum(self, mime_type: str):
         """Convert MIME type string to enum value."""
         from google.ads.googleads.v20.enums.types.mime_type import MimeTypeEnum
 

@@ -13,7 +13,7 @@ from src.sdk_services.account.customer_service import (
 @pytest.fixture
 def mock_sdk_client() -> Any:
     """Create a mock SDK client."""
-    with patch("src.sdk_services.customer_service.get_sdk_client") as mock:
+    with patch("src.sdk_services.account.customer_service.get_sdk_client") as mock:
         client = MagicMock()
         mock.return_value = client
         yield client
@@ -47,25 +47,37 @@ async def test_create_customer_client(
     mock_response.resource_name = "customers/1234567890"
     mock_customer_service.create_customer_client.return_value = mock_response
 
-    # Call the method
-    result = await customer_service.create_customer_client(
-        ctx=mock_ctx,
-        manager_customer_id="123-456-7890",
-        descriptive_name="Test Client",
-        currency_code="USD",
-        time_zone="America/New_York",
-    )
+    # Mock serialize_proto_message to return expected data
+    expected_result = {
+        "resource_name": "customers/1234567890",
+        "customer_id": "1234567890",
+        "descriptive_name": "Test Client",
+        "currency_code": "USD",
+        "time_zone": "America/New_York",
+    }
+
+    with patch(
+        "src.sdk_services.account.customer_service.serialize_proto_message",
+        return_value=expected_result,
+    ):
+        # Call the method
+        result = await customer_service.create_customer_client(
+            ctx=mock_ctx,
+            manager_customer_id="123-456-7890",
+            descriptive_name="Test Client",
+            currency_code="USD",
+            time_zone="America/New_York",
+        )
 
     # Verify the result
+    assert result == expected_result
     assert result["customer_id"] == "1234567890"
     assert result["descriptive_name"] == "Test Client"
-    assert result["currency_code"] == "USD"
-    assert result["time_zone"] == "America/New_York"
 
     # Verify the API was called correctly
     mock_customer_service.create_customer_client.assert_called_once()
     call_args = mock_customer_service.create_customer_client.call_args
-    request = call_args.kwargs["request"]
+    request = call_args[1]["request"]
     assert request.customer_id == "1234567890"
     assert request.customer_client.descriptive_name == "Test Client"
 

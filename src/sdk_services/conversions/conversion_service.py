@@ -67,7 +67,7 @@ class ConversionService:
         status: str = "ENABLED",
         value_settings: Optional[Dict[str, Any]] = None,
         counting_type: str = "ONE_PER_CLICK",
-        attribution_model: str = "DATA_DRIVEN",
+        attribution_model: str = "GOOGLE_SEARCH_ATTRIBUTION_DATA_DRIVEN",
         click_through_lookback_window_days: int = 30,
         view_through_lookback_window_days: int = 1,
     ) -> Dict[str, Any]:
@@ -291,7 +291,7 @@ def create_conversion_tools(
         status: str = "ENABLED",
         value_settings: Optional[Dict[str, Any]] = None,
         counting_type: str = "ONE_PER_CLICK",
-        attribution_model: str = "DATA_DRIVEN",
+        attribution_model: str = "GOOGLE_SEARCH_ATTRIBUTION_DATA_DRIVEN",
         click_through_lookback_window_days: int = 30,
         view_through_lookback_window_days: int = 1,
     ) -> Dict[str, Any]:
@@ -307,7 +307,7 @@ def create_conversion_tools(
                 - default_value: Default conversion value
                 - always_use_default_value: Whether to always use default value
             counting_type: ONE_PER_CLICK or MANY_PER_CLICK
-            attribution_model: Attribution model - DATA_DRIVEN, LAST_CLICK, FIRST_CLICK, LINEAR, TIME_DECAY, POSITION_BASED
+            attribution_model: Attribution model - GOOGLE_SEARCH_ATTRIBUTION_DATA_DRIVEN, GOOGLE_ADS_LAST_CLICK, GOOGLE_SEARCH_ATTRIBUTION_FIRST_CLICK, GOOGLE_SEARCH_ATTRIBUTION_LINEAR, GOOGLE_SEARCH_ATTRIBUTION_TIME_DECAY, GOOGLE_SEARCH_ATTRIBUTION_POSITION_BASED
             click_through_lookback_window_days: Click lookback window (1-90 days)
             view_through_lookback_window_days: View lookback window (1-30 days)
 

@@ -19,7 +19,6 @@ from google.ads.googleads.v20.common.types.offline_user_data import (
     UserAttribute,
     ShoppingLoyalty,
     CustomerMatchUserListMetadata,
-    StoreSalesMetadata,
     OfflineUserAddressInfo,
 )
 from google.ads.googleads.v20.enums.types.user_identifier_source import (
@@ -321,7 +320,6 @@ class UserDataService:
         customer_id: str,
         conversion_action: str,
         store_sales_data: List[Dict[str, Any]],
-        external_attribution_data: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """Upload store sales data for enhanced conversions.
 
@@ -330,7 +328,6 @@ class UserDataService:
             customer_id: The customer ID
             conversion_action: The conversion action resource name
             store_sales_data: List of store sales data
-            external_attribution_data: Optional external attribution data
 
         Returns:
             Upload result with success/failure details
@@ -392,27 +389,13 @@ class UserDataService:
                 operation.create = user_data
                 operations.append(operation)
 
-            # Create request with store sales metadata
+            # Create request
             request = UploadUserDataRequest()
             request.customer_id = customer_id
             request.operations = operations
 
-            # Set store sales metadata
-            store_sales_metadata = StoreSalesMetadata()
-            store_sales_metadata.loyalty_fraction = 1.0  # Default to 100%
-            store_sales_metadata.transaction_upload_fraction = 1.0  # Default to 100%
-
-            if external_attribution_data:
-                if "external_attribution_credit" in external_attribution_data:
-                    store_sales_metadata.external_attribution_credit = (
-                        external_attribution_data["external_attribution_credit"]
-                    )
-                if "external_attribution_model" in external_attribution_data:
-                    store_sales_metadata.external_attribution_model = (
-                        external_attribution_data["external_attribution_model"]
-                    )
-
-            request.store_sales_metadata = store_sales_metadata
+            # Note: StoreSalesMetadata is not supported as a separate field in v20 API
+            # Store sales data is handled through transaction attributes with store_code
 
             # Make the API call
             response: UploadUserDataResponse = self.client.upload_user_data(
@@ -508,7 +491,6 @@ def create_user_data_tools(
         customer_id: str,
         conversion_action: str,
         store_sales_data: List[Dict[str, Any]],
-        external_attribution_data: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """Upload store sales data for enhanced conversions from offline sales.
 
@@ -519,8 +501,6 @@ def create_user_data_tools(
                 - user_identifiers: List of identifiers (hashed_email, hashed_phone_number)
                 - transaction_attribute: Transaction details with store_code, currency_code,
                   transaction_amount_micros, transaction_date_time, order_id
-            external_attribution_data: Optional external attribution data with external_attribution_credit
-              and external_attribution_model
 
         Returns:
             Upload result with received operations count and any failure details
@@ -530,7 +510,6 @@ def create_user_data_tools(
             customer_id=customer_id,
             conversion_action=conversion_action,
             store_sales_data=store_sales_data,
-            external_attribution_data=external_attribution_data,
         )
 
     tools.extend(

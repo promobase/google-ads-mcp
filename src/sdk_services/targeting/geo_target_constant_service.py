@@ -12,10 +12,6 @@ from google.ads.googleads.v20.services.types.geo_target_constant_service import 
 )
 from google.ads.googleads.errors import GoogleAdsException
 
-from google.ads.googleads.v20.services.services.google_ads_service import (
-    GoogleAdsServiceClient,
-)
-
 from src.sdk_client import get_sdk_client
 from src.utils import get_logger
 
@@ -205,39 +201,9 @@ class GeoTargetConstantService:
             List of geo target constants
         """
         try:
-            # Use GoogleAdsService for search
-            sdk_client = get_sdk_client()
-            google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
-                "GoogleAdsService"
-            )
-
-            # Build GAQL query
-            gaql_query = f"""
-                SELECT 
-                    geo_target_constant.id,
-                    geo_target_constant.name,
-                    geo_target_constant.country_code,
-                    geo_target_constant.target_type,
-                    geo_target_constant.status,
-                    geo_target_constant.canonical_name,
-                    geo_target_constant.parent_geo_target,
-                    geo_target_constant.resource_name
-                FROM geo_target_constant
-                WHERE geo_target_constant.name LIKE '%{query}%'
-                    AND geo_target_constant.status = 'ENABLED'
-                ORDER BY geo_target_constant.name
-                LIMIT {limit}
-            """
-
-            # Execute search
-            # Note: We can't specify customer_id for geo_target_constant queries
-            # These are account-independent resources
-            search_request = google_ads_service.search_google_ads_request()
-            search_request.query = gaql_query
-
-            # Process results
-            # Note: geo_target_constant queries don't require customer_id
-            # but we'll handle this differently based on the actual API
+            # Note: Direct GAQL search for geo_target_constant is not straightforward
+            # since these are account-independent resources.
+            # We'll use the suggest method as an alternative approach.
 
             await ctx.log(
                 level="info",
