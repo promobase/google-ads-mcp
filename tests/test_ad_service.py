@@ -188,8 +188,8 @@ async def test_create_responsive_search_ad_minimal(
 
     # Check that optional paths are not set
     responsive_ad = ad.responsive_search_ad
-    assert not hasattr(responsive_ad, 'path1') or responsive_ad.path1 == ""
-    assert not hasattr(responsive_ad, 'path2') or responsive_ad.path2 == ""
+    assert not hasattr(responsive_ad, "path1") or responsive_ad.path1 == ""
+    assert not hasattr(responsive_ad, "path2") or responsive_ad.path2 == ""
 
 
 @pytest.mark.asyncio
@@ -381,7 +381,9 @@ async def test_update_ad_status(
     # Mock serialize_proto_message
     expected_result = {
         "results": [
-            {"resource_name": f"customers/{customer_id}/adGroupAds/{ad_group_id}~{ad_id}"}
+            {
+                "resource_name": f"customers/{customer_id}/adGroupAds/{ad_group_id}~{ad_id}"
+            }
         ]
     }
 
@@ -410,7 +412,10 @@ async def test_update_ad_status(
 
     operation = request.operations[0]
     ad_group_ad = operation.update
-    assert ad_group_ad.resource_name == f"customers/{customer_id}/adGroupAds/{ad_group_id}~{ad_id}"
+    assert (
+        ad_group_ad.resource_name
+        == f"customers/{customer_id}/adGroupAds/{ad_group_id}~{ad_id}"
+    )
     assert ad_group_ad.status == new_status
     assert "status" in operation.update_mask.paths
 

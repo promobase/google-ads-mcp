@@ -56,7 +56,9 @@ async def test_add_location_criteria(
     mock_response.results = []
     for i, _ in enumerate(location_ids):
         result = Mock()
-        result.resource_name = f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 100}"
+        result.resource_name = (
+            f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 100}"
+        )
         mock_response.results.append(result)
 
     # Get the mocked campaign criterion service client
@@ -66,7 +68,9 @@ async def test_add_location_criteria(
     # Mock serialize_proto_message
     expected_result = {
         "results": [
-            {"resource_name": f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 100}"}
+            {
+                "resource_name": f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 100}"
+            }
             for i in range(len(location_ids))
         ]
     }
@@ -101,7 +105,10 @@ async def test_add_location_criteria(
     assert criterion.campaign == f"customers/{customer_id}/campaigns/{campaign_id}"
     assert criterion.negative == negative
     assert abs(criterion.bid_modifier - bid_modifier) < 0.001
-    assert criterion.location.geo_target_constant == f"geoTargetConstants/{location_ids[0]}"
+    assert (
+        criterion.location.geo_target_constant
+        == f"geoTargetConstants/{location_ids[0]}"
+    )
 
     # Verify logging
     mock_ctx.log.assert_called_once_with(  # type: ignore
@@ -137,7 +144,9 @@ async def test_add_location_criteria_negative(
     # Mock serialize_proto_message
     expected_result = {
         "results": [
-            {"resource_name": f"customers/{customer_id}/campaignCriteria/{campaign_id}~101"}
+            {
+                "resource_name": f"customers/{customer_id}/campaignCriteria/{campaign_id}~101"
+            }
         ]
     }
 
@@ -165,7 +174,7 @@ async def test_add_location_criteria_negative(
     criterion = operation.create
     assert criterion.negative == negative
     # Bid modifier should not be set for negative criteria
-    assert not hasattr(criterion, 'bid_modifier') or criterion.bid_modifier == 0
+    assert not hasattr(criterion, "bid_modifier") or criterion.bid_modifier == 0
 
 
 @pytest.mark.asyncio
@@ -185,7 +194,9 @@ async def test_add_language_criteria(
     mock_response.results = []
     for i, _ in enumerate(language_ids):
         result = Mock()
-        result.resource_name = f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 200}"
+        result.resource_name = (
+            f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 200}"
+        )
         mock_response.results.append(result)
 
     # Get the mocked campaign criterion service client
@@ -195,7 +206,9 @@ async def test_add_language_criteria(
     # Mock serialize_proto_message
     expected_result = {
         "results": [
-            {"resource_name": f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 200}"}
+            {
+                "resource_name": f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 200}"
+            }
             for i in range(len(language_ids))
         ]
     }
@@ -227,7 +240,9 @@ async def test_add_language_criteria(
     criterion = operation.create
     assert criterion.campaign == f"customers/{customer_id}/campaigns/{campaign_id}"
     assert criterion.negative == False
-    assert criterion.language.language_constant == f"languageConstants/{language_ids[0]}"
+    assert (
+        criterion.language.language_constant == f"languageConstants/{language_ids[0]}"
+    )
 
     # Verify logging
     mock_ctx.log.assert_called_once_with(  # type: ignore
@@ -254,7 +269,9 @@ async def test_add_device_criteria(
     mock_response.results = []
     for i, _ in enumerate(device_types):
         result = Mock()
-        result.resource_name = f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 300}"
+        result.resource_name = (
+            f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 300}"
+        )
         mock_response.results.append(result)
 
     # Get the mocked campaign criterion service client
@@ -264,7 +281,9 @@ async def test_add_device_criteria(
     # Mock serialize_proto_message
     expected_result = {
         "results": [
-            {"resource_name": f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 300}"}
+            {
+                "resource_name": f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 300}"
+            }
             for i in range(len(device_types))
         ]
     }
@@ -295,7 +314,9 @@ async def test_add_device_criteria(
     # Check operations
     mobile_operation = request.operations[0]
     mobile_criterion = mobile_operation.create
-    assert mobile_criterion.campaign == f"customers/{customer_id}/campaigns/{campaign_id}"
+    assert (
+        mobile_criterion.campaign == f"customers/{customer_id}/campaigns/{campaign_id}"
+    )
     assert mobile_criterion.negative == False
     assert mobile_criterion.device.type_ == DeviceEnum.Device.MOBILE
     assert abs(mobile_criterion.bid_modifier - 1.3) < 0.001
@@ -338,7 +359,9 @@ async def test_add_device_criteria_no_bid_modifiers(
     # Mock serialize_proto_message
     expected_result = {
         "results": [
-            {"resource_name": f"customers/{customer_id}/campaignCriteria/{campaign_id}~301"}
+            {
+                "resource_name": f"customers/{customer_id}/campaignCriteria/{campaign_id}~301"
+            }
         ]
     }
 
@@ -364,7 +387,7 @@ async def test_add_device_criteria_no_bid_modifiers(
     criterion = operation.create
     assert criterion.device.type_ == DeviceEnum.Device.TABLET
     # No bid modifier should be set
-    assert not hasattr(criterion, 'bid_modifier') or criterion.bid_modifier == 0
+    assert not hasattr(criterion, "bid_modifier") or criterion.bid_modifier == 0
 
 
 @pytest.mark.asyncio
@@ -388,7 +411,9 @@ async def test_add_negative_keyword_criteria(
     mock_response.results = []
     for i, keyword in enumerate(keywords):
         result = Mock()
-        result.resource_name = f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 400}"
+        result.resource_name = (
+            f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 400}"
+        )
         mock_response.results.append(result)
 
     # Get the mocked campaign criterion service client
@@ -398,7 +423,9 @@ async def test_add_negative_keyword_criteria(
     # Mock serialize_proto_message
     expected_result = {
         "results": [
-            {"resource_name": f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 400}"}
+            {
+                "resource_name": f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 400}"
+            }
             for i in range(len(keywords))
         ]
     }
@@ -453,7 +480,9 @@ async def test_remove_campaign_criterion(
     # Arrange
     customer_id = "1234567890"
     campaign_id = "9876543210"
-    criterion_resource_name = f"customers/{customer_id}/campaignCriteria/{campaign_id}~500"
+    criterion_resource_name = (
+        f"customers/{customer_id}/campaignCriteria/{campaign_id}~500"
+    )
 
     # Create mock response
     mock_response = Mock(spec=MutateCampaignCriteriaResponse)
@@ -514,7 +543,9 @@ async def test_error_handling(
 
     # Get the mocked campaign criterion service client and make it raise exception
     mock_campaign_criterion_client = campaign_criterion_service.client  # type: ignore
-    mock_campaign_criterion_client.mutate_campaign_criteria.side_effect = google_ads_exception  # type: ignore
+    mock_campaign_criterion_client.mutate_campaign_criteria.side_effect = (
+        google_ads_exception  # type: ignore
+    )
 
     # Act & Assert
     with pytest.raises(Exception) as exc_info:

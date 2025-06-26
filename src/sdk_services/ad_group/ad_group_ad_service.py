@@ -69,7 +69,7 @@ class AdGroupAdService:
             # Create ad group ad
             ad_group_ad = AdGroupAd()
             ad_group_ad.ad_group = ad_group_resource
-            
+
             # Create ad with resource name
             ad = Ad()
             ad.resource_name = ad_resource_name

@@ -84,7 +84,7 @@ class AdService:
 
             # Create responsive search ad info
             responsive_search_ad = ResponsiveSearchAdInfo()
-            
+
             # Set display URL paths on the ad info
             if path1:
                 responsive_search_ad.path1 = path1
@@ -185,7 +185,7 @@ class AdService:
 
             # Create expanded text ad info
             expanded_text_ad = ExpandedTextAdInfo()
-            
+
             # Set display URL paths on the ad info
             if path1:
                 expanded_text_ad.path1 = path1

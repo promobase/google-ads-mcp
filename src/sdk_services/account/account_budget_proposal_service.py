@@ -96,17 +96,17 @@ class AccountBudgetProposalService:
             if proposed_start_date_time:
                 proposal.proposed_start_date_time = proposed_start_date_time
 
-            # Set spending limit
-            proposal.proposed_spending_limit_type = proposed_spending_limit_type
+            # Set spending limit (these are mutually exclusive oneof fields)
             if proposed_spending_limit_micros is not None:
                 proposal.proposed_spending_limit_micros = proposed_spending_limit_micros
+            else:
+                proposal.proposed_spending_limit_type = proposed_spending_limit_type
 
-            # Set end time if provided
-            if proposed_end_time_type:
-                proposal.proposed_end_time_type = proposed_end_time_type
-
+            # Set end time if provided (these are mutually exclusive oneof fields)
             if proposed_end_date_time:
                 proposal.proposed_end_date_time = proposed_end_date_time
+            elif proposed_end_time_type:
+                proposal.proposed_end_time_type = proposed_end_time_type
 
             # Create operation
             operation = AccountBudgetProposalOperation()
@@ -142,20 +142,27 @@ class AccountBudgetProposalService:
         self,
         ctx: Context,
         customer_id: str,
-        proposal_resource_name: str,
+        account_budget: str,
+        billing_setup: str,
         proposed_name: Optional[str] = None,
         proposed_spending_limit_micros: Optional[int] = None,
         proposed_end_date_time: Optional[str] = None,
+        proposed_start_date_time: Optional[str] = None,
     ) -> Dict[str, Any]:
-        """Update an account budget proposal.
+        """Create an UPDATE proposal for an existing account budget.
+
+        Note: Account budget proposals work by creating new proposals with UPDATE type,
+        not by directly updating existing proposals.
 
         Args:
             ctx: FastMCP context
             customer_id: The customer ID
-            proposal_resource_name: Resource name of the proposal to update
+            account_budget: Resource name of the account budget to update
+            billing_setup: Resource name of the billing setup
             proposed_name: Optional new name
             proposed_spending_limit_micros: Optional new spending limit in micros
             proposed_end_date_time: Optional new end date/time
+            proposed_start_date_time: Optional new start date/time
 
         Returns:
             Mutation result dictionary
@@ -163,31 +170,29 @@ class AccountBudgetProposalService:
         try:
             customer_id = format_customer_id(customer_id)
 
-            # Create account budget proposal with resource name
+            # Create account budget proposal for UPDATE
             proposal = AccountBudgetProposal()
-            proposal.resource_name = proposal_resource_name
-
-            # Build update mask
-            update_mask_paths = []
+            proposal.proposal_type = (
+                AccountBudgetProposalTypeEnum.AccountBudgetProposalType.UPDATE
+            )
+            proposal.account_budget = account_budget
+            proposal.billing_setup = billing_setup
 
             if proposed_name is not None:
                 proposal.proposed_name = proposed_name
-                update_mask_paths.append("proposed_name")
 
             if proposed_spending_limit_micros is not None:
                 proposal.proposed_spending_limit_micros = proposed_spending_limit_micros
-                update_mask_paths.append("proposed_spending_limit_micros")
 
             if proposed_end_date_time is not None:
                 proposal.proposed_end_date_time = proposed_end_date_time
-                update_mask_paths.append("proposed_end_date_time")
+
+            if proposed_start_date_time is not None:
+                proposal.proposed_start_date_time = proposed_start_date_time
 
             # Create operation
             operation = AccountBudgetProposalOperation()
-            operation.update = proposal
-            operation.update_mask.CopyFrom(
-                field_mask_pb2.FieldMask(paths=update_mask_paths)
-            )
+            operation.create = proposal
 
             # Create request
             request = MutateAccountBudgetProposalRequest()
@@ -199,7 +204,7 @@ class AccountBudgetProposalService:
 
             await ctx.log(
                 level="info",
-                message="Updated account budget proposal",
+                message="Created UPDATE proposal for account budget",
             )
 
             return serialize_proto_message(response)
@@ -209,7 +214,7 @@ class AccountBudgetProposalService:
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
-            error_msg = f"Failed to update account budget proposal: {str(e)}"
+            error_msg = f"Failed to create update proposal: {str(e)}"
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
 
@@ -396,30 +401,36 @@ def create_account_budget_proposal_tools(
     async def update_account_budget_proposal(
         ctx: Context,
         customer_id: str,
-        proposal_resource_name: str,
+        account_budget: str,
+        billing_setup: str,
         proposed_name: Optional[str] = None,
         proposed_spending_limit_micros: Optional[int] = None,
         proposed_end_date_time: Optional[str] = None,
+        proposed_start_date_time: Optional[str] = None,
     ) -> Dict[str, Any]:
-        """Update an account budget proposal.
+        """Create an UPDATE proposal for an existing account budget.
 
         Args:
             customer_id: The customer ID
-            proposal_resource_name: Resource name of the proposal to update
+            account_budget: Resource name of the account budget to update
+            billing_setup: Resource name of the billing setup
             proposed_name: Optional new name for the account budget
             proposed_spending_limit_micros: Optional new spending limit in micros
             proposed_end_date_time: Optional new end date/time (YYYY-MM-DD HH:MM:SS)
+            proposed_start_date_time: Optional new start date/time (YYYY-MM-DD HH:MM:SS)
 
         Returns:
-            Updated account budget proposal details with list of updated fields
+            Created update proposal details with resource_name
         """
         return await service.update_account_budget_proposal(
             ctx=ctx,
             customer_id=customer_id,
-            proposal_resource_name=proposal_resource_name,
+            account_budget=account_budget,
+            billing_setup=billing_setup,
             proposed_name=proposed_name,
             proposed_spending_limit_micros=proposed_spending_limit_micros,
             proposed_end_date_time=proposed_end_date_time,
+            proposed_start_date_time=proposed_start_date_time,
         )
 
     async def list_account_budget_proposals(

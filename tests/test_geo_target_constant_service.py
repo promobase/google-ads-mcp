@@ -49,7 +49,7 @@ def create_mock_geo_target_suggestion(
 ) -> Mock:
     """Create a mock geo target constant suggestion."""
     suggestion = Mock()
-    
+
     # Mock geo target constant
     geo_target = Mock()
     geo_target.resource_name = resource_name
@@ -61,12 +61,12 @@ def create_mock_geo_target_suggestion(
     geo_target.status.name = "ENABLED"
     geo_target.canonical_name = canonical_name
     geo_target.parent_geo_target = parent_geo_target
-    
+
     suggestion.geo_target_constant = geo_target
     suggestion.locale = locale
     suggestion.reach = reach
     suggestion.search_term = search_term
-    
+
     return suggestion
 
 
@@ -99,7 +99,7 @@ async def test_suggest_geo_targets_by_location(
         ),
         create_mock_geo_target_suggestion(
             resource_name="geoTargetConstants/1014044",
-            geo_id="1014044", 
+            geo_id="1014044",
             name="California",
             country_code="US",
             target_type="State",
@@ -125,7 +125,7 @@ async def test_suggest_geo_targets_by_location(
 
     # Assert
     assert len(result) == 2
-    
+
     # Check first result (New York)
     ny_result = result[0]
     assert ny_result["resource_name"] == "geoTargetConstants/1023191"
@@ -210,7 +210,7 @@ async def test_suggest_geo_targets_by_location_no_country_code(
     call_args = mock_geo_target_client.suggest_geo_target_constants.call_args  # type: ignore
     request = call_args[1]["request"]
     assert request.locale == locale
-    assert not hasattr(request, 'country_code') or request.country_code == ""
+    assert not hasattr(request, "country_code") or request.country_code == ""
 
 
 @pytest.mark.asyncio
@@ -272,7 +272,7 @@ async def test_suggest_geo_targets_by_address(
     assert request.locale == locale
     assert request.country_code == country_code
     # Check that geo_targets was set (this will contain the address)
-    assert hasattr(request, 'geo_targets')
+    assert hasattr(request, "geo_targets")
 
     # Verify logging
     mock_ctx.log.assert_called_once_with(  # type: ignore
@@ -358,12 +358,12 @@ async def test_suggest_geo_targets_with_no_status(
     geo_target.status = None  # No status
     geo_target.canonical_name = "Test Location, US"
     geo_target.parent_geo_target = "geoTargetConstants/2840"
-    
+
     suggestion.geo_target_constant = geo_target
     suggestion.locale = "en"
     suggestion.reach = 50000
     suggestion.search_term = "Test Location"
-    
+
     mock_response.geo_target_constant_suggestions = [suggestion]
 
     # Get the mocked geo target constant service client
@@ -378,7 +378,9 @@ async def test_suggest_geo_targets_with_no_status(
 
     # Assert
     assert len(result) == 1
-    assert result[0]["status"] == "UNKNOWN"  # Should default to UNKNOWN when status is None
+    assert (
+        result[0]["status"] == "UNKNOWN"
+    )  # Should default to UNKNOWN when status is None
 
 
 @pytest.mark.asyncio
@@ -394,7 +396,9 @@ async def test_error_handling_location(
 
     # Get the mocked geo target constant service client and make it raise exception
     mock_geo_target_client = geo_target_constant_service.client  # type: ignore
-    mock_geo_target_client.suggest_geo_target_constants.side_effect = google_ads_exception  # type: ignore
+    mock_geo_target_client.suggest_geo_target_constants.side_effect = (
+        google_ads_exception  # type: ignore
+    )
 
     # Act & Assert
     with pytest.raises(Exception) as exc_info:
@@ -426,7 +430,9 @@ async def test_error_handling_address(
 
     # Get the mocked geo target constant service client and make it raise exception
     mock_geo_target_client = geo_target_constant_service.client  # type: ignore
-    mock_geo_target_client.suggest_geo_target_constants.side_effect = google_ads_exception  # type: ignore
+    mock_geo_target_client.suggest_geo_target_constants.side_effect = (
+        google_ads_exception  # type: ignore
+    )
 
     # Act & Assert
     with pytest.raises(Exception) as exc_info:
@@ -458,7 +464,9 @@ async def test_error_handling_search(
 
     # Get the mocked geo target constant service client and make it raise exception
     mock_geo_target_client = geo_target_constant_service.client  # type: ignore
-    mock_geo_target_client.suggest_geo_target_constants.side_effect = google_ads_exception  # type: ignore
+    mock_geo_target_client.suggest_geo_target_constants.side_effect = (
+        google_ads_exception  # type: ignore
+    )
 
     # Act & Assert
     with pytest.raises(Exception) as exc_info:
@@ -494,7 +502,7 @@ def test_register_geo_target_constant_tools() -> None:
 
     expected_tools = [
         "suggest_geo_targets_by_location",
-        "suggest_geo_targets_by_address", 
+        "suggest_geo_targets_by_address",
         "search_geo_targets",
     ]
 
