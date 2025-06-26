@@ -43,7 +43,7 @@ class CampaignAssetService:
         customer_id: str,
         campaign_id: str,
         asset_id: str,
-        field_type: str,
+        field_type: AssetFieldTypeEnum.AssetFieldType,
     ) -> Dict[str, Any]:
         """Link an asset to a campaign for a specific field type.
 
@@ -52,7 +52,7 @@ class CampaignAssetService:
             customer_id: The customer ID
             campaign_id: The campaign ID
             asset_id: The asset ID to link
-            field_type: The field type for the asset (e.g., HEADLINE, DESCRIPTION, SITELINK, etc.)
+            field_type: The field type enum value
 
         Returns:
             Created campaign asset link details
@@ -66,9 +66,7 @@ class CampaignAssetService:
             campaign_asset = CampaignAsset()
             campaign_asset.campaign = campaign_resource
             campaign_asset.asset = asset_resource
-            campaign_asset.field_type = getattr(
-                AssetFieldTypeEnum.AssetFieldType, field_type
-            )
+            campaign_asset.field_type = field_type
 
             # Create operation
             operation = CampaignAssetOperation()
@@ -186,7 +184,7 @@ class CampaignAssetService:
         ctx: Context,
         customer_id: str,
         campaign_id: Optional[str] = None,
-        field_type: Optional[str] = None,
+        field_type: Optional[AssetFieldTypeEnum.AssetFieldType] = None,
         include_system_managed: bool = False,
     ) -> List[Dict[str, Any]]:
         """List campaign assets.
@@ -228,7 +226,7 @@ class CampaignAssetService:
             if campaign_id:
                 conditions.append(f"campaign.id = {campaign_id}")
             if field_type:
-                conditions.append(f"campaign_asset.field_type = '{field_type}'")
+                conditions.append(f"campaign_asset.field_type = '{field_type.name}'")
             if not include_system_managed:
                 conditions.append("campaign_asset.source = 'ADVERTISER'")
 
@@ -284,7 +282,7 @@ class CampaignAssetService:
         customer_id: str,
         campaign_id: str,
         asset_id: str,
-        field_type: str,
+        field_type: AssetFieldTypeEnum.AssetFieldType,
     ) -> Dict[str, Any]:
         """Remove an asset from a campaign.
 
@@ -371,12 +369,15 @@ def create_campaign_asset_tools(
         Returns:
             Created campaign asset link details including resource_name
         """
+        # Convert string enum to proper enum type
+        field_type_enum = getattr(AssetFieldTypeEnum.AssetFieldType, field_type)
+
         return await service.link_asset_to_campaign(
             ctx=ctx,
             customer_id=customer_id,
             campaign_id=campaign_id,
             asset_id=asset_id,
-            field_type=field_type,
+            field_type=field_type_enum,
         )
 
     async def link_multiple_assets_to_campaign(
@@ -422,11 +423,18 @@ def create_campaign_asset_tools(
         Returns:
             List of campaign assets with details
         """
+        # Convert string enum to proper enum type if provided
+        field_type_enum = (
+            getattr(AssetFieldTypeEnum.AssetFieldType, field_type)
+            if field_type
+            else None
+        )
+
         return await service.list_campaign_assets(
             ctx=ctx,
             customer_id=customer_id,
             campaign_id=campaign_id,
-            field_type=field_type,
+            field_type=field_type_enum,
             include_system_managed=include_system_managed,
         )
 
@@ -448,12 +456,15 @@ def create_campaign_asset_tools(
         Returns:
             Removal result with status
         """
+        # Convert string enum to proper enum type
+        field_type_enum = getattr(AssetFieldTypeEnum.AssetFieldType, field_type)
+
         return await service.remove_asset_from_campaign(
             ctx=ctx,
             customer_id=customer_id,
             campaign_id=campaign_id,
             asset_id=asset_id,
-            field_type=field_type,
+            field_type=field_type_enum,
         )
 
     tools.extend(

@@ -50,8 +50,8 @@ class CampaignService:
         customer_id: str,
         name: str,
         budget_resource_name: str,
-        advertising_channel_type: str = "SEARCH",
-        status: str = "PAUSED",
+        advertising_channel_type: AdvertisingChannelTypeEnum.AdvertisingChannelType = AdvertisingChannelTypeEnum.AdvertisingChannelType.SEARCH,
+        status: CampaignStatusEnum.CampaignStatus = CampaignStatusEnum.CampaignStatus.PAUSED,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
     ) -> Dict[str, Any]:
@@ -79,14 +79,10 @@ class CampaignService:
             campaign.campaign_budget = budget_resource_name
 
             # Set advertising channel type
-            campaign.advertising_channel_type = (
-                AdvertisingChannelTypeEnum.AdvertisingChannelType[
-                    advertising_channel_type
-                ]
-            )
+            campaign.advertising_channel_type = advertising_channel_type
 
             # Set status
-            campaign.status = CampaignStatusEnum.CampaignStatus[status]
+            campaign.status = status
 
             # Set campaign experiment type
             campaign.experiment_type = (
@@ -129,7 +125,7 @@ class CampaignService:
         customer_id: str,
         campaign_id: str,
         name: Optional[str] = None,
-        status: Optional[str] = None,
+        status: Optional[CampaignStatusEnum.CampaignStatus] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
     ) -> Dict[str, Any]:
@@ -163,7 +159,7 @@ class CampaignService:
                 update_mask_fields.append("name")
 
             if status is not None:
-                campaign.status = CampaignStatusEnum.CampaignStatus[status]
+                campaign.status = status
                 update_mask_fields.append("status")
 
             if start_date is not None:
@@ -240,13 +236,19 @@ def create_campaign_tools(
         Returns:
             Created campaign details
         """
+        # Convert string enums to proper enum types
+        channel_type_enum = getattr(
+            AdvertisingChannelTypeEnum.AdvertisingChannelType, advertising_channel_type
+        )
+        status_enum = getattr(CampaignStatusEnum.CampaignStatus, status)
+
         return await service.create_campaign(
             ctx=ctx,
             customer_id=customer_id,
             name=name,
             budget_resource_name=budget_resource_name,
-            advertising_channel_type=advertising_channel_type,
-            status=status,
+            advertising_channel_type=channel_type_enum,
+            status=status_enum,
             start_date=start_date,
             end_date=end_date,
         )
@@ -273,12 +275,17 @@ def create_campaign_tools(
         Returns:
             Updated campaign details
         """
+        # Convert string enum to proper enum type if provided
+        status_enum = (
+            getattr(CampaignStatusEnum.CampaignStatus, status) if status else None
+        )
+
         return await service.update_campaign(
             ctx=ctx,
             customer_id=customer_id,
             campaign_id=campaign_id,
             name=name,
-            status=status,
+            status=status_enum,
             start_date=start_date,
             end_date=end_date,
         )

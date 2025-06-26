@@ -192,7 +192,7 @@ class CampaignCriterionService:
         ctx: Context,
         customer_id: str,
         campaign_id: str,
-        device_types: List[str],
+        device_types: List[DeviceEnum.Device],
         bid_modifiers: Optional[Dict[str, float]] = None,
     ) -> Dict[str, Any]:
         """Add device targeting criteria to a campaign.
@@ -201,7 +201,7 @@ class CampaignCriterionService:
             ctx: FastMCP context
             customer_id: The customer ID
             campaign_id: The campaign ID
-            device_types: List of device types (MOBILE, DESKTOP, TABLET)
+            device_types: List of device type enum values
             bid_modifiers: Optional dict of device type to bid modifier
 
         Returns:
@@ -222,12 +222,13 @@ class CampaignCriterionService:
                 )
 
                 # Set bid modifier if provided
-                if bid_modifiers and device_type in bid_modifiers:
-                    campaign_criterion.bid_modifier = bid_modifiers[device_type]
+                device_type_str = device_type.name
+                if bid_modifiers and device_type_str in bid_modifiers:
+                    campaign_criterion.bid_modifier = bid_modifiers[device_type_str]
 
                 # Create device info
                 device_info = DeviceInfo()
-                device_info.type_ = DeviceEnum.Device[device_type]
+                device_info.type_ = device_type
                 campaign_criterion.device = device_info
 
                 # Create operation
@@ -294,9 +295,9 @@ class CampaignCriterionService:
                 # Create keyword info
                 keyword_info = KeywordInfo()
                 keyword_info.text = keyword["text"]
-                keyword_info.match_type = KeywordMatchTypeEnum.KeywordMatchType[
-                    keyword["match_type"]
-                ]
+                keyword_info.match_type = getattr(
+                    KeywordMatchTypeEnum.KeywordMatchType, keyword["match_type"]
+                )
                 campaign_criterion.keyword = keyword_info
 
                 # Create operation
@@ -461,11 +462,16 @@ def create_campaign_criterion_tools(
         Returns:
             Mutation response with created campaign criteria
         """
+        # Convert string enums to proper enum types
+        device_type_enums = [
+            getattr(DeviceEnum.Device, device_type) for device_type in device_types
+        ]
+
         return await service.add_device_criteria(
             ctx=ctx,
             customer_id=customer_id,
             campaign_id=campaign_id,
-            device_types=device_types,
+            device_types=device_type_enums,
             bid_modifiers=bid_modifiers,
         )
 

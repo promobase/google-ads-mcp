@@ -62,7 +62,7 @@ class CampaignBidModifierService:
         ctx: Context,
         customer_id: str,
         campaign_id: str,
-        device_type: str,
+        device_type: DeviceEnum.Device,
         bid_modifier: float,
     ) -> Dict[str, Any]:
         """Create a device bid modifier for a campaign.
@@ -71,7 +71,7 @@ class CampaignBidModifierService:
             ctx: FastMCP context
             customer_id: The customer ID
             campaign_id: The campaign ID
-            device_type: Device type (MOBILE, DESKTOP, TABLET)
+            device_type: Device type enum value
             bid_modifier: Bid modifier value (0.1-10.0, where 1.0 is no change)
 
         Returns:
@@ -88,7 +88,7 @@ class CampaignBidModifierService:
 
             # Set device criterion
             device_info = DeviceInfo()
-            device_info.type_ = getattr(DeviceEnum.Device, device_type)
+            device_info.type_ = device_type
             bid_modifier_obj.device = device_info
 
             # Create operation
@@ -190,11 +190,11 @@ class CampaignBidModifierService:
         ctx: Context,
         customer_id: str,
         campaign_id: str,
-        day_of_week: str,
+        day_of_week: DayOfWeekEnum.DayOfWeek,
         start_hour: int,
-        start_minute: str,
+        start_minute: MinuteOfHourEnum.MinuteOfHour,
         end_hour: int,
-        end_minute: str,
+        end_minute: MinuteOfHourEnum.MinuteOfHour,
         bid_modifier: float,
     ) -> Dict[str, Any]:
         """Create an ad schedule bid modifier for a campaign.
@@ -203,11 +203,11 @@ class CampaignBidModifierService:
             ctx: FastMCP context
             customer_id: The customer ID
             campaign_id: The campaign ID
-            day_of_week: Day of week (MONDAY, TUESDAY, etc.)
+            day_of_week: Day of week enum value
             start_hour: Start hour (0-23)
-            start_minute: Start minute (ZERO, FIFTEEN, THIRTY, FORTY_FIVE)
+            start_minute: Start minute enum value
             end_hour: End hour (0-23)
-            end_minute: End minute (ZERO, FIFTEEN, THIRTY, FORTY_FIVE)
+            end_minute: End minute enum value
             bid_modifier: Bid modifier value (0.1-10.0)
 
         Returns:
@@ -224,15 +224,11 @@ class CampaignBidModifierService:
 
             # Set ad schedule criterion
             ad_schedule_info = AdScheduleInfo()
-            ad_schedule_info.day_of_week = getattr(DayOfWeekEnum.DayOfWeek, day_of_week)
+            ad_schedule_info.day_of_week = day_of_week
             ad_schedule_info.start_hour = start_hour
-            ad_schedule_info.start_minute = getattr(
-                MinuteOfHourEnum.MinuteOfHour, start_minute
-            )
+            ad_schedule_info.start_minute = start_minute
             ad_schedule_info.end_hour = end_hour
-            ad_schedule_info.end_minute = getattr(
-                MinuteOfHourEnum.MinuteOfHour, end_minute
-            )
+            ad_schedule_info.end_minute = end_minute
             bid_modifier_obj.ad_schedule = ad_schedule_info
 
             # Create operation
@@ -611,11 +607,14 @@ def create_campaign_bid_modifier_tools(
         Returns:
             Created bid modifier details with resource_name
         """
+        # Convert string enum to proper enum type
+        device_type_enum = getattr(DeviceEnum.Device, device_type)
+
         return await service.create_device_bid_modifier(
             ctx=ctx,
             customer_id=customer_id,
             campaign_id=campaign_id,
-            device_type=device_type,
+            device_type=device_type_enum,
             bid_modifier=bid_modifier,
         )
 
@@ -671,15 +670,20 @@ def create_campaign_bid_modifier_tools(
         Returns:
             Created bid modifier details
         """
+        # Convert string enums to proper enum types
+        day_of_week_enum = getattr(DayOfWeekEnum.DayOfWeek, day_of_week)
+        start_minute_enum = getattr(MinuteOfHourEnum.MinuteOfHour, start_minute)
+        end_minute_enum = getattr(MinuteOfHourEnum.MinuteOfHour, end_minute)
+
         return await service.create_ad_schedule_bid_modifier(
             ctx=ctx,
             customer_id=customer_id,
             campaign_id=campaign_id,
-            day_of_week=day_of_week,
+            day_of_week=day_of_week_enum,
             start_hour=start_hour,
-            start_minute=start_minute,
+            start_minute=start_minute_enum,
             end_hour=end_hour,
-            end_minute=end_minute,
+            end_minute=end_minute_enum,
             bid_modifier=bid_modifier,
         )
 
