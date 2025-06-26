@@ -46,7 +46,7 @@ class LabelService:
         name: str,
         description: Optional[str] = None,
         background_color: Optional[str] = None,
-        status: str = "ENABLED",
+        status: LabelStatusEnum.LabelStatus = LabelStatusEnum.LabelStatus.ENABLED,
     ) -> Dict[str, Any]:
         """Create a new label.
 
@@ -67,7 +67,7 @@ class LabelService:
             # Create label
             label = Label()
             label.name = name
-            label.status = getattr(LabelStatusEnum.LabelStatus, status)
+            label.status = status
 
             # Create text label
             text_label = TextLabel()
@@ -114,7 +114,7 @@ class LabelService:
         name: Optional[str] = None,
         description: Optional[str] = None,
         background_color: Optional[str] = None,
-        status: Optional[str] = None,
+        status: Optional[LabelStatusEnum.LabelStatus] = None,
     ) -> Dict[str, Any]:
         """Update an existing label.
 
@@ -146,7 +146,7 @@ class LabelService:
                 update_mask_fields.append("name")
 
             if status is not None:
-                label.status = getattr(LabelStatusEnum.LabelStatus, status)
+                label.status = status
                 update_mask_fields.append("status")
 
             # Update text label fields
@@ -450,13 +450,16 @@ def create_label_tools(service: LabelService) -> List[Callable[..., Awaitable[An
         Returns:
             Created label details with resource_name and label_id
         """
+        # Convert string enum to proper enum type
+        status_enum = getattr(LabelStatusEnum.LabelStatus, status)
+
         return await service.create_label(
             ctx=ctx,
             customer_id=customer_id,
             name=name,
             description=description,
             background_color=background_color,
-            status=status,
+            status=status_enum,
         )
 
     async def update_label(
@@ -481,6 +484,9 @@ def create_label_tools(service: LabelService) -> List[Callable[..., Awaitable[An
         Returns:
             Updated label details with updated_fields list
         """
+        # Convert string enum to proper enum type if provided
+        status_enum = getattr(LabelStatusEnum.LabelStatus, status) if status else None
+
         return await service.update_label(
             ctx=ctx,
             customer_id=customer_id,
@@ -488,7 +494,7 @@ def create_label_tools(service: LabelService) -> List[Callable[..., Awaitable[An
             name=name,
             description=description,
             background_color=background_color,
-            status=status,
+            status=status_enum,
         )
 
     async def list_labels(

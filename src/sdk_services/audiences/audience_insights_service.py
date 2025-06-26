@@ -150,7 +150,10 @@ class AudienceInsightsService:
             # Add dimensions
             for dimension in dimensions:
                 request.dimensions.append(
-                    getattr(AudienceInsightsDimensionEnum.AudienceInsightsDimension, dimension)
+                    getattr(
+                        AudienceInsightsDimensionEnum.AudienceInsightsDimension,
+                        dimension,
+                    )
                 )
 
             # Make the API call
@@ -252,7 +255,10 @@ class AudienceInsightsService:
             # Add dimensions
             for dimension in dimensions:
                 request.dimensions.append(
-                    getattr(AudienceInsightsDimensionEnum.AudienceInsightsDimension, dimension)
+                    getattr(
+                        AudienceInsightsDimensionEnum.AudienceInsightsDimension,
+                        dimension,
+                    )
                 )
 
             # Make the API call

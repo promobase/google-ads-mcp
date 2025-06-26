@@ -296,7 +296,8 @@ class BiddingStrategyService:
             # Configure Target Impression Share
             target_impression_share = TargetImpressionShare()
             target_impression_share.location = getattr(
-                TargetImpressionShareLocationEnum.TargetImpressionShareLocation, location
+                TargetImpressionShareLocationEnum.TargetImpressionShareLocation,
+                location,
             )
             target_impression_share.location_fraction_micros = location_fraction_micros
 

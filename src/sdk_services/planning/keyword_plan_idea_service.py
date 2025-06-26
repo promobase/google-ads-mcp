@@ -376,7 +376,7 @@ def create_keyword_plan_idea_tools(
         keywords: List[str],
         language: str,
         geo_target_constants: List[str],
-        keyword_plan_network: KeywordPlanNetworkEnum.KeywordPlanNetwork = KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH_AND_PARTNERS,
+        keyword_plan_network: str = "GOOGLE_SEARCH_AND_PARTNERS",
         include_adult_keywords: bool = False,
         page_size: int = 100,
     ) -> List[Dict[str, Any]]:
@@ -401,7 +401,7 @@ def create_keyword_plan_idea_tools(
         keyword_plan_network_enum = getattr(
             KeywordPlanNetworkEnum.KeywordPlanNetwork, keyword_plan_network
         )
-        
+
         return await service.generate_keyword_ideas_from_keywords(
             ctx=ctx,
             customer_id=customer_id,
@@ -419,7 +419,7 @@ def create_keyword_plan_idea_tools(
         page_url: str,
         language: str,
         geo_target_constants: List[str],
-        keyword_plan_network: KeywordPlanNetworkEnum.KeywordPlanNetwork = KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH_AND_PARTNERS,
+        keyword_plan_network: str = "GOOGLE_SEARCH_AND_PARTNERS",
         include_adult_keywords: bool = False,
         page_size: int = 100,
     ) -> List[Dict[str, Any]]:
@@ -437,13 +437,18 @@ def create_keyword_plan_idea_tools(
         Returns:
             List of keyword ideas with metrics and annotations
         """
+        # Convert string enum to proper enum type
+        keyword_plan_network_enum = getattr(
+            KeywordPlanNetworkEnum.KeywordPlanNetwork, keyword_plan_network
+        )
+
         return await service.generate_keyword_ideas_from_url(
             ctx=ctx,
             customer_id=customer_id,
             page_url=page_url,
             language=language,
             geo_target_constants=geo_target_constants,
-            keyword_plan_network=keyword_plan_network,
+            keyword_plan_network=keyword_plan_network_enum,
             include_adult_keywords=include_adult_keywords,
             page_size=page_size,
         )
@@ -454,7 +459,7 @@ def create_keyword_plan_idea_tools(
         site_url: str,
         language: str,
         geo_target_constants: List[str],
-        keyword_plan_network: KeywordPlanNetworkEnum.KeywordPlanNetwork = KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH_AND_PARTNERS,
+        keyword_plan_network: str = "GOOGLE_SEARCH_AND_PARTNERS",
         include_adult_keywords: bool = False,
         page_size: int = 100,
     ) -> List[Dict[str, Any]]:
@@ -472,13 +477,18 @@ def create_keyword_plan_idea_tools(
         Returns:
             List of keyword ideas with metrics and annotations
         """
+        # Convert string enum to proper enum type
+        keyword_plan_network_enum = getattr(
+            KeywordPlanNetworkEnum.KeywordPlanNetwork, keyword_plan_network
+        )
+
         return await service.generate_keyword_ideas_from_site(
             ctx=ctx,
             customer_id=customer_id,
             site_url=site_url,
             language=language,
             geo_target_constants=geo_target_constants,
-            keyword_plan_network=keyword_plan_network,
+            keyword_plan_network=keyword_plan_network_enum,
             include_adult_keywords=include_adult_keywords,
             page_size=page_size,
         )
@@ -490,7 +500,7 @@ def create_keyword_plan_idea_tools(
         page_url: str,
         language: str,
         geo_target_constants: List[str],
-        keyword_plan_network: KeywordPlanNetworkEnum.KeywordPlanNetwork = KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH_AND_PARTNERS,
+        keyword_plan_network: str = "GOOGLE_SEARCH_AND_PARTNERS",
         include_adult_keywords: bool = False,
         page_size: int = 100,
     ) -> List[Dict[str, Any]]:
@@ -509,6 +519,11 @@ def create_keyword_plan_idea_tools(
         Returns:
             List of keyword ideas with metrics and annotations
         """
+        # Convert string enum to proper enum type
+        keyword_plan_network_enum = getattr(
+            KeywordPlanNetworkEnum.KeywordPlanNetwork, keyword_plan_network
+        )
+
         return await service.generate_keyword_ideas_from_keywords_and_url(
             ctx=ctx,
             customer_id=customer_id,
@@ -516,7 +531,7 @@ def create_keyword_plan_idea_tools(
             page_url=page_url,
             language=language,
             geo_target_constants=geo_target_constants,
-            keyword_plan_network=keyword_plan_network,
+            keyword_plan_network=keyword_plan_network_enum,
             include_adult_keywords=include_adult_keywords,
             page_size=page_size,
         )
