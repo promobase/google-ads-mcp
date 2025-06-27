@@ -41,7 +41,9 @@ class CustomerConversionGoalService:
         """Get the customer conversion goal service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("CustomerConversionGoalService")
+            self._client = sdk_client.client.get_service(
+                "CustomerConversionGoalService"
+            )
         assert self._client is not None
         return self._client
 
@@ -70,37 +72,37 @@ class CustomerConversionGoalService:
             mutate_operations = []
             for op in operations:
                 operation = CustomerConversionGoalOperation()
-                
+
                 if "update" in op:
                     update_data = op["update"]
                     conversion_goal = CustomerConversionGoal()
-                    
+
                     if "resource_name" in update_data:
                         conversion_goal.resource_name = update_data["resource_name"]
-                    
+
                     if "category" in update_data:
                         conversion_goal.category = getattr(
                             ConversionActionCategoryEnum.ConversionActionCategory,
                             update_data["category"],
                         )
-                    
+
                     if "origin" in update_data:
                         conversion_goal.origin = getattr(
                             ConversionOriginEnum.ConversionOrigin,
                             update_data["origin"],
                         )
-                    
+
                     if "biddable" in update_data:
                         conversion_goal.biddable = bool(update_data["biddable"])
-                    
+
                     # Set update mask for fields that can be updated
                     update_mask = field_mask_pb2.FieldMask()
                     if "biddable" in update_data:
                         update_mask.paths.append("biddable")
                     operation.update_mask = update_mask
-                    
+
                     operation.update = conversion_goal
-                
+
                 mutate_operations.append(operation)
 
             # Create request

@@ -25,7 +25,6 @@ from google.ads.googleads.v20.services.types.account_budget_proposal_service imp
     MutateAccountBudgetProposalRequest,
     MutateAccountBudgetProposalResponse,
 )
-from google.protobuf import field_mask_pb2
 
 from src.sdk_client import get_sdk_client
 from src.utils import format_customer_id, get_logger, serialize_proto_message

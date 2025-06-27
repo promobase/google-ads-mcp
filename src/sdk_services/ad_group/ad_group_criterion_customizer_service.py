@@ -1,32 +1,29 @@
 """Ad group criterion customizer service implementation using Google Ads SDK."""
 
-from typing import Any, Dict, List, Optional, Callable, Awaitable
+from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
-from google.ads.googleads.v20.services.services.ad_group_criterion_customizer_service import (
-    AdGroupCriterionCustomizerServiceClient,
-)
-from google.ads.googleads.v20.services.types.ad_group_criterion_customizer_service import (
-    MutateAdGroupCriterionCustomizersRequest,
-    AdGroupCriterionCustomizerOperation,
-    MutateAdGroupCriterionCustomizersResponse,
-)
-from google.ads.googleads.v20.resources.types.ad_group_criterion_customizer import (
-    AdGroupCriterionCustomizer,
-)
+from google.ads.googleads.errors import GoogleAdsException
 from google.ads.googleads.v20.common.types.customizer_value import (
     CustomizerValue,
 )
 from google.ads.googleads.v20.enums.types.customizer_attribute_type import (
     CustomizerAttributeTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.customizer_value_status import (
-    CustomizerValueStatusEnum,
-)
 from google.ads.googleads.v20.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
-from google.ads.googleads.errors import GoogleAdsException
+from google.ads.googleads.v20.resources.types.ad_group_criterion_customizer import (
+    AdGroupCriterionCustomizer,
+)
+from google.ads.googleads.v20.services.services.ad_group_criterion_customizer_service import (
+    AdGroupCriterionCustomizerServiceClient,
+)
+from google.ads.googleads.v20.services.types.ad_group_criterion_customizer_service import (
+    AdGroupCriterionCustomizerOperation,
+    MutateAdGroupCriterionCustomizersRequest,
+    MutateAdGroupCriterionCustomizersResponse,
+)
 
 from src.sdk_client import get_sdk_client
 from src.utils import format_customer_id, get_logger, serialize_proto_message
@@ -46,7 +43,9 @@ class AdGroupCriterionCustomizerService:
         """Get the ad group criterion customizer service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("AdGroupCriterionCustomizerService")
+            self._client = sdk_client.client.get_service(
+                "AdGroupCriterionCustomizerService"
+            )
         assert self._client is not None
         return self._client
 
@@ -79,21 +78,25 @@ class AdGroupCriterionCustomizerService:
             mutate_operations = []
             for op in operations:
                 operation = AdGroupCriterionCustomizerOperation()
-                
+
                 if "create" in op:
                     create_data = op["create"]
                     customizer = AdGroupCriterionCustomizer()
-                    
+
                     if "ad_group_criterion" in create_data:
-                        customizer.ad_group_criterion = create_data["ad_group_criterion"]
-                    
+                        customizer.ad_group_criterion = create_data[
+                            "ad_group_criterion"
+                        ]
+
                     if "customizer_attribute" in create_data:
-                        customizer.customizer_attribute = create_data["customizer_attribute"]
-                    
+                        customizer.customizer_attribute = create_data[
+                            "customizer_attribute"
+                        ]
+
                     if "value" in create_data:
                         value_data = create_data["value"]
                         customizer_value = CustomizerValue()
-                        
+
                         if "type" in value_data and "value" in value_data:
                             value_type = value_data["type"].upper()
                             # Set the type enum
@@ -103,14 +106,14 @@ class AdGroupCriterionCustomizerService:
                             )
                             # All values are stored as strings
                             customizer_value.string_value = str(value_data["value"])
-                        
+
                         customizer.value = customizer_value
-                    
+
                     operation.create = customizer
-                
+
                 elif "remove" in op:
                     operation.remove = op["remove"]
-                
+
                 mutate_operations.append(operation)
 
             # Create request
@@ -129,38 +132,7 @@ class AdGroupCriterionCustomizerService:
                 self.client.mutate_ad_group_criterion_customizers(request=request)
             )
 
-            # Process results
-            results = []
-            for result in response.results:
-                result_dict = {
-                    "resource_name": result.resource_name,
-                }
-                
-                if result.ad_group_criterion_customizer:
-                    result_dict["ad_group_criterion_customizer"] = serialize_proto_message(
-                        result.ad_group_criterion_customizer
-                    )
-                
-                results.append(result_dict)
-
-            # Handle partial failure
-            partial_failure_error = None
-            if response.partial_failure_error:
-                partial_failure_error = {
-                    "code": response.partial_failure_error.code,
-                    "message": response.partial_failure_error.message,
-                    "details": [detail for detail in response.partial_failure_error.details],
-                }
-
-            await ctx.log(
-                level="info",
-                message=f"Mutated {len(results)} ad group criterion customizers",
-            )
-
-            return {
-                "results": results,
-                "partial_failure_error": partial_failure_error,
-            }
+            return serialize_proto_message(response)
 
         except GoogleAdsException as e:
             error_msg = f"Google Ads API error: {e.failure}"

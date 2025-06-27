@@ -42,13 +42,15 @@ class TestAdGroupCriterionCustomizerService:
         """Test creating ad group criterion customizers."""
         # Mock response
         mock_result = Mock()
-        mock_result.resource_name = "customers/123/adGroupCriterionCustomizers/456~789~101112"
+        mock_result.resource_name = (
+            "customers/123/adGroupCriterionCustomizers/456~789~101112"
+        )
         mock_result.ad_group_criterion_customizer = None
-        
+
         mock_response = Mock()
         mock_response.results = [mock_result]
         mock_response.partial_failure_error = None
-        
+
         mock_client.mutate_ad_group_criterion_customizers.return_value = mock_response
 
         # Test data
@@ -57,10 +59,7 @@ class TestAdGroupCriterionCustomizerService:
                 "create": {
                     "ad_group_criterion": "customers/123/adGroupCriteria/456~789",
                     "customizer_attribute": "customers/123/customizerAttributes/101112",
-                    "value": {
-                        "type": "TEXT",
-                        "value": "Custom Text Value"
-                    }
+                    "value": {"type": "TEXT", "value": "Custom Text Value"},
                 }
             }
         ]
@@ -73,18 +72,27 @@ class TestAdGroupCriterionCustomizerService:
         )
 
         # Verify the result
-        assert result["results"][0]["resource_name"] == "customers/123/adGroupCriterionCustomizers/456~789~101112"
+        assert (
+            result["results"][0]["resource_name"]
+            == "customers/123/adGroupCriterionCustomizers/456~789~101112"
+        )
         assert result["partial_failure_error"] is None
-        
+
         # Verify the API call
         mock_client.mutate_ad_group_criterion_customizers.assert_called_once()
         call_args = mock_client.mutate_ad_group_criterion_customizers.call_args[1]
         request = call_args["request"]
-        
+
         assert request.customer_id == "123"
         assert len(request.operations) == 1
-        assert request.operations[0].create.ad_group_criterion == "customers/123/adGroupCriteria/456~789"
-        assert request.operations[0].create.customizer_attribute == "customers/123/customizerAttributes/101112"
+        assert (
+            request.operations[0].create.ad_group_criterion
+            == "customers/123/adGroupCriteria/456~789"
+        )
+        assert (
+            request.operations[0].create.customizer_attribute
+            == "customers/123/customizerAttributes/101112"
+        )
         assert request.operations[0].create.value.string_value == "Custom Text Value"
 
     @pytest.mark.asyncio
@@ -94,20 +102,20 @@ class TestAdGroupCriterionCustomizerService:
         """Test removing ad group criterion customizers."""
         # Mock response
         mock_result = Mock()
-        mock_result.resource_name = "customers/123/adGroupCriterionCustomizers/456~789~101112"
+        mock_result.resource_name = (
+            "customers/123/adGroupCriterionCustomizers/456~789~101112"
+        )
         mock_result.ad_group_criterion_customizer = None
-        
+
         mock_response = Mock()
         mock_response.results = [mock_result]
         mock_response.partial_failure_error = None
-        
+
         mock_client.mutate_ad_group_criterion_customizers.return_value = mock_response
 
         # Test data
         operations = [
-            {
-                "remove": "customers/123/adGroupCriterionCustomizers/456~789~101112"
-            }
+            {"remove": "customers/123/adGroupCriterionCustomizers/456~789~101112"}
         ]
 
         # Call the method
@@ -118,16 +126,22 @@ class TestAdGroupCriterionCustomizerService:
         )
 
         # Verify the result
-        assert result["results"][0]["resource_name"] == "customers/123/adGroupCriterionCustomizers/456~789~101112"
-        
+        assert (
+            result["results"][0]["resource_name"]
+            == "customers/123/adGroupCriterionCustomizers/456~789~101112"
+        )
+
         # Verify the API call
         mock_client.mutate_ad_group_criterion_customizers.assert_called_once()
         call_args = mock_client.mutate_ad_group_criterion_customizers.call_args[1]
         request = call_args["request"]
-        
+
         assert request.customer_id == "123"
         assert len(request.operations) == 1
-        assert request.operations[0].remove == "customers/123/adGroupCriterionCustomizers/456~789~101112"
+        assert (
+            request.operations[0].remove
+            == "customers/123/adGroupCriterionCustomizers/456~789~101112"
+        )
 
     @pytest.mark.asyncio
     async def test_mutate_ad_group_criterion_customizers_number_value(
@@ -136,13 +150,15 @@ class TestAdGroupCriterionCustomizerService:
         """Test creating ad group criterion customizers with number value."""
         # Mock response
         mock_result = Mock()
-        mock_result.resource_name = "customers/123/adGroupCriterionCustomizers/456~789~101112"
+        mock_result.resource_name = (
+            "customers/123/adGroupCriterionCustomizers/456~789~101112"
+        )
         mock_result.ad_group_criterion_customizer = None
-        
+
         mock_response = Mock()
         mock_response.results = [mock_result]
         mock_response.partial_failure_error = None
-        
+
         mock_client.mutate_ad_group_criterion_customizers.return_value = mock_response
 
         # Test data
@@ -151,10 +167,7 @@ class TestAdGroupCriterionCustomizerService:
                 "create": {
                     "ad_group_criterion": "customers/123/adGroupCriteria/456~789",
                     "customizer_attribute": "customers/123/customizerAttributes/101112",
-                    "value": {
-                        "type": "NUMBER",
-                        "value": "99.99"
-                    }
+                    "value": {"type": "NUMBER", "value": "99.99"},
                 }
             }
         ]
@@ -170,7 +183,7 @@ class TestAdGroupCriterionCustomizerService:
         mock_client.mutate_ad_group_criterion_customizers.assert_called_once()
         call_args = mock_client.mutate_ad_group_criterion_customizers.call_args[1]
         request = call_args["request"]
-        
+
         assert request.operations[0].create.value.string_value == "99.99"
 
     @pytest.mark.asyncio
@@ -180,18 +193,20 @@ class TestAdGroupCriterionCustomizerService:
         """Test mutating ad group criterion customizers with partial failure."""
         # Mock response with partial failure
         mock_result = Mock()
-        mock_result.resource_name = "customers/123/adGroupCriterionCustomizers/456~789~101112"
+        mock_result.resource_name = (
+            "customers/123/adGroupCriterionCustomizers/456~789~101112"
+        )
         mock_result.ad_group_criterion_customizer = None
-        
+
         mock_error = Mock()
         mock_error.code = 3
         mock_error.message = "Invalid customizer attribute"
         mock_error.details = []
-        
+
         mock_response = Mock()
         mock_response.results = [mock_result]
         mock_response.partial_failure_error = mock_error
-        
+
         mock_client.mutate_ad_group_criterion_customizers.return_value = mock_response
 
         # Test data
@@ -200,10 +215,7 @@ class TestAdGroupCriterionCustomizerService:
                 "create": {
                     "ad_group_criterion": "customers/123/adGroupCriteria/456~789",
                     "customizer_attribute": "customers/123/customizerAttributes/101112",
-                    "value": {
-                        "type": "TEXT",
-                        "value": "Test Value"
-                    }
+                    "value": {"type": "TEXT", "value": "Test Value"},
                 }
             }
         ]
@@ -218,7 +230,9 @@ class TestAdGroupCriterionCustomizerService:
 
         # Verify the result includes partial failure error
         assert result["partial_failure_error"]["code"] == 3
-        assert result["partial_failure_error"]["message"] == "Invalid customizer attribute"
+        assert (
+            result["partial_failure_error"]["message"] == "Invalid customizer attribute"
+        )
 
 
 class TestAdGroupCriterionCustomizerTools:
@@ -233,10 +247,10 @@ class TestAdGroupCriterionCustomizerTools:
         )
 
         tools = create_ad_group_criterion_customizer_tools(service)
-        
+
         # Should have one tool
         assert len(tools) == 1
-        
+
         # Test the mutate tool
         mutate_tool = tools[0]
         await mutate_tool(
@@ -244,7 +258,7 @@ class TestAdGroupCriterionCustomizerTools:
             customer_id="123",
             operations=[],
         )
-        
+
         service.mutate_ad_group_criterion_customizers.assert_called_once_with(
             ctx=mock_context,
             customer_id="123",

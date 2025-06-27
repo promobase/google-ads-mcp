@@ -1,23 +1,23 @@
 """Ad parameter service implementation using Google Ads SDK."""
 
-from typing import Any, Dict, List, Optional, Callable, Awaitable
+from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
-from google.ads.googleads.v20.services.services.ad_parameter_service import (
-    AdParameterServiceClient,
-)
-from google.ads.googleads.v20.services.types.ad_parameter_service import (
-    MutateAdParametersRequest,
-    AdParameterOperation,
-    MutateAdParametersResponse,
+from google.ads.googleads.errors import GoogleAdsException
+from google.ads.googleads.v20.enums.types.response_content_type import (
+    ResponseContentTypeEnum,
 )
 from google.ads.googleads.v20.resources.types.ad_parameter import (
     AdParameter,
 )
-from google.ads.googleads.v20.enums.types.response_content_type import (
-    ResponseContentTypeEnum,
+from google.ads.googleads.v20.services.services.ad_parameter_service import (
+    AdParameterServiceClient,
 )
-from google.ads.googleads.errors import GoogleAdsException
+from google.ads.googleads.v20.services.types.ad_parameter_service import (
+    AdParameterOperation,
+    MutateAdParametersRequest,
+    MutateAdParametersResponse,
+)
 from google.protobuf import field_mask_pb2
 
 from src.sdk_client import get_sdk_client
@@ -71,43 +71,47 @@ class AdParameterService:
             mutate_operations = []
             for op in operations:
                 operation = AdParameterOperation()
-                
+
                 if "create" in op:
                     create_data = op["create"]
                     ad_parameter = AdParameter()
-                    
+
                     if "ad_group_criterion" in create_data:
-                        ad_parameter.ad_group_criterion = create_data["ad_group_criterion"]
-                    
+                        ad_parameter.ad_group_criterion = create_data[
+                            "ad_group_criterion"
+                        ]
+
                     if "parameter_index" in create_data:
-                        ad_parameter.parameter_index = int(create_data["parameter_index"])
-                    
+                        ad_parameter.parameter_index = int(
+                            create_data["parameter_index"]
+                        )
+
                     if "insertion_text" in create_data:
                         ad_parameter.insertion_text = create_data["insertion_text"]
-                    
+
                     operation.create = ad_parameter
-                
+
                 elif "update" in op:
                     update_data = op["update"]
                     ad_parameter = AdParameter()
-                    
+
                     if "resource_name" in update_data:
                         ad_parameter.resource_name = update_data["resource_name"]
-                    
+
                     if "insertion_text" in update_data:
                         ad_parameter.insertion_text = update_data["insertion_text"]
-                    
+
                     # Set update mask for fields that can be updated
                     update_mask = field_mask_pb2.FieldMask()
                     if "insertion_text" in update_data:
                         update_mask.paths.append("insertion_text")
                     operation.update_mask = update_mask
-                    
+
                     operation.update = ad_parameter
-                
+
                 elif "remove" in op:
                     operation.remove = op["remove"]
-                
+
                 mutate_operations.append(operation)
 
             # Create request
@@ -122,42 +126,11 @@ class AdParameterService:
             )
 
             # Make the API call
-            response: MutateAdParametersResponse = (
-                self.client.mutate_ad_parameters(request=request)
+            response: MutateAdParametersResponse = self.client.mutate_ad_parameters(
+                request=request
             )
 
-            # Process results
-            results = []
-            for result in response.results:
-                result_dict = {
-                    "resource_name": result.resource_name,
-                }
-                
-                if result.ad_parameter:
-                    result_dict["ad_parameter"] = serialize_proto_message(
-                        result.ad_parameter
-                    )
-                
-                results.append(result_dict)
-
-            # Handle partial failure
-            partial_failure_error = None
-            if response.partial_failure_error:
-                partial_failure_error = {
-                    "code": response.partial_failure_error.code,
-                    "message": response.partial_failure_error.message,
-                    "details": [detail for detail in response.partial_failure_error.details],
-                }
-
-            await ctx.log(
-                level="info",
-                message=f"Mutated {len(results)} ad parameters",
-            )
-
-            return {
-                "results": results,
-                "partial_failure_error": partial_failure_error,
-            }
+            return serialize_proto_message(response)
 
         except GoogleAdsException as e:
             error_msg = f"Google Ads API error: {e.failure}"

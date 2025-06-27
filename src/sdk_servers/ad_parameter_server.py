@@ -13,11 +13,11 @@ def register_ad_parameter_server(
     mcp: FastMCP[Any],
 ) -> None:
     """Register ad parameter server with MCP.
-    
+
     This server provides tools for managing ad parameters,
     which allow dynamic numeric values in ads (like prices or inventory levels).
-    
+
     Args:
         mcp: The FastMCP server instance
     """
-    return register_ad_parameter_tools(mcp)
+    register_ad_parameter_tools(mcp)

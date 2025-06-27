@@ -4,8 +4,9 @@ This module provides functionality for managing keyword plan campaigns in Google
 Keyword plan campaigns define the targeting and settings for keyword planning.
 """
 
-from typing import List, Optional
+from typing import Any, List, Optional
 
+from fastmcp import FastMCP
 from google.ads.googleads.v20.enums.types.keyword_plan_network import (
     KeywordPlanNetworkEnum,
 )
@@ -22,13 +23,24 @@ from google.ads.googleads.v20.services.types.keyword_plan_campaign_service impor
     MutateKeywordPlanCampaignsResponse,
 )
 
+from src.sdk_client import get_sdk_client
+
 
 class KeywordPlanCampaignService:
     """Service for managing Google Ads keyword plan campaigns."""
 
-    def __init__(self, client):
-        self.client = client
-        self.service = self.client.get_service("KeywordPlanCampaignService")
+    def __init__(self) -> None:
+        """Initialize the keyword plan campaign service."""
+        self._client: Optional[KeywordPlanCampaignServiceClient] = None
+
+    @property
+    def client(self) -> KeywordPlanCampaignServiceClient:
+        """Get the keyword plan campaign service client."""
+        if self._client is None:
+            sdk_client = get_sdk_client()
+            self._client = sdk_client.client.get_service("KeywordPlanCampaignService")
+        assert self._client is not None
+        return self._client
 
     def mutate_keyword_plan_campaigns(
         self,
@@ -54,7 +66,7 @@ class KeywordPlanCampaignService:
             partial_failure=partial_failure,
             validate_only=validate_only,
         )
-        return self.service.mutate_keyword_plan_campaigns(request=request)
+        return self.client.mutate_keyword_plan_campaigns(request=request)
 
     def create_keyword_plan_campaign_operation(
         self,
@@ -160,3 +172,226 @@ class KeywordPlanCampaignService:
             KeywordPlanCampaignOperation: The operation to remove the keyword plan campaign
         """
         return KeywordPlanCampaignOperation(remove=resource_name)
+
+
+def register_keyword_plan_campaign_tools(mcp: FastMCP[Any]) -> None:
+    """Register keyword plan campaign tools with the MCP server."""
+
+    @mcp.tool
+    async def mutate_keyword_plan_campaigns(
+        customer_id: str,
+        operations: list[dict[str, Any]],
+        partial_failure: bool = False,
+        validate_only: bool = False,
+    ) -> str:
+        """Create, update, or remove keyword plan campaigns.
+
+        Args:
+            customer_id: The customer ID
+            operations: List of keyword plan campaign operations
+            partial_failure: Enable partial failure
+            validate_only: Only validate the request
+
+        Returns:
+            Success message with operation count
+        """
+        service = KeywordPlanCampaignService()
+
+        def _get_network_enum(
+            network_str: str,
+        ) -> KeywordPlanNetworkEnum.KeywordPlanNetwork:
+            """Convert string to network enum."""
+            if network_str == "GOOGLE_SEARCH":
+                return KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH
+            elif network_str == "GOOGLE_SEARCH_AND_PARTNERS":
+                return (
+                    KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH_AND_PARTNERS
+                )
+            else:
+                raise ValueError(f"Invalid network: {network_str}")
+
+        ops = []
+        for op_data in operations:
+            op_type = op_data["operation_type"]
+
+            if op_type == "create":
+                operation = service.create_keyword_plan_campaign_operation(
+                    keyword_plan=op_data["keyword_plan"],
+                    name=op_data["name"],
+                    keyword_plan_network=_get_network_enum(
+                        op_data["keyword_plan_network"]
+                    ),
+                    cpc_bid_micros=op_data["cpc_bid_micros"],
+                    language_constants=op_data.get("language_constants"),
+                    geo_target_constants=op_data.get("geo_target_constants"),
+                )
+            elif op_type == "update":
+                network = None
+                if "keyword_plan_network" in op_data:
+                    network = _get_network_enum(op_data["keyword_plan_network"])
+
+                operation = service.update_keyword_plan_campaign_operation(
+                    resource_name=op_data["resource_name"],
+                    name=op_data.get("name"),
+                    keyword_plan_network=network,
+                    cpc_bid_micros=op_data.get("cpc_bid_micros"),
+                    language_constants=op_data.get("language_constants"),
+                    geo_target_constants=op_data.get("geo_target_constants"),
+                )
+            elif op_type == "remove":
+                operation = service.remove_keyword_plan_campaign_operation(
+                    resource_name=op_data["resource_name"]
+                )
+            else:
+                raise ValueError(f"Invalid operation type: {op_type}")
+
+            ops.append(operation)
+
+        response = service.mutate_keyword_plan_campaigns(
+            customer_id=customer_id,
+            operations=ops,
+            partial_failure=partial_failure,
+            validate_only=validate_only,
+        )
+
+        return f"Successfully processed {len(response.results)} keyword plan campaign operations"
+
+    @mcp.tool
+    async def create_keyword_plan_campaign(
+        customer_id: str,
+        keyword_plan: str,
+        name: str,
+        keyword_plan_network: str,
+        cpc_bid_micros: int,
+        language_constants: list[str] = [],
+        geo_target_constants: list[str] = [],
+    ) -> str:
+        """Create a new keyword plan campaign.
+
+        Args:
+            customer_id: The customer ID
+            keyword_plan: The keyword plan resource name
+            name: Name of the keyword plan campaign
+            keyword_plan_network: Targeting network (GOOGLE_SEARCH or GOOGLE_SEARCH_AND_PARTNERS)
+            cpc_bid_micros: Default CPC bid in micros
+            language_constants: List of language constant resource names
+            geo_target_constants: List of geo target constant resource names
+
+        Returns:
+            The created keyword plan campaign resource name
+        """
+        service = KeywordPlanCampaignService()
+
+        def _get_network_enum(
+            network_str: str,
+        ) -> KeywordPlanNetworkEnum.KeywordPlanNetwork:
+            """Convert string to network enum."""
+            if network_str == "GOOGLE_SEARCH":
+                return KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH
+            elif network_str == "GOOGLE_SEARCH_AND_PARTNERS":
+                return (
+                    KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH_AND_PARTNERS
+                )
+            else:
+                raise ValueError(f"Invalid network: {network_str}")
+
+        operation = service.create_keyword_plan_campaign_operation(
+            keyword_plan=keyword_plan,
+            name=name,
+            keyword_plan_network=_get_network_enum(keyword_plan_network),
+            cpc_bid_micros=cpc_bid_micros,
+            language_constants=language_constants,
+            geo_target_constants=geo_target_constants,
+        )
+
+        response = service.mutate_keyword_plan_campaigns(
+            customer_id=customer_id, operations=[operation]
+        )
+
+        result = response.results[0]
+        return f"Created keyword plan campaign: {result.resource_name}"
+
+    @mcp.tool
+    async def update_keyword_plan_campaign(
+        customer_id: str,
+        resource_name: str,
+        name: Optional[str] = None,
+        keyword_plan_network: Optional[str] = None,
+        cpc_bid_micros: Optional[int] = None,
+        language_constants: Optional[list[str]] = None,
+        geo_target_constants: Optional[list[str]] = None,
+    ) -> str:
+        """Update an existing keyword plan campaign.
+
+        Args:
+            customer_id: The customer ID
+            resource_name: The keyword plan campaign resource name
+            name: Name of the keyword plan campaign
+            keyword_plan_network: Targeting network (GOOGLE_SEARCH or GOOGLE_SEARCH_AND_PARTNERS)
+            cpc_bid_micros: Default CPC bid in micros
+            language_constants: List of language constant resource names
+            geo_target_constants: List of geo target constant resource names
+
+        Returns:
+            The updated keyword plan campaign resource name
+        """
+        service = KeywordPlanCampaignService()
+
+        def _get_network_enum(
+            network_str: str,
+        ) -> KeywordPlanNetworkEnum.KeywordPlanNetwork:
+            """Convert string to network enum."""
+            if network_str == "GOOGLE_SEARCH":
+                return KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH
+            elif network_str == "GOOGLE_SEARCH_AND_PARTNERS":
+                return (
+                    KeywordPlanNetworkEnum.KeywordPlanNetwork.GOOGLE_SEARCH_AND_PARTNERS
+                )
+            else:
+                raise ValueError(f"Invalid network: {network_str}")
+
+        network = None
+        if keyword_plan_network is not None:
+            network = _get_network_enum(keyword_plan_network)
+
+        operation = service.update_keyword_plan_campaign_operation(
+            resource_name=resource_name,
+            name=name,
+            keyword_plan_network=network,
+            cpc_bid_micros=cpc_bid_micros,
+            language_constants=language_constants,
+            geo_target_constants=geo_target_constants,
+        )
+
+        response = service.mutate_keyword_plan_campaigns(
+            customer_id=customer_id, operations=[operation]
+        )
+
+        result = response.results[0]
+        return f"Updated keyword plan campaign: {result.resource_name}"
+
+    @mcp.tool
+    async def remove_keyword_plan_campaign(
+        customer_id: str,
+        resource_name: str,
+    ) -> str:
+        """Remove a keyword plan campaign.
+
+        Args:
+            customer_id: The customer ID
+            resource_name: The keyword plan campaign resource name
+
+        Returns:
+            Success message
+        """
+        service = KeywordPlanCampaignService()
+
+        operation = service.remove_keyword_plan_campaign_operation(
+            resource_name=resource_name
+        )
+
+        service.mutate_keyword_plan_campaigns(
+            customer_id=customer_id, operations=[operation]
+        )
+
+        return f"Removed keyword plan campaign: {resource_name}"

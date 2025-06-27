@@ -111,7 +111,7 @@ from src.sdk_servers.customizer_attribute_server import (
 )
 from src.sdk_servers.data_link_server import register_data_link_server
 from src.sdk_servers.experiment_server import experiment_sdk_server
-from src.sdk_servers.experiment_arm_server import create_experiment_arm_server
+from src.sdk_servers.experiment_arm_server import register_experiment_arm_server
 from src.sdk_servers.geo_target_constant_server import geo_target_constant_sdk_server
 from src.sdk_servers.google_ads_field_server import google_ads_field_sdk_server
 from src.sdk_servers.google_ads_server import register_google_ads_server
@@ -122,21 +122,25 @@ from src.sdk_servers.invoice_server import register_invoice_server
 from src.sdk_servers.keyword_plan_idea_server import register_keyword_plan_idea_server
 from src.sdk_servers.keyword_plan_server import keyword_plan_sdk_server
 from src.sdk_servers.keyword_plan_ad_group_server import (
-    create_keyword_plan_ad_group_server,
+    register_keyword_plan_ad_group_server,
 )
 from src.sdk_servers.keyword_plan_campaign_server import (
-    create_keyword_plan_campaign_server,
+    register_keyword_plan_campaign_server,
 )
 from src.sdk_servers.keyword_plan_ad_group_keyword_server import (
-    create_keyword_plan_ad_group_keyword_server,
+    register_keyword_plan_ad_group_keyword_server,
 )
 from src.sdk_servers.keyword_plan_campaign_keyword_server import (
-    create_keyword_plan_campaign_keyword_server,
+    register_keyword_plan_campaign_keyword_server,
 )
-from src.sdk_servers.brand_suggestion_server import create_brand_suggestion_server
-from src.sdk_servers.product_link_server import create_product_link_server
-from src.sdk_servers.conversion_goal_campaign_config_server import create_conversion_goal_campaign_config_server
-from src.sdk_servers.custom_conversion_goal_server import create_custom_conversion_goal_server
+from src.sdk_servers.brand_suggestion_server import register_brand_suggestion_server
+from src.sdk_servers.product_link_server import register_product_link_server
+from src.sdk_servers.conversion_goal_campaign_config_server import (
+    register_conversion_goal_campaign_config_server,
+)
+from src.sdk_servers.custom_conversion_goal_server import (
+    register_custom_conversion_goal_server,
+)
 from src.sdk_servers.customer_conversion_goal_server import (
     register_customer_conversion_goal_server,
 )
@@ -266,23 +270,17 @@ mcp.mount(custom_interest_sdk_server, prefix="custom_interest")
 mcp.mount(custom_audience_sdk_server, prefix="custom_audience")
 mcp.mount(keyword_plan_sdk_server, prefix="keyword_plan")
 register_keyword_plan_idea_server(mcp)
-mcp.mount(create_keyword_plan_ad_group_server(), prefix="keyword_plan_ad_group")
-mcp.mount(create_keyword_plan_campaign_server(), prefix="keyword_plan_campaign")
-mcp.mount(
-    create_keyword_plan_ad_group_keyword_server(),
-    prefix="keyword_plan_ad_group_keyword",
-)
-mcp.mount(
-    create_keyword_plan_campaign_keyword_server(),
-    prefix="keyword_plan_campaign_keyword",
-)
-mcp.mount(create_brand_suggestion_server(), prefix="brand_suggestion")
-mcp.mount(create_product_link_server(), prefix="product_link")
-mcp.mount(create_conversion_goal_campaign_config_server(), prefix="conversion_goal_campaign_config")
-mcp.mount(create_custom_conversion_goal_server(), prefix="custom_conversion_goal")
+register_keyword_plan_ad_group_server(mcp)
+register_keyword_plan_campaign_server(mcp)
+register_keyword_plan_ad_group_keyword_server(mcp)
+register_keyword_plan_campaign_keyword_server(mcp)
+register_brand_suggestion_server(mcp)
+register_product_link_server(mcp)
+register_conversion_goal_campaign_config_server(mcp)
+register_custom_conversion_goal_server(mcp)
 register_customer_conversion_goal_server(mcp)
 mcp.mount(experiment_sdk_server, prefix="experiment")
-mcp.mount(create_experiment_arm_server(), prefix="experiment_arm")
+register_experiment_arm_server(mcp)
 mcp.mount(conversion_upload_sdk_server, prefix="conversion_upload")
 mcp.mount(smart_campaign_sdk_server, prefix="smart_campaign")
 mcp.mount(remarketing_action_sdk_server, prefix="remarketing_action")

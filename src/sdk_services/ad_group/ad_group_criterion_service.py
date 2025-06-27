@@ -6,7 +6,6 @@ from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
 from google.ads.googleads.v20.common.types.criteria import (
     AgeRangeInfo,
-    AudienceInfo,
     GenderInfo,
     IncomeRangeInfo,
     KeywordInfo,
@@ -232,7 +231,7 @@ class AdGroupCriterionService:
         customer_id: str,
         ad_group_id: str,
         demographics: List[Dict[str, Any]],
-    ) -> List[Dict[str, Any]]:
+    ) -> Dict[str, Any]:
         """Add demographic targeting criteria to an ad group.
 
         Args:
@@ -306,30 +305,7 @@ class AdGroupCriterionService:
                 self.client.mutate_ad_group_criteria(request=request)
             )
 
-            # Process results
-            results = []
-            for i, result in enumerate(response.results):
-                criterion_resource = result.resource_name
-                criterion_id = (
-                    criterion_resource.split("/")[-1] if criterion_resource else ""
-                )
-                demo = demographics[i]
-                results.append(
-                    {
-                        "resource_name": criterion_resource,
-                        "criterion_id": criterion_id,
-                        "type": demo["type"],
-                        "value": demo["value"],
-                        "bid_modifier": demo.get("bid_modifier"),
-                    }
-                )
-
-            await ctx.log(
-                level="info",
-                message=f"Added {len(results)} demographic criteria to ad group {ad_group_id}",
-            )
-
-            return results
+            return serialize_proto_message(response)
 
         except GoogleAdsException as e:
             error_msg = f"Google Ads API error: {e.failure}"
@@ -527,7 +503,7 @@ def create_ad_group_criterion_tools(
         customer_id: str,
         ad_group_id: str,
         demographics: List[Dict[str, Any]],
-    ) -> List[Dict[str, Any]]:
+    ) -> Dict[str, Any]:
         """Add demographic targeting criteria to an ad group.
 
         Args:
