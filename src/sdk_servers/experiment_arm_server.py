@@ -8,7 +8,8 @@ from src.sdk_services.campaign.experiment_arm_service import (
     register_experiment_arm_tools,
 )
 
+# Create the FastMCP server instance
+experiment_arm_sdk_server = FastMCP[Any](name="experiment_arm_sdk_server")
 
-def register_experiment_arm_server(mcp: FastMCP[Any]) -> None:
-    """Register experiment arm server tools with the MCP server."""
-    register_experiment_arm_tools(mcp)
+# Register the tools with the server instance
+register_experiment_arm_tools(experiment_arm_sdk_server)

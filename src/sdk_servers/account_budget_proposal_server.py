@@ -1,24 +1,13 @@
-"""Server wrapper for account budget proposal service."""
-
-from typing import Any
+"""Account budget proposal server using SDK implementation."""
 
 from fastmcp import FastMCP
 
 from src.sdk_services.account.account_budget_proposal_service import (
     register_account_budget_proposal_tools,
-    AccountBudgetProposalService,
 )
 
+# Create the account budget proposal server
+account_budget_proposal_sdk_server = FastMCP(name="account-budget-proposal-service")
 
-def register_account_budget_proposal_server(
-    mcp: FastMCP[Any],
-) -> AccountBudgetProposalService:
-    """Register account budget proposal tools with the MCP server.
-
-    Args:
-        mcp: The FastMCP server instance
-
-    Returns:
-        The AccountBudgetProposalService instance for testing purposes
-    """
-    return register_account_budget_proposal_tools(mcp)
+# Register the tools
+register_account_budget_proposal_tools(account_budget_proposal_sdk_server)

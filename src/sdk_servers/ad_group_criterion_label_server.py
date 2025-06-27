@@ -1,6 +1,4 @@
-"""Ad group criterion label server module."""
-
-from typing import Any
+"""Ad group criterion label server using SDK implementation."""
 
 from fastmcp import FastMCP
 
@@ -8,7 +6,8 @@ from src.sdk_services.ad_group.ad_group_criterion_label_service import (
     register_ad_group_criterion_label_tools,
 )
 
+# Create the ad group criterion label server
+ad_group_criterion_label_sdk_server = FastMCP(name="ad-group-criterion-label-service")
 
-def register_ad_group_criterion_label_server(mcp: FastMCP[Any]) -> None:
-    """Register ad group criterion label server tools with the MCP server."""
-    register_ad_group_criterion_label_tools(mcp)
+# Register the tools
+register_ad_group_criterion_label_tools(ad_group_criterion_label_sdk_server)

@@ -1,7 +1,5 @@
 """Campaign label server module."""
 
-from typing import Any
-
 from fastmcp import FastMCP
 
 from src.sdk_services.campaign.campaign_label_service import (
@@ -9,6 +7,8 @@ from src.sdk_services.campaign.campaign_label_service import (
 )
 
 
-def register_campaign_label_server(mcp: FastMCP[Any]) -> None:
-    """Register campaign label server tools with the MCP server."""
-    register_campaign_label_tools(mcp)
+# Create the campaign label SDK server instance
+campaign_label_sdk_server = FastMCP()
+
+# Register tools with the server
+register_campaign_label_tools(campaign_label_sdk_server)

@@ -1,24 +1,13 @@
-"""Server wrapper for payments account service."""
-
-from typing import Any
+"""Payments account server using SDK implementation."""
 
 from fastmcp import FastMCP
 
 from src.sdk_services.account.payments_account_service import (
     register_payments_account_tools,
-    PaymentsAccountService,
 )
 
+# Create the payments account server
+payments_account_sdk_server = FastMCP(name="payments-account-service")
 
-def register_payments_account_server(
-    mcp: FastMCP[Any],
-) -> PaymentsAccountService:
-    """Register payments account tools with the MCP server.
-
-    Args:
-        mcp: The FastMCP server instance
-
-    Returns:
-        The PaymentsAccountService instance for testing purposes
-    """
-    return register_payments_account_tools(mcp)
+# Register the tools
+register_payments_account_tools(payments_account_sdk_server)

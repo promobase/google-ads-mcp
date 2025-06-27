@@ -1,24 +1,13 @@
-"""Server wrapper for ad group asset set service."""
-
-from typing import Any
+"""Ad group asset set server using SDK implementation."""
 
 from fastmcp import FastMCP
 
 from src.sdk_services.ad_group.ad_group_asset_set_service import (
     register_ad_group_asset_set_tools,
-    AdGroupAssetSetService,
 )
 
+# Create the ad group asset set server
+ad_group_asset_set_sdk_server = FastMCP(name="ad-group-asset-set-service")
 
-def register_ad_group_asset_set_server(
-    mcp: FastMCP[Any],
-) -> AdGroupAssetSetService:
-    """Register ad group asset set tools with the MCP server.
-
-    Args:
-        mcp: The FastMCP server instance
-
-    Returns:
-        The AdGroupAssetSetService instance for testing purposes
-    """
-    return register_ad_group_asset_set_tools(mcp)
+# Register the tools
+register_ad_group_asset_set_tools(ad_group_asset_set_sdk_server)

@@ -1,12 +1,11 @@
-"""Google Ads server wrapper for MCP registration."""
-
-from typing import Any
+"""Google Ads server using SDK implementation."""
 
 from fastmcp import FastMCP
 
 from src.sdk_services.metadata.google_ads_service import register_google_ads_tools
 
+# Create the Google Ads server
+google_ads_sdk_server = FastMCP(name="google-ads-service")
 
-def register_google_ads_server(mcp: FastMCP[Any]) -> None:
-    """Register Google Ads server with the MCP server."""
-    register_google_ads_tools(mcp)
+# Register the tools
+register_google_ads_tools(google_ads_sdk_server)

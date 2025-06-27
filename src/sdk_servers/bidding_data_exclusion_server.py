@@ -1,24 +1,13 @@
-"""Server wrapper for bidding data exclusion service."""
-
-from typing import Any
+"""Bidding data exclusion server using SDK implementation."""
 
 from fastmcp import FastMCP
 
 from src.sdk_services.bidding.bidding_data_exclusion_service import (
     register_bidding_data_exclusion_tools,
-    BiddingDataExclusionService,
 )
 
+# Create the bidding data exclusion server
+bidding_data_exclusion_sdk_server = FastMCP(name="bidding-data-exclusion-service")
 
-def register_bidding_data_exclusion_server(
-    mcp: FastMCP[Any],
-) -> BiddingDataExclusionService:
-    """Register bidding data exclusion tools with the MCP server.
-
-    Args:
-        mcp: The FastMCP server instance
-
-    Returns:
-        The BiddingDataExclusionService instance for testing purposes
-    """
-    return register_bidding_data_exclusion_tools(mcp)
+# Register the tools
+register_bidding_data_exclusion_tools(bidding_data_exclusion_sdk_server)

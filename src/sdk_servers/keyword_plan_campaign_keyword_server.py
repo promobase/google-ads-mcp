@@ -8,7 +8,10 @@ from src.sdk_services.planning.keyword_plan_campaign_keyword_service import (
     register_keyword_plan_campaign_keyword_tools,
 )
 
+# Create the FastMCP instance for keyword plan campaign keyword
+keyword_plan_campaign_keyword_sdk_server = FastMCP[Any](
+    name="keyword_plan_campaign_keyword_sdk_server"
+)
 
-def register_keyword_plan_campaign_keyword_server(mcp: FastMCP[Any]) -> None:
-    """Register keyword plan campaign keyword server tools with the MCP server."""
-    register_keyword_plan_campaign_keyword_tools(mcp)
+# Register the tools with the server instance
+register_keyword_plan_campaign_keyword_tools(keyword_plan_campaign_keyword_sdk_server)

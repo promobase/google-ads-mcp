@@ -8,7 +8,8 @@ from src.sdk_services.campaign.campaign_bid_modifier_service import (
     register_campaign_bid_modifier_tools,
 )
 
+# Create the FastMCP server instance
+campaign_bid_modifier_sdk_server = FastMCP[Any](name="campaign_bid_modifier_sdk_server")
 
-def register_campaign_bid_modifier_server(mcp: FastMCP[Any]) -> None:
-    """Register campaign bid modifier server tools with the MCP server."""
-    register_campaign_bid_modifier_tools(mcp)
+# Register the tools with the server instance
+register_campaign_bid_modifier_tools(campaign_bid_modifier_sdk_server)

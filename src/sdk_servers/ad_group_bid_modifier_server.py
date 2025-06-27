@@ -8,7 +8,8 @@ from src.sdk_services.ad_group.ad_group_bid_modifier_service import (
     register_ad_group_bid_modifier_tools,
 )
 
+# Create the FastMCP server instance
+ad_group_bid_modifier_sdk_server = FastMCP[Any](name="ad_group_bid_modifier_sdk_server")
 
-def register_ad_group_bid_modifier_server(mcp: FastMCP[Any]) -> None:
-    """Register ad group bid modifier server tools with the MCP server."""
-    register_ad_group_bid_modifier_tools(mcp)
+# Register the tools with the server instance
+register_ad_group_bid_modifier_tools(ad_group_bid_modifier_sdk_server)

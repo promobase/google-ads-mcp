@@ -1,6 +1,4 @@
-"""Campaign Customizer server wrapper for MCP registration."""
-
-from typing import Any
+"""Campaign customizer server using SDK implementation."""
 
 from fastmcp import FastMCP
 
@@ -8,7 +6,8 @@ from src.sdk_services.campaign.campaign_customizer_service import (
     register_campaign_customizer_tools,
 )
 
+# Create the campaign customizer server
+campaign_customizer_sdk_server = FastMCP(name="campaign-customizer-service")
 
-def register_campaign_customizer_server(mcp: FastMCP[Any]) -> None:
-    """Register Campaign Customizer server with the MCP server."""
-    register_campaign_customizer_tools(mcp)
+# Register the tools
+register_campaign_customizer_tools(campaign_customizer_sdk_server)

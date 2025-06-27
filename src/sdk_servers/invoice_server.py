@@ -1,24 +1,13 @@
-"""Server wrapper for invoice service."""
-
-from typing import Any
+"""Invoice server using SDK implementation."""
 
 from fastmcp import FastMCP
 
 from src.sdk_services.account.invoice_service import (
     register_invoice_tools,
-    InvoiceService,
 )
 
+# Create the invoice server
+invoice_sdk_server = FastMCP(name="invoice-service")
 
-def register_invoice_server(
-    mcp: FastMCP[Any],
-) -> InvoiceService:
-    """Register invoice tools with the MCP server.
-
-    Args:
-        mcp: The FastMCP server instance
-
-    Returns:
-        The InvoiceService instance for testing purposes
-    """
-    return register_invoice_tools(mcp)
+# Register the tools
+register_invoice_tools(invoice_sdk_server)

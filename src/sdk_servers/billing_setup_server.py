@@ -1,12 +1,11 @@
 """Billing setup server module."""
 
-from typing import Any
-
 from fastmcp import FastMCP
 
 from src.sdk_services.account.billing_setup_service import register_billing_setup_tools
 
+# Create the FastMCP instance
+billing_setup_sdk_server = FastMCP(name="billing-setup-service")
 
-def register_billing_setup_server(mcp: FastMCP[Any]) -> None:
-    """Register billing setup server tools with the MCP server."""
-    register_billing_setup_tools(mcp)
+# Register the tools with the server instance
+register_billing_setup_tools(billing_setup_sdk_server)

@@ -6,7 +6,8 @@ from fastmcp import FastMCP
 
 from src.sdk_services.assets.asset_set_service import register_asset_set_tools
 
+# Initialize the server instance
+asset_set_sdk_server = FastMCP[Any]()
 
-def register_asset_set_server(mcp: FastMCP[Any]) -> None:
-    """Register asset set server tools with the MCP server."""
-    register_asset_set_tools(mcp)
+# Register tools with the server
+register_asset_set_tools(asset_set_sdk_server)

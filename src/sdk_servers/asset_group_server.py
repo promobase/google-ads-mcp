@@ -6,7 +6,8 @@ from fastmcp import FastMCP
 
 from src.sdk_services.assets.asset_group_service import register_asset_group_tools
 
+# Initialize the server instance
+asset_group_sdk_server = FastMCP[Any]()
 
-def register_asset_group_server(mcp: FastMCP[Any]) -> None:
-    """Register asset group server tools with the MCP server."""
-    register_asset_group_tools(mcp)
+# Register tools with the server
+register_asset_group_tools(asset_group_sdk_server)

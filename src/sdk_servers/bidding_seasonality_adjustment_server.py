@@ -1,24 +1,15 @@
-"""Server wrapper for bidding seasonality adjustment service."""
-
-from typing import Any
+"""Bidding seasonality adjustment server using SDK implementation."""
 
 from fastmcp import FastMCP
 
 from src.sdk_services.bidding.bidding_seasonality_adjustment_service import (
     register_bidding_seasonality_adjustment_tools,
-    BiddingSeasonalityAdjustmentService,
 )
 
+# Create the bidding seasonality adjustment server
+bidding_seasonality_adjustment_sdk_server = FastMCP(
+    name="bidding-seasonality-adjustment-service"
+)
 
-def register_bidding_seasonality_adjustment_server(
-    mcp: FastMCP[Any],
-) -> BiddingSeasonalityAdjustmentService:
-    """Register bidding seasonality adjustment tools with the MCP server.
-
-    Args:
-        mcp: The FastMCP server instance
-
-    Returns:
-        The BiddingSeasonalityAdjustmentService instance for testing purposes
-    """
-    return register_bidding_seasonality_adjustment_tools(mcp)
+# Register the tools
+register_bidding_seasonality_adjustment_tools(bidding_seasonality_adjustment_sdk_server)

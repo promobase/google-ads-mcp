@@ -1,24 +1,16 @@
 """Server wrapper for customer user access service."""
 
-from typing import Any
-
 from fastmcp import FastMCP
 
 from src.sdk_services.account.customer_user_access_service import (
     register_customer_user_access_tools,
-    CustomerUserAccessService,
 )
 
+# Create FastMCP instance
+customer_user_access_sdk_server = FastMCP(
+    name="customer-user-access-server",
+    instructions="Server for managing customer user access",
+)
 
-def register_customer_user_access_server(
-    mcp: FastMCP[Any],
-) -> CustomerUserAccessService:
-    """Register customer user access tools with the MCP server.
-
-    Args:
-        mcp: The FastMCP server instance
-
-    Returns:
-        The CustomerUserAccessService instance for testing purposes
-    """
-    return register_customer_user_access_tools(mcp)
+# Register tools with the server
+register_customer_user_access_tools(customer_user_access_sdk_server)

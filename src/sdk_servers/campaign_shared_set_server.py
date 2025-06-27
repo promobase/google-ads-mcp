@@ -8,7 +8,8 @@ from src.sdk_services.campaign.campaign_shared_set_service import (
     register_campaign_shared_set_tools,
 )
 
+# Create the FastMCP server instance
+campaign_shared_set_sdk_server = FastMCP[Any](name="campaign_shared_set_sdk_server")
 
-def register_campaign_shared_set_server(mcp: FastMCP[Any]) -> None:
-    """Register campaign shared set server tools with the MCP server."""
-    register_campaign_shared_set_tools(mcp)
+# Register the tools with the server instance
+register_campaign_shared_set_tools(campaign_shared_set_sdk_server)

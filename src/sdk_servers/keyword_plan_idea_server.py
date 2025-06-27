@@ -8,7 +8,8 @@ from src.sdk_services.planning.keyword_plan_idea_service import (
     register_keyword_plan_idea_tools,
 )
 
+# Create the FastMCP instance for keyword plan idea
+keyword_plan_idea_sdk_server = FastMCP[Any](name="keyword_plan_idea_sdk_server")
 
-def register_keyword_plan_idea_server(mcp: FastMCP[Any]) -> None:
-    """Register keyword plan idea server tools with the MCP server."""
-    register_keyword_plan_idea_tools(mcp)
+# Register the tools with the server instance
+register_keyword_plan_idea_tools(keyword_plan_idea_sdk_server)

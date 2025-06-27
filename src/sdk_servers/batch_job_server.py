@@ -1,24 +1,13 @@
-"""Server wrapper for batch job service."""
-
-from typing import Any
+"""Batch job server using SDK implementation."""
 
 from fastmcp import FastMCP
 
 from src.sdk_services.data_import.batch_job_service import (
     register_batch_job_tools,
-    BatchJobService,
 )
 
+# Create the batch job server
+batch_job_sdk_server = FastMCP(name="batch-job-service")
 
-def register_batch_job_server(
-    mcp: FastMCP[Any],
-) -> BatchJobService:
-    """Register batch job tools with the MCP server.
-
-    Args:
-        mcp: The FastMCP server instance
-
-    Returns:
-        The BatchJobService instance for testing purposes
-    """
-    return register_batch_job_tools(mcp)
+# Register the tools
+register_batch_job_tools(batch_job_sdk_server)
