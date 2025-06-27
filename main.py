@@ -58,6 +58,9 @@ from src.sdk_servers.custom_interest_server import custom_interest_sdk_server
 from src.sdk_servers.customer_client_link_server import (
     register_customer_client_link_server,
 )
+from src.sdk_servers.customer_manager_link_server import (
+    register_customer_manager_link_server,
+)
 from src.sdk_servers.customer_negative_criterion_server import (
     customer_negative_criterion_sdk_server,
 )
@@ -72,6 +75,7 @@ from src.sdk_servers.data_link_server import register_data_link_server
 from src.sdk_servers.experiment_server import experiment_sdk_server
 from src.sdk_servers.geo_target_constant_server import geo_target_constant_sdk_server
 from src.sdk_servers.google_ads_field_server import google_ads_field_sdk_server
+from src.sdk_servers.google_ads_server import register_google_ads_server
 from src.sdk_servers.invoice_server import register_invoice_server
 from src.sdk_servers.keyword_plan_idea_server import register_keyword_plan_idea_server
 from src.sdk_servers.keyword_plan_server import keyword_plan_sdk_server
@@ -218,6 +222,8 @@ register_campaign_draft_server(mcp)
 register_bidding_data_exclusion_server(mcp)
 register_customer_client_link_server(mcp)
 register_audience_insights_server(mcp)
+register_google_ads_server(mcp)
+register_customer_manager_link_server(mcp)
 
 
 @mcp.tool
