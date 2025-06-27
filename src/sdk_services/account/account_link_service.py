@@ -10,7 +10,13 @@ from google.ads.googleads.v20.enums.types.account_link_status import (
 from google.ads.googleads.v20.enums.types.linked_account_type import (
     LinkedAccountTypeEnum,
 )
-from google.ads.googleads.v20.resources.types.account_link import AccountLink
+from google.ads.googleads.v20.enums.types.mobile_app_vendor import (
+    MobileAppVendorEnum,
+)
+from google.ads.googleads.v20.resources.types.account_link import (
+    AccountLink,
+    ThirdPartyAppAnalyticsLinkIdentifier,
+)
 from google.ads.googleads.v20.services.services.account_link_service import (
     AccountLinkServiceClient,
 )
@@ -51,17 +57,19 @@ class AccountLinkService:
         self,
         ctx: Context,
         customer_id: str,
-        linked_account_type: LinkedAccountTypeEnum.LinkedAccountType,
-        linked_account_id: str,
+        app_analytics_provider_id: int,
+        app_id: str,
+        app_vendor: MobileAppVendorEnum.MobileAppVendor,
         status: AccountLinkStatusEnum.AccountLinkStatus = AccountLinkStatusEnum.AccountLinkStatus.ENABLED,
     ) -> Dict[str, Any]:
-        """Create an account link.
+        """Create an account link for third party app analytics.
 
         Args:
             ctx: FastMCP context
             customer_id: The customer ID
-            linked_account_type: Type of linked account enum value
-            linked_account_id: ID of the account to link
+            app_analytics_provider_id: The ID of the app analytics provider
+            app_id: The app ID (e.g. package name for Android, App Store ID for iOS)
+            app_vendor: The app vendor (APPLE_APP_STORE or GOOGLE_APP_STORE)
             status: Link status enum value
 
         Returns:
@@ -70,10 +78,16 @@ class AccountLinkService:
         try:
             customer_id = format_customer_id(customer_id)
 
+            # Create third party app analytics identifier
+            third_party_analytics = ThirdPartyAppAnalyticsLinkIdentifier()
+            third_party_analytics.app_analytics_provider_id = app_analytics_provider_id
+            third_party_analytics.app_id = app_id
+            third_party_analytics.app_vendor = app_vendor
+
             # Create account link
             account_link = AccountLink()
-            account_link.type_ = linked_account_type
-            account_link.linked_account = linked_account_id
+            account_link.type_ = LinkedAccountTypeEnum.LinkedAccountType.THIRD_PARTY_APP_ANALYTICS
+            account_link.third_party_app_analytics = third_party_analytics
             account_link.status = status
 
             # Create request
@@ -88,7 +102,7 @@ class AccountLinkService:
 
             await ctx.log(
                 level="info",
-                message=f"Created account link between {customer_id} and {linked_account_id}",
+                message=f"Created account link for app {app_id}",
             )
 
             # Return serialized response
@@ -198,7 +212,9 @@ class AccountLinkService:
                     account_link.account_link_id,
                     account_link.status,
                     account_link.type,
-                    account_link.linked_account
+                    account_link.third_party_app_analytics.app_analytics_provider_id,
+                    account_link.third_party_app_analytics.app_id,
+                    account_link.third_party_app_analytics.app_vendor
                 FROM account_link
             """
 
@@ -289,32 +305,33 @@ def create_account_link_tools(
     async def create_account_link(
         ctx: Context,
         customer_id: str,
-        linked_account_type: str,
-        linked_account_id: str,
+        app_analytics_provider_id: int,
+        app_id: str,
+        app_vendor: str,
         status: str = "ENABLED",
     ) -> Dict[str, Any]:
-        """Create an account link to connect accounts.
+        """Create an account link for third party app analytics.
 
         Args:
             customer_id: The customer ID
-            linked_account_type: Type of linked account (GOOGLE_ADS, HOTEL_CENTER, MERCHANT_CENTER, etc.)
-            linked_account_id: ID of the account to link
+            app_analytics_provider_id: The ID of the app analytics provider
+            app_id: The app ID (e.g. "com.example.app" for Android or "123456789" for iOS)
+            app_vendor: The app vendor - APPLE_APP_STORE or GOOGLE_APP_STORE
             status: Link status - ENABLED or REMOVED
 
         Returns:
             Created account link details with resource_name
         """
         # Convert string enums to proper enum types
-        type_enum = getattr(
-            LinkedAccountTypeEnum.LinkedAccountType, linked_account_type
-        )
+        vendor_enum = getattr(MobileAppVendorEnum.MobileAppVendor, app_vendor)
         status_enum = getattr(AccountLinkStatusEnum.AccountLinkStatus, status)
 
         return await service.create_account_link(
             ctx=ctx,
             customer_id=customer_id,
-            linked_account_type=type_enum,
-            linked_account_id=linked_account_id,
+            app_analytics_provider_id=app_analytics_provider_id,
+            app_id=app_id,
+            app_vendor=vendor_enum,
             status=status_enum,
         )
 

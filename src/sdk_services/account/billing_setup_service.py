@@ -75,9 +75,11 @@ class BillingSetupService:
                 f"customers/{customer_id}/paymentsAccounts/{payments_account_id}"
             )
 
-            # Set start date/time
-            billing_setup.start_date_time = start_date
-            billing_setup.start_time_type = start_time_type
+            # Set start date/time (these are mutually exclusive oneof fields)
+            if start_time_type == TimeTypeEnum.TimeType.NOW:
+                billing_setup.start_time_type = start_time_type
+            else:
+                billing_setup.start_date_time = start_date
 
             # Set end date/time if provided
             if end_time_type != TimeTypeEnum.TimeType.FOREVER:

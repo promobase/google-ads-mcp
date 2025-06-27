@@ -179,7 +179,7 @@ class CustomerClientLinkService:
         Args:
             ctx: FastMCP context
             customer_id: The manager customer ID
-            status_filter: Optional status filter (PENDING, ACTIVE, CANCELLED, REJECTED)
+            status_filter: Optional status filter (PENDING, ACTIVE, CANCELED, REJECTED)
 
         Returns:
             List of customer client links
@@ -264,7 +264,7 @@ def create_customer_client_link_tools(
         Args:
             customer_id: The manager customer ID
             client_customer: Resource name of the client customer (e.g., customers/123456789)
-            status: Link status (PENDING, ACTIVE, CANCELLED, REJECTED)
+            status: Link status (PENDING, ACTIVE, CANCELED, REJECTED)
             hidden: Whether the link is hidden from the client in their account list
 
         Returns:
@@ -293,7 +293,7 @@ def create_customer_client_link_tools(
         Args:
             customer_id: The manager customer ID
             link_resource_name: Resource name of the link to update
-            status: Optional new status (PENDING, ACTIVE, CANCELLED, REJECTED)
+            status: Optional new status (PENDING, ACTIVE, CANCELED, REJECTED)
             hidden: Optional new hidden status
 
         Returns:
@@ -321,7 +321,7 @@ def create_customer_client_link_tools(
 
         Args:
             customer_id: The manager customer ID
-            status_filter: Optional status filter (PENDING, ACTIVE, CANCELLED, REJECTED)
+            status_filter: Optional status filter (PENDING, ACTIVE, CANCELED, REJECTED)
 
         Returns:
             List of customer client links with client account details and link status

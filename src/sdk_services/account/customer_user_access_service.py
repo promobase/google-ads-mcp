@@ -43,61 +43,9 @@ class CustomerUserAccessService:
         assert self._client is not None
         return self._client
 
-    async def grant_user_access(
-        self,
-        ctx: Context,
-        customer_id: str,
-        email_address: str,
-        access_role: AccessRoleEnum.AccessRole,
-    ) -> Dict[str, Any]:
-        """Grant access to a user for a customer account.
-
-        Args:
-            ctx: FastMCP context
-            customer_id: The customer ID
-            email_address: Email address of the user to grant access to
-            access_role: Access role enum value
-
-        Returns:
-            Created user access details
-        """
-        try:
-            customer_id = format_customer_id(customer_id)
-
-            # Create customer user access
-            user_access = CustomerUserAccess()
-            user_access.email_address = email_address
-            user_access.access_role = access_role
-
-            # Create operation
-            operation = CustomerUserAccessOperation()
-            operation.create = user_access
-
-            # Create request
-            request = MutateCustomerUserAccessRequest()
-            request.customer_id = customer_id
-            request.operation = operation
-
-            # Make the API call
-            response: MutateCustomerUserAccessResponse = (
-                self.client.mutate_customer_user_access(request=request)
-            )
-
-            await ctx.log(
-                level="info",
-                message=f"Granted {access_role} access to {email_address}",
-            )
-
-            return serialize_proto_message(response)
-
-        except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
-            await ctx.log(level="error", message=error_msg)
-            raise Exception(error_msg) from e
-        except Exception as e:
-            error_msg = f"Failed to grant user access: {str(e)}"
-            await ctx.log(level="error", message=error_msg)
-            raise Exception(error_msg) from e
+    # Note: CustomerUserAccessService does not support creating new access.
+    # To grant access to new users, use CustomerUserAccessInvitationService instead.
+    # This service only supports updating and removing existing user access.
 
     async def update_user_access(
         self,
@@ -277,31 +225,9 @@ def create_customer_user_access_tools(
     """
     tools = []
 
-    async def grant_user_access(
-        ctx: Context,
-        customer_id: str,
-        email_address: str,
-        access_role: str,
-    ) -> Dict[str, Any]:
-        """Grant access to a user for a customer account.
-
-        Args:
-            customer_id: The customer ID
-            email_address: Email address of the user to grant access to
-            access_role: Access role - ADMIN, STANDARD, READ_ONLY, or EMAIL_ONLY
-
-        Returns:
-            Created user access details with resource_name
-        """
-        # Convert string enum to proper enum type
-        role_enum = getattr(AccessRoleEnum.AccessRole, access_role)
-
-        return await service.grant_user_access(
-            ctx=ctx,
-            customer_id=customer_id,
-            email_address=email_address,
-            access_role=role_enum,
-        )
+    # Note: grant_user_access is not included because CustomerUserAccessService
+    # does not support creating new access. Use CustomerUserAccessInvitationService
+    # to send invitations for new user access.
 
     async def update_user_access(
         ctx: Context,
@@ -370,7 +296,6 @@ def create_customer_user_access_tools(
 
     tools.extend(
         [
-            grant_user_access,
             update_user_access,
             list_user_access,
             revoke_user_access,
