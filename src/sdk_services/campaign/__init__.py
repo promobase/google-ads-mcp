@@ -11,6 +11,7 @@ from .campaign_bid_modifier_service import (
 )
 from .campaign_label_service import CampaignLabelService, register_campaign_label_tools
 from .campaign_asset_service import CampaignAssetService, register_campaign_asset_tools
+from .campaign_asset_set_service import CampaignAssetSetService
 from .campaign_shared_set_service import (
     CampaignSharedSetService,
     register_campaign_shared_set_tools,
@@ -18,6 +19,7 @@ from .campaign_shared_set_service import (
 from .campaign_draft_service import CampaignDraftService, register_campaign_draft_tools
 from .smart_campaign_service import SmartCampaignService, register_smart_campaign_tools
 from .experiment_service import ExperimentService, register_experiment_tools
+from .experiment_arm_service import ExperimentArmService
 
 __all__ = [
     "CampaignService",
@@ -30,6 +32,7 @@ __all__ = [
     "register_campaign_label_tools",
     "CampaignAssetService",
     "register_campaign_asset_tools",
+    "CampaignAssetSetService",
     "CampaignSharedSetService",
     "register_campaign_shared_set_tools",
     "CampaignDraftService",
@@ -38,4 +41,5 @@ __all__ = [
     "register_smart_campaign_tools",
     "ExperimentService",
     "register_experiment_tools",
+    "ExperimentArmService",
 ]

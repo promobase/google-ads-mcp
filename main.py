@@ -15,27 +15,41 @@ from src.sdk_servers.account_budget_proposal_server import (
 )
 from src.sdk_servers.account_link_server import register_account_link_server
 from src.sdk_servers.ad_group_ad_server import register_ad_group_ad_server
+from src.sdk_servers.ad_group_ad_label_server import register_ad_group_ad_label_server
 from src.sdk_servers.ad_group_asset_server import register_ad_group_asset_server
+from src.sdk_servers.ad_group_asset_set_server import register_ad_group_asset_set_server
 from src.sdk_servers.ad_group_bid_modifier_server import (
     register_ad_group_bid_modifier_server,
 )
 from src.sdk_servers.ad_group_criterion_server import ad_group_criterion_sdk_server
+from src.sdk_servers.ad_group_criterion_label_server import (
+    register_ad_group_criterion_label_server,
+)
+from src.sdk_servers.ad_group_customizer_server import (
+    register_ad_group_customizer_server,
+)
 from src.sdk_servers.ad_group_label_server import register_ad_group_label_server
 from src.sdk_servers.ad_group_server import ad_group_sdk_server
 from src.sdk_servers.ad_server import ad_sdk_server
 from src.sdk_servers.asset_group_asset_server import register_asset_group_asset_server
 from src.sdk_servers.asset_group_server import register_asset_group_server
+from src.sdk_servers.asset_group_signal_server import register_asset_group_signal_server
 from src.sdk_servers.asset_server import asset_sdk_server
 from src.sdk_servers.asset_set_server import register_asset_set_server
 from src.sdk_servers.audience_insights_server import register_audience_insights_server
 from src.sdk_servers.audience_server import register_audience_server
+from src.sdk_servers.batch_job_server import register_batch_job_server
 from src.sdk_servers.bidding_data_exclusion_server import (
     register_bidding_data_exclusion_server,
+)
+from src.sdk_servers.bidding_seasonality_adjustment_server import (
+    register_bidding_seasonality_adjustment_server,
 )
 from src.sdk_servers.bidding_strategy_server import bidding_strategy_sdk_server
 from src.sdk_servers.billing_setup_server import register_billing_setup_server
 from src.sdk_servers.budget_server import budget_sdk_server
 from src.sdk_servers.campaign_asset_server import register_campaign_asset_server
+from src.sdk_servers.campaign_asset_set_server import register_campaign_asset_set_server
 from src.sdk_servers.campaign_bid_modifier_server import (
     register_campaign_bid_modifier_server,
 )
@@ -71,6 +85,10 @@ from src.sdk_servers.customer_client_link_server import (
 from src.sdk_servers.customer_manager_link_server import (
     register_customer_manager_link_server,
 )
+from src.sdk_servers.customer_asset_server import register_customer_asset_server
+from src.sdk_servers.customer_customizer_server import (
+    register_customer_customizer_server,
+)
 from src.sdk_servers.customer_label_server import register_customer_label_server
 from src.sdk_servers.customer_negative_criterion_server import (
     customer_negative_criterion_sdk_server,
@@ -79,21 +97,37 @@ from src.sdk_servers.customer_server import customer_sdk_server
 from src.sdk_servers.customer_user_access_server import (
     register_customer_user_access_server,
 )
+from src.sdk_servers.customer_user_access_invitation_server import (
+    register_customer_user_access_invitation_server,
+)
 from src.sdk_servers.customizer_attribute_server import (
     register_customizer_attribute_server,
 )
 from src.sdk_servers.data_link_server import register_data_link_server
 from src.sdk_servers.experiment_server import experiment_sdk_server
+from src.sdk_servers.experiment_arm_server import create_experiment_arm_server
 from src.sdk_servers.geo_target_constant_server import geo_target_constant_sdk_server
 from src.sdk_servers.google_ads_field_server import google_ads_field_sdk_server
 from src.sdk_servers.google_ads_server import register_google_ads_server
+from src.sdk_servers.identity_verification_server import (
+    register_identity_verification_server,
+)
 from src.sdk_servers.invoice_server import register_invoice_server
 from src.sdk_servers.keyword_plan_idea_server import register_keyword_plan_idea_server
 from src.sdk_servers.keyword_plan_server import keyword_plan_sdk_server
+from src.sdk_servers.keyword_plan_ad_group_server import (
+    create_keyword_plan_ad_group_server,
+)
+from src.sdk_servers.keyword_plan_campaign_server import (
+    create_keyword_plan_campaign_server,
+)
 from src.sdk_servers.keyword_server import keyword_sdk_server
 from src.sdk_servers.label_server import label_sdk_server
 from src.sdk_servers.offline_user_data_job_server import (
     register_offline_user_data_job_server,
+)
+from src.sdk_servers.payments_account_server import (
+    register_payments_account_server,
 )
 from src.sdk_servers.reach_plan_server import register_reach_plan_server
 from src.sdk_servers.recommendation_server import recommendation_sdk_server
@@ -190,6 +224,7 @@ mcp.mount(search_sdk_server, prefix="search")
 mcp.mount(asset_sdk_server, prefix="asset")
 register_asset_group_server(mcp)
 register_asset_group_asset_server(mcp)
+register_asset_group_signal_server(mcp)
 register_asset_set_server(mcp)
 mcp.mount(bidding_strategy_sdk_server, prefix="bidding_strategy")
 # mcp.mount(extension_feed_item_sdk_server, prefix="extension")  # Not available in v20
@@ -205,13 +240,17 @@ mcp.mount(shared_criterion_sdk_server, prefix="shared_criterion")
 mcp.mount(label_sdk_server, prefix="label")
 register_campaign_label_server(mcp)
 register_campaign_asset_server(mcp)
+register_campaign_asset_set_server(mcp)
 register_ad_group_label_server(mcp)
 mcp.mount(google_ads_field_sdk_server, prefix="google_ads_field")
 mcp.mount(custom_interest_sdk_server, prefix="custom_interest")
 mcp.mount(custom_audience_sdk_server, prefix="custom_audience")
 mcp.mount(keyword_plan_sdk_server, prefix="keyword_plan")
 register_keyword_plan_idea_server(mcp)
+mcp.mount(create_keyword_plan_ad_group_server(), prefix="keyword_plan_ad_group")
+mcp.mount(create_keyword_plan_campaign_server(), prefix="keyword_plan_campaign")
 mcp.mount(experiment_sdk_server, prefix="experiment")
+mcp.mount(create_experiment_arm_server(), prefix="experiment_arm")
 mcp.mount(conversion_upload_sdk_server, prefix="conversion_upload")
 mcp.mount(smart_campaign_sdk_server, prefix="smart_campaign")
 mcp.mount(remarketing_action_sdk_server, prefix="remarketing_action")
@@ -225,6 +264,14 @@ register_conversion_value_rule_server(mcp)
 register_user_data_server(mcp)
 register_customizer_attribute_server(mcp)
 register_customer_user_access_server(mcp)
+register_customer_user_access_invitation_server(mcp)
+register_payments_account_server(mcp)
+register_batch_job_server(mcp)
+register_identity_verification_server(mcp)
+register_ad_group_ad_label_server(mcp)
+register_ad_group_criterion_label_server(mcp)
+register_ad_group_customizer_server(mcp)
+register_ad_group_asset_set_server(mcp)
 register_account_link_server(mcp)
 register_reach_plan_server(mcp)
 register_data_link_server(mcp)
@@ -232,10 +279,13 @@ register_account_budget_proposal_server(mcp)
 register_invoice_server(mcp)
 register_campaign_draft_server(mcp)
 register_bidding_data_exclusion_server(mcp)
+register_bidding_seasonality_adjustment_server(mcp)
 register_customer_client_link_server(mcp)
 register_audience_insights_server(mcp)
 register_google_ads_server(mcp)
 register_customer_manager_link_server(mcp)
+register_customer_asset_server(mcp)
+register_customer_customizer_server(mcp)
 register_customer_label_server(mcp)
 register_conversion_custom_variable_server(mcp)
 register_campaign_conversion_goal_server(mcp)

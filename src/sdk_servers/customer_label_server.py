@@ -12,4 +12,3 @@ from src.sdk_services.account.customer_label_service import (
 def register_customer_label_server(mcp: FastMCP[Any]) -> None:
     """Register Customer Label server with the MCP server."""
     register_customer_label_tools(mcp)
-

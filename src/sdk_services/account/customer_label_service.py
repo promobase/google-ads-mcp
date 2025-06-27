@@ -263,4 +263,3 @@ def register_customer_label_tools(
         mcp.tool(tool)
 
     return service
-

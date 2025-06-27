@@ -249,4 +249,3 @@ class TestCustomerLabelTools:
                 partial_failure=False,
                 validate_only=True,
             )
-
