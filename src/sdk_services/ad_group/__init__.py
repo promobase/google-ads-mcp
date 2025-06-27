@@ -24,11 +24,19 @@ from .ad_group_criterion_service import (
     AdGroupCriterionService,
     register_ad_group_criterion_tools,
 )
+from .ad_group_criterion_customizer_service import (
+    AdGroupCriterionCustomizerService,
+    register_ad_group_criterion_customizer_tools,
+)
 from .ad_group_criterion_label_service import AdGroupCriterionLabelService
 from .ad_group_customizer_service import AdGroupCustomizerService
 from .ad_group_label_service import (
     AdGroupLabelService,
     register_ad_group_label_tools,
+)
+from .ad_parameter_service import (
+    AdParameterService,
+    register_ad_parameter_tools,
 )
 from .ad_group_service import (
     AdGroupService,
@@ -56,6 +64,8 @@ __all__ = [
     "register_ad_group_bid_modifier_tools",
     "AdGroupCriterionService",
     "register_ad_group_criterion_tools",
+    "AdGroupCriterionCustomizerService",
+    "register_ad_group_criterion_customizer_tools",
     "AdGroupCriterionLabelService",
     "AdGroupCustomizerService",
     "AdGroupLabelService",
@@ -64,6 +74,8 @@ __all__ = [
     "register_ad_group_tools",
     "AdService",
     "register_ad_tools",
+    "AdParameterService",
+    "register_ad_parameter_tools",
     "KeywordService",
     "register_keyword_tools",
 ]

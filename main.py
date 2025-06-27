@@ -25,6 +25,12 @@ from src.sdk_servers.ad_group_criterion_server import ad_group_criterion_sdk_ser
 from src.sdk_servers.ad_group_criterion_label_server import (
     register_ad_group_criterion_label_server,
 )
+from src.sdk_servers.ad_group_criterion_customizer_server import (
+    register_ad_group_criterion_customizer_server,
+)
+from src.sdk_servers.ad_parameter_server import (
+    register_ad_parameter_server,
+)
 from src.sdk_servers.ad_group_customizer_server import (
     register_ad_group_customizer_server,
 )
@@ -120,6 +126,19 @@ from src.sdk_servers.keyword_plan_ad_group_server import (
 )
 from src.sdk_servers.keyword_plan_campaign_server import (
     create_keyword_plan_campaign_server,
+)
+from src.sdk_servers.keyword_plan_ad_group_keyword_server import (
+    create_keyword_plan_ad_group_keyword_server,
+)
+from src.sdk_servers.keyword_plan_campaign_keyword_server import (
+    create_keyword_plan_campaign_keyword_server,
+)
+from src.sdk_servers.brand_suggestion_server import create_brand_suggestion_server
+from src.sdk_servers.product_link_server import create_product_link_server
+from src.sdk_servers.conversion_goal_campaign_config_server import create_conversion_goal_campaign_config_server
+from src.sdk_servers.custom_conversion_goal_server import create_custom_conversion_goal_server
+from src.sdk_servers.customer_conversion_goal_server import (
+    register_customer_conversion_goal_server,
 )
 from src.sdk_servers.keyword_server import keyword_sdk_server
 from src.sdk_servers.label_server import label_sdk_server
@@ -249,6 +268,19 @@ mcp.mount(keyword_plan_sdk_server, prefix="keyword_plan")
 register_keyword_plan_idea_server(mcp)
 mcp.mount(create_keyword_plan_ad_group_server(), prefix="keyword_plan_ad_group")
 mcp.mount(create_keyword_plan_campaign_server(), prefix="keyword_plan_campaign")
+mcp.mount(
+    create_keyword_plan_ad_group_keyword_server(),
+    prefix="keyword_plan_ad_group_keyword",
+)
+mcp.mount(
+    create_keyword_plan_campaign_keyword_server(),
+    prefix="keyword_plan_campaign_keyword",
+)
+mcp.mount(create_brand_suggestion_server(), prefix="brand_suggestion")
+mcp.mount(create_product_link_server(), prefix="product_link")
+mcp.mount(create_conversion_goal_campaign_config_server(), prefix="conversion_goal_campaign_config")
+mcp.mount(create_custom_conversion_goal_server(), prefix="custom_conversion_goal")
+register_customer_conversion_goal_server(mcp)
 mcp.mount(experiment_sdk_server, prefix="experiment")
 mcp.mount(create_experiment_arm_server(), prefix="experiment_arm")
 mcp.mount(conversion_upload_sdk_server, prefix="conversion_upload")
@@ -270,6 +302,8 @@ register_batch_job_server(mcp)
 register_identity_verification_server(mcp)
 register_ad_group_ad_label_server(mcp)
 register_ad_group_criterion_label_server(mcp)
+register_ad_group_criterion_customizer_server(mcp)
+register_ad_parameter_server(mcp)
 register_ad_group_customizer_server(mcp)
 register_ad_group_asset_set_server(mcp)
 register_account_link_server(mcp)
