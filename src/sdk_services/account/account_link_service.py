@@ -86,7 +86,9 @@ class AccountLinkService:
 
             # Create account link
             account_link = AccountLink()
-            account_link.type_ = LinkedAccountTypeEnum.LinkedAccountType.THIRD_PARTY_APP_ANALYTICS
+            account_link.type_ = (
+                LinkedAccountTypeEnum.LinkedAccountType.THIRD_PARTY_APP_ANALYTICS
+            )
             account_link.third_party_app_analytics = third_party_analytics
             account_link.status = status
 

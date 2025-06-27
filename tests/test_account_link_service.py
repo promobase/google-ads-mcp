@@ -71,9 +71,7 @@ async def test_create_account_link(
     mock_account_link_client.create_account_link.return_value = mock_response  # type: ignore
 
     # Mock serialize_proto_message
-    expected_result = {
-        "resource_name": "customers/1234567890/accountLinks/111222333"
-    }
+    expected_result = {"resource_name": "customers/1234567890/accountLinks/111222333"}
 
     with patch(
         "src.sdk_services.account.account_link_service.serialize_proto_message",
@@ -97,8 +95,14 @@ async def test_create_account_link(
     call_args = mock_account_link_client.create_account_link.call_args  # type: ignore
     request = call_args[1]["request"]
     assert request.customer_id == customer_id
-    assert request.account_link.type_ == LinkedAccountTypeEnum.LinkedAccountType.THIRD_PARTY_APP_ANALYTICS
-    assert request.account_link.third_party_app_analytics.app_analytics_provider_id == app_analytics_provider_id
+    assert (
+        request.account_link.type_
+        == LinkedAccountTypeEnum.LinkedAccountType.THIRD_PARTY_APP_ANALYTICS
+    )
+    assert (
+        request.account_link.third_party_app_analytics.app_analytics_provider_id
+        == app_analytics_provider_id
+    )
     assert request.account_link.third_party_app_analytics.app_id == app_id
     assert request.account_link.third_party_app_analytics.app_vendor == app_vendor
     assert request.account_link.status == status
@@ -132,9 +136,7 @@ async def test_update_account_link(
     mock_account_link_client.mutate_account_link.return_value = mock_response  # type: ignore
 
     # Mock serialize_proto_message
-    expected_result = {
-        "result": {"resource_name": account_link_resource_name}
-    }
+    expected_result = {"result": {"resource_name": account_link_resource_name}}
 
     with patch(
         "src.sdk_services.account.account_link_service.serialize_proto_message",
@@ -156,7 +158,7 @@ async def test_update_account_link(
     call_args = mock_account_link_client.mutate_account_link.call_args  # type: ignore
     request = call_args[1]["request"]
     assert request.customer_id == customer_id
-    
+
     operation = request.operation
     assert operation.update.resource_name == account_link_resource_name
     assert operation.update.status == new_status
@@ -190,9 +192,7 @@ async def test_update_account_link_no_changes(
     mock_account_link_client.mutate_account_link.return_value = mock_response  # type: ignore
 
     # Mock serialize_proto_message
-    expected_result = {
-        "result": {"resource_name": account_link_resource_name}
-    }
+    expected_result = {"result": {"resource_name": account_link_resource_name}}
 
     with patch(
         "src.sdk_services.account.account_link_service.serialize_proto_message",
@@ -267,7 +267,7 @@ async def test_list_account_links(
             "status": obj.status.name,
             "type": obj.type.name,
         }
-        if hasattr(obj, 'third_party_app_analytics') and obj.third_party_app_analytics:
+        if hasattr(obj, "third_party_app_analytics") and obj.third_party_app_analytics:
             result["third_party_app_analytics"] = {
                 "app_analytics_provider_id": obj.third_party_app_analytics.app_analytics_provider_id,
                 "app_id": obj.third_party_app_analytics.app_id,
@@ -300,7 +300,9 @@ async def test_list_account_links(
     assert first_result["account_link_id"] == 100
     assert first_result["status"] == "ENABLED"
     assert first_result["type"] == "THIRD_PARTY_APP_ANALYTICS"
-    assert first_result["third_party_app_analytics"]["app_analytics_provider_id"] == 123456
+    assert (
+        first_result["third_party_app_analytics"]["app_analytics_provider_id"] == 123456
+    )
     assert first_result["third_party_app_analytics"]["app_id"] == "com.example.app0"
     assert first_result["third_party_app_analytics"]["app_vendor"] == "GOOGLE_APP_STORE"
 
@@ -380,9 +382,7 @@ async def test_remove_account_link(
     mock_account_link_client.mutate_account_link.return_value = mock_response  # type: ignore
 
     # Mock serialize_proto_message
-    expected_result = {
-        "result": {"resource_name": account_link_resource_name}
-    }
+    expected_result = {"result": {"resource_name": account_link_resource_name}}
 
     with patch(
         "src.sdk_services.account.account_link_service.serialize_proto_message",
@@ -403,7 +403,7 @@ async def test_remove_account_link(
     call_args = mock_account_link_client.mutate_account_link.call_args  # type: ignore
     request = call_args[1]["request"]
     assert request.customer_id == customer_id
-    
+
     operation = request.operation
     assert operation.remove == account_link_resource_name
 

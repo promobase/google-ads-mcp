@@ -324,27 +324,32 @@ async def test_list_customer_client_links(
     # Create expected results
     expected_links = []
     expected_clients = []
-    
+
     for i in range(3):
-        expected_links.append({
-            "resource_name": f"customers/{customer_id}/customerClientLinks/{i + 100}",
-            "client_customer": f"customers/{i + 200}",
-            "manager_link_id": i + 100,
-            "status": "ACTIVE" if i == 0 else "PENDING",
-            "hidden": i == 2,
-        })
-        expected_clients.append({
-            "descriptive_name": f"Client {i + 1}",
-            "manager": False,
-            "test_account": False,
-            "auto_tagging_enabled": True,
-            "id": i + 200,
-            "time_zone": "America/New_York",
-            "currency_code": "USD",
-        })
-    
+        expected_links.append(
+            {
+                "resource_name": f"customers/{customer_id}/customerClientLinks/{i + 100}",
+                "client_customer": f"customers/{i + 200}",
+                "manager_link_id": i + 100,
+                "status": "ACTIVE" if i == 0 else "PENDING",
+                "hidden": i == 2,
+            }
+        )
+        expected_clients.append(
+            {
+                "descriptive_name": f"Client {i + 1}",
+                "manager": False,
+                "test_account": False,
+                "auto_tagging_enabled": True,
+                "id": i + 200,
+                "time_zone": "America/New_York",
+                "currency_code": "USD",
+            }
+        )
+
     # Mock serialize_proto_message to return expected results
     serialize_call_count = 0
+
     def serialize_side_effect(obj: Any):
         nonlocal serialize_call_count
         # For each row, we serialize link first, then client

@@ -219,7 +219,7 @@ class UserListService:
             ctx: FastMCP context
             customer_id: The customer ID
             name: User list name
-            seed_user_list_ids: List of user list IDs to base similarity on
+            seed_user_list_ids: List of user list IDs (only first one will be used)
             description: Optional description
 
         Returns:
@@ -240,8 +240,11 @@ class UserListService:
 
             # Create similar user list info
             similar_user_list = SimilarUserListInfo()
-            for seed_list_id in seed_user_list_ids:
-                seed_resource = f"customers/{customer_id}/userLists/{seed_list_id}"
+            # SimilarUserListInfo only supports a single seed user list
+            if seed_user_list_ids:
+                seed_resource = (
+                    f"customers/{customer_id}/userLists/{seed_user_list_ids[0]}"
+                )
                 similar_user_list.seed_user_list = seed_resource
 
             user_list.similar_user_list = similar_user_list
@@ -262,7 +265,7 @@ class UserListService:
 
             await ctx.log(
                 level="info",
-                message=f"Created similar user list '{name}' based on {len(seed_user_list_ids)} seed lists",
+                message=f"Created similar user list '{name}' based on seed list {seed_user_list_ids[0] if seed_user_list_ids else 'none'}",
             )
 
             # Return serialized response
@@ -540,7 +543,7 @@ def create_user_list_tools(
         Args:
             customer_id: The customer ID
             name: User list name
-            seed_user_list_ids: List of user list IDs to base similarity on
+            seed_user_list_ids: List of user list IDs (only first one will be used)
             description: Optional description
 
         Returns:

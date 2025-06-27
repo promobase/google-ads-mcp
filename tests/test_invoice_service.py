@@ -51,7 +51,7 @@ async def test_list_invoices(
 
     # Create mock response
     mock_response = Mock(spec=ListInvoicesResponse)
-    
+
     # Create mock invoices
     mock_invoices = []
     for i in range(2):
@@ -73,7 +73,7 @@ async def test_list_invoices(
         invoice.corrected_invoice = ""
         invoice.replaced_invoices = []
         invoice.pdf_url = f"https://example.com/invoice_{i + 100}.pdf"
-        
+
         # Add account budget summaries
         invoice.account_budget_summaries = []
         summary = Mock()
@@ -89,9 +89,9 @@ async def test_list_invoices(
         summary.billable_activity_date_range.start_date = f"{issue_year}-01-01"
         summary.billable_activity_date_range.end_date = f"{issue_year}-01-31"
         invoice.account_budget_summaries.append(summary)
-        
+
         mock_invoices.append(invoice)
-    
+
     mock_response.invoices = mock_invoices
 
     # Get the mocked invoice service client
@@ -241,7 +241,7 @@ async def test_list_invoices_with_credit_memo(
 
     # Create mock response
     mock_response = Mock(spec=ListInvoicesResponse)
-    
+
     # Create a regular invoice and a credit memo
     invoice = Mock()
     invoice.resource_name = f"customers/{customer_id}/invoices/100"
@@ -259,7 +259,7 @@ async def test_list_invoices_with_credit_memo(
     invoice.replaced_invoices = []
     invoice.pdf_url = "https://example.com/invoice_100.pdf"
     invoice.account_budget_summaries = []
-    
+
     credit_memo = Mock()
     credit_memo.resource_name = f"customers/{customer_id}/invoices/101"
     credit_memo.id = "101"
@@ -276,7 +276,7 @@ async def test_list_invoices_with_credit_memo(
     credit_memo.replaced_invoices = []
     credit_memo.pdf_url = "https://example.com/credit_memo_101.pdf"
     credit_memo.account_budget_summaries = []
-    
+
     mock_response.invoices = [invoice, credit_memo]
 
     # Get the mocked invoice service client
@@ -320,14 +320,17 @@ async def test_list_invoices_with_credit_memo(
     # Assert
     assert result == expected_result
     assert len(result["invoices"]) == 2
-    
+
     # Check invoice types
     assert result["invoices"][0]["type"] == "INVOICE"
     assert result["invoices"][1]["type"] == "CREDIT_MEMO"
-    
+
     # Check credit memo references original invoice
-    assert result["invoices"][1]["corrected_invoice"] == result["invoices"][0]["resource_name"]
-    
+    assert (
+        result["invoices"][1]["corrected_invoice"]
+        == result["invoices"][0]["resource_name"]
+    )
+
     # Check amounts
     assert result["invoices"][0]["total_amount_micros"] > 0  # Invoice is positive
     assert result["invoices"][1]["total_amount_micros"] < 0  # Credit memo is negative
@@ -397,7 +400,7 @@ async def test_tool_wrapper_list_invoices(
 
     # Import the tool function
     from src.sdk_services.account.invoice_service import create_invoice_tools
-    
+
     tools = create_invoice_tools(invoice_service)
     list_invoices_tool = tools[0]  # First (and only) tool
 
@@ -449,7 +452,7 @@ async def test_tool_wrapper_list_invoices_case_insensitive(
 
     # Import the tool function
     from src.sdk_services.account.invoice_service import create_invoice_tools
-    
+
     tools = create_invoice_tools(invoice_service)
     list_invoices_tool = tools[0]
 

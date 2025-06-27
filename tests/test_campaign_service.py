@@ -68,9 +68,7 @@ async def test_create_campaign(
 
     # Mock serialize_proto_message
     expected_result = {
-        "results": [
-            {"resource_name": "customers/1234567890/campaigns/111222333"}
-        ]
+        "results": [{"resource_name": "customers/1234567890/campaigns/111222333"}]
     }
 
     with patch(
@@ -136,9 +134,7 @@ async def test_create_campaign_with_dates(
 
     # Mock serialize_proto_message
     expected_result = {
-        "results": [
-            {"resource_name": "customers/1234567890/campaigns/111222333"}
-        ]
+        "results": [{"resource_name": "customers/1234567890/campaigns/111222333"}]
     }
 
     with patch(
@@ -179,7 +175,9 @@ async def test_create_campaign_shopping_channel(
     customer_id = "1234567890"
     name = "Shopping Campaign"
     budget_resource_name = "customers/1234567890/campaignBudgets/987654321"
-    advertising_channel_type = AdvertisingChannelTypeEnum.AdvertisingChannelType.SHOPPING
+    advertising_channel_type = (
+        AdvertisingChannelTypeEnum.AdvertisingChannelType.SHOPPING
+    )
     status = CampaignStatusEnum.CampaignStatus.PAUSED
 
     # Create mock response
@@ -194,9 +192,7 @@ async def test_create_campaign_shopping_channel(
 
     # Mock serialize_proto_message
     expected_result = {
-        "results": [
-            {"resource_name": "customers/1234567890/campaigns/111222333"}
-        ]
+        "results": [{"resource_name": "customers/1234567890/campaigns/111222333"}]
     }
 
     with patch(
@@ -251,9 +247,7 @@ async def test_update_campaign(
 
     # Mock serialize_proto_message
     expected_result = {
-        "results": [
-            {"resource_name": "customers/1234567890/campaigns/111222333"}
-        ]
+        "results": [{"resource_name": "customers/1234567890/campaigns/111222333"}]
     }
 
     with patch(
@@ -281,7 +275,8 @@ async def test_update_campaign(
 
     operation = request.operations[0]
     assert (
-        operation.update.resource_name == f"customers/{customer_id}/campaigns/{campaign_id}"
+        operation.update.resource_name
+        == f"customers/{customer_id}/campaigns/{campaign_id}"
     )
     assert operation.update.name == new_name
     assert operation.update.status == new_status
@@ -319,9 +314,7 @@ async def test_update_campaign_dates_only(
 
     # Mock serialize_proto_message
     expected_result = {
-        "results": [
-            {"resource_name": "customers/1234567890/campaigns/111222333"}
-        ]
+        "results": [{"resource_name": "customers/1234567890/campaigns/111222333"}]
     }
 
     with patch(
@@ -372,9 +365,7 @@ async def test_update_campaign_no_changes(
 
     # Mock serialize_proto_message
     expected_result = {
-        "results": [
-            {"resource_name": "customers/1234567890/campaigns/111222333"}
-        ]
+        "results": [{"resource_name": "customers/1234567890/campaigns/111222333"}]
     }
 
     with patch(
@@ -496,14 +487,12 @@ async def test_tool_wrapper_create_campaign(
 
     # Mock serialize_proto_message
     expected_result = {
-        "results": [
-            {"resource_name": "customers/1234567890/campaigns/111222333"}
-        ]
+        "results": [{"resource_name": "customers/1234567890/campaigns/111222333"}]
     }
 
     # Import the tool function
     from src.sdk_services.campaign.campaign_service import create_campaign_tools
-    
+
     tools = create_campaign_tools(campaign_service)
     create_campaign_tool = tools[0]  # First tool
 
@@ -559,14 +548,12 @@ async def test_tool_wrapper_update_campaign(
 
     # Mock serialize_proto_message
     expected_result = {
-        "results": [
-            {"resource_name": "customers/1234567890/campaigns/111222333"}
-        ]
+        "results": [{"resource_name": "customers/1234567890/campaigns/111222333"}]
     }
 
     # Import the tool function
     from src.sdk_services.campaign.campaign_service import create_campaign_tools
-    
+
     tools = create_campaign_tools(campaign_service)
     update_campaign_tool = tools[1]  # Second tool
 

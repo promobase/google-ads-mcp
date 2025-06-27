@@ -180,7 +180,9 @@ async def test_list_user_access(
         row.customer_user_access.email_address = f"user{i}@example.com"
         row.customer_user_access.access_role = Mock()
         row.customer_user_access.access_role.name = roles[i].name
-        row.customer_user_access.access_creation_date_time = f"2024-01-{i + 1:02d} 10:00:00"
+        row.customer_user_access.access_creation_date_time = (
+            f"2024-01-{i + 1:02d} 10:00:00"
+        )
         row.customer_user_access.inviter_user_email_address = "admin@example.com"
         mock_results.append(row)
 

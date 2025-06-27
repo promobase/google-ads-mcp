@@ -290,6 +290,139 @@ async def test_remove_keyword(
 
 
 @pytest.mark.asyncio
+async def test_add_keywords_without_bids(
+    keyword_service: KeywordService,
+    mock_sdk_client: Any,
+    mock_ctx: Context,
+) -> None:
+    """Test adding keywords without any bids specified."""
+    # Arrange
+    customer_id = "1234567890"
+    ad_group_id = "9876543210"
+    keywords: List[Dict[str, Any]] = [
+        {"text": "running shoes", "match_type": "EXACT"},
+        {"text": "athletic footwear", "match_type": "PHRASE"},
+    ]
+
+    # Create mock response
+    mock_response = Mock(spec=MutateAdGroupCriteriaResponse)
+    mock_response.results = []
+    for i in range(len(keywords)):
+        result = Mock()
+        result.resource_name = (
+            f"customers/{customer_id}/adGroupCriteria/{ad_group_id}~{i + 1000}"
+        )
+        mock_response.results.append(result)
+
+    # Get the mocked criterion service client
+    mock_criterion_service_client = keyword_service.client  # type: ignore
+    mock_criterion_service_client.mutate_ad_group_criteria.return_value = mock_response  # type: ignore
+
+    # Mock serialize_proto_message
+    expected_result = {
+        "results": [
+            {
+                "resource_name": f"customers/{customer_id}/adGroupCriteria/{ad_group_id}~{i + 1000}"
+            }
+            for i in range(len(keywords))
+        ]
+    }
+
+    with patch(
+        "src.sdk_services.ad_group.keyword_service.serialize_proto_message",
+        return_value=expected_result,
+    ):
+        # Act
+        result = await keyword_service.add_keywords(
+            ctx=mock_ctx,
+            customer_id=customer_id,
+            ad_group_id=ad_group_id,
+            keywords=keywords,
+        )
+
+    # Assert
+    assert result == expected_result
+    assert len(result["results"]) == 2
+
+    # Verify the API call
+    mock_criterion_service_client.mutate_ad_group_criteria.assert_called_once()  # type: ignore
+    call_args = mock_criterion_service_client.mutate_ad_group_criteria.call_args  # type: ignore
+    request = call_args[1]["request"]
+    assert request.customer_id == customer_id
+    assert len(request.operations) == 2
+
+    # Check that no bids were set
+    for operation in request.operations:
+        assert (
+            not hasattr(operation.create, "cpc_bid_micros")
+            or operation.create.cpc_bid_micros == 0
+        )
+
+
+@pytest.mark.asyncio
+async def test_add_keywords_with_default_match_type(
+    keyword_service: KeywordService,
+    mock_sdk_client: Any,
+    mock_ctx: Context,
+) -> None:
+    """Test adding keywords with default match type when not specified."""
+    # Arrange
+    customer_id = "1234567890"
+    ad_group_id = "9876543210"
+    keywords: List[Dict[str, Any]] = [
+        {"text": "running shoes"},  # No match_type specified
+    ]
+
+    # Create mock response
+    mock_response = Mock(spec=MutateAdGroupCriteriaResponse)
+    mock_result = Mock()
+    mock_result.resource_name = (
+        f"customers/{customer_id}/adGroupCriteria/{ad_group_id}~1000"
+    )
+    mock_response.results = [mock_result]
+
+    # Get the mocked criterion service client
+    mock_criterion_service_client = keyword_service.client  # type: ignore
+    mock_criterion_service_client.mutate_ad_group_criteria.return_value = mock_response  # type: ignore
+
+    # Mock serialize_proto_message
+    expected_result = {
+        "results": [
+            {
+                "resource_name": f"customers/{customer_id}/adGroupCriteria/{ad_group_id}~1000"
+            }
+        ]
+    }
+
+    with patch(
+        "src.sdk_services.ad_group.keyword_service.serialize_proto_message",
+        return_value=expected_result,
+    ):
+        # Act
+        result = await keyword_service.add_keywords(
+            ctx=mock_ctx,
+            customer_id=customer_id,
+            ad_group_id=ad_group_id,
+            keywords=keywords,
+        )
+
+    # Assert
+    assert result == expected_result
+
+    # Verify the API call
+    mock_criterion_service_client.mutate_ad_group_criteria.assert_called_once()  # type: ignore
+    call_args = mock_criterion_service_client.mutate_ad_group_criteria.call_args  # type: ignore
+    request = call_args[1]["request"]
+    operation = request.operations[0]
+
+    # Should default to BROAD match type
+    assert (
+        operation.create.keyword.match_type
+        == KeywordMatchTypeEnum.KeywordMatchType.BROAD
+    )
+
+
+@pytest.mark.asyncio
 async def test_error_handling(
     keyword_service: KeywordService,
     mock_sdk_client: Any,
@@ -324,6 +457,71 @@ async def test_error_handling(
         level="error",
         message="Failed to add keywords: Test Google Ads Exception",
     )
+
+
+@pytest.mark.asyncio
+async def test_update_keyword_bid_error_handling(
+    keyword_service: KeywordService,
+    mock_sdk_client: Any,
+    mock_ctx: Context,
+    google_ads_exception: Any,
+) -> None:
+    """Test error handling for update keyword bid."""
+    # Arrange
+    customer_id = "1234567890"
+    ad_group_id = "9876543210"
+    criterion_id = "123456"
+
+    # Get the mocked criterion service client and make it raise exception
+    mock_criterion_service_client = keyword_service.client  # type: ignore
+    mock_criterion_service_client.mutate_ad_group_criteria.side_effect = (  # pyright: ignore
+        google_ads_exception
+    )
+
+    # Act & Assert
+    with pytest.raises(Exception) as exc_info:
+        await keyword_service.update_keyword_bid(
+            ctx=mock_ctx,
+            customer_id=customer_id,
+            ad_group_id=ad_group_id,
+            criterion_id=criterion_id,
+            cpc_bid_micros=2000000,
+        )
+
+    assert "Failed to update keyword bid" in str(exc_info.value)
+    assert "Test Google Ads Exception" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_remove_keyword_error_handling(
+    keyword_service: KeywordService,
+    mock_sdk_client: Any,
+    mock_ctx: Context,
+    google_ads_exception: Any,
+) -> None:
+    """Test error handling for remove keyword."""
+    # Arrange
+    customer_id = "1234567890"
+    ad_group_id = "9876543210"
+    criterion_id = "123"
+
+    # Get the mocked criterion service client and make it raise exception
+    mock_criterion_service_client = keyword_service.client  # type: ignore
+    mock_criterion_service_client.mutate_ad_group_criteria.side_effect = (  # pyright: ignore
+        google_ads_exception
+    )
+
+    # Act & Assert
+    with pytest.raises(Exception) as exc_info:
+        await keyword_service.remove_keyword(
+            ctx=mock_ctx,
+            customer_id=customer_id,
+            ad_group_id=ad_group_id,
+            criterion_id=criterion_id,
+        )
+
+    assert "Failed to remove keyword" in str(exc_info.value)
+    assert "Test Google Ads Exception" in str(exc_info.value)
 
 
 def test_register_keyword_tools() -> None:

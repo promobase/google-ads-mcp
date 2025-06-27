@@ -266,7 +266,6 @@ class CampaignDraftService:
 
             # Create request
             request = PromoteCampaignDraftRequest()
-            request.customer_id = customer_id
             request.campaign_draft = draft_resource_name
 
             # Make the API call

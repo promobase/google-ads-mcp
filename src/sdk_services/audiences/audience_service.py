@@ -93,11 +93,13 @@ class AudienceService:
                 dimension = self._create_audience_dimension(dim_config)
                 audience.dimensions.append(dimension)
 
-            # Add exclusion dimensions if provided
-            if exclusion_dimensions:
-                for excl_config in exclusion_dimensions:
-                    exclusion = self._create_audience_exclusion_dimension(excl_config)
-                    audience.exclusion_dimensions.append(exclusion)
+            # Add exclusion dimension if provided
+            # Note: In v20, only one exclusion dimension is supported
+            if exclusion_dimensions and len(exclusion_dimensions) > 0:
+                exclusion = self._create_audience_exclusion_dimension(
+                    exclusion_dimensions[0]
+                )
+                audience.exclusion_dimension = exclusion
 
             # Create operation
             operation = AudienceOperation()
@@ -134,62 +136,143 @@ class AudienceService:
             age_dim = AgeDimension()
             age_ranges = config.get("age_ranges", [])
             for age_range in age_ranges:
-                age_dim.age_ranges.append(age_range)
+                # Create AgeSegment from age range specification
+                from google.ads.googleads.v20.common.types.audiences import AgeSegment
+
+                age_segment = AgeSegment()
+
+                # Handle different age range formats
+                if isinstance(age_range, dict):
+                    if "min_age" in age_range:
+                        age_segment.min_age = age_range["min_age"]
+                    if "max_age" in age_range:
+                        age_segment.max_age = age_range["max_age"]
+                elif isinstance(age_range, str):
+                    # Handle predefined age ranges
+                    if age_range == "AGE_RANGE_18_24":
+                        age_segment.min_age = 18
+                        age_segment.max_age = 24
+                    elif age_range == "AGE_RANGE_25_34":
+                        age_segment.min_age = 25
+                        age_segment.max_age = 34
+                    elif age_range == "AGE_RANGE_35_44":
+                        age_segment.min_age = 35
+                        age_segment.max_age = 44
+                    elif age_range == "AGE_RANGE_45_54":
+                        age_segment.min_age = 45
+                        age_segment.max_age = 54
+                    elif age_range == "AGE_RANGE_55_64":
+                        age_segment.min_age = 55
+                        age_segment.max_age = 64
+                    elif age_range == "AGE_RANGE_65_UP":
+                        age_segment.min_age = 65
+                        # No max_age for 65+
+
+                age_dim.age_ranges.append(age_segment)
             dimension.age = age_dim
 
         elif dimension_type == "GENDER":
             gender_dim = GenderDimension()
             genders = config.get("genders", [])
-            gender_dim.genders.extend(genders)
+
+            # Import enum for gender
+            from google.ads.googleads.v20.enums.types.gender_type import GenderTypeEnum
+
+            for gender in genders:
+                if isinstance(gender, str):
+                    gender_dim.genders.append(
+                        getattr(GenderTypeEnum.GenderType, gender)
+                    )
+                else:
+                    gender_dim.genders.append(gender)
             dimension.gender = gender_dim
 
         elif dimension_type == "HOUSEHOLD_INCOME":
             income_dim = HouseholdIncomeDimension()
             income_ranges = config.get("income_ranges", [])
+
+            # Import enum for income range
+            from google.ads.googleads.v20.enums.types.income_range_type import (
+                IncomeRangeTypeEnum,
+            )
+
             for income_range in income_ranges:
-                income_dim.income_ranges.append(income_range)
+                if isinstance(income_range, str):
+                    income_dim.income_ranges.append(
+                        getattr(IncomeRangeTypeEnum.IncomeRangeType, income_range)
+                    )
+                else:
+                    income_dim.income_ranges.append(income_range)
             dimension.household_income = income_dim
 
         elif dimension_type == "PARENTAL_STATUS":
             parental_dim = ParentalStatusDimension()
             parent_types = config.get("parent_types", [])
-            parental_dim.parent_types.extend(parent_types)
+
+            # Import enum for parental status
+            from google.ads.googleads.v20.enums.types.parental_status_type import (
+                ParentalStatusTypeEnum,
+            )
+
+            for parent_type in parent_types:
+                if isinstance(parent_type, str):
+                    parental_dim.parental_statuses.append(
+                        getattr(ParentalStatusTypeEnum.ParentalStatusType, parent_type)
+                    )
+                else:
+                    parental_dim.parental_statuses.append(parent_type)
             dimension.parental_status = parental_dim
 
         elif dimension_type == "USER_LIST":
             segment_dim = AudienceSegmentDimension()
             user_list_segment = UserListSegment()
             user_list_segment.user_list = config.get("user_list_resource")  # type: ignore
-            segment_dim.segments.append(
-                AudienceSegmentDimension.AudienceSegment(user_list=user_list_segment)  # type: ignore
-            )
+
+            # Create audience segment manually
+            from google.ads.googleads.v20.common.types.audiences import AudienceSegment
+
+            audience_segment = AudienceSegment()
+            audience_segment.user_list = user_list_segment  # type: ignore
+            segment_dim.segments.append(audience_segment)
             dimension.audience_segments = segment_dim
 
         elif dimension_type == "USER_INTEREST":
             segment_dim = AudienceSegmentDimension()
             interest_segment = UserInterestSegment()
             interest_segment.user_interest_category = config.get("interest_resource")  # type: ignore
-            segment_dim.segments.append(
-                AudienceSegmentDimension.AudienceSegment(user_interest=interest_segment)  # type: ignore
-            )
+
+            # Create audience segment manually
+            from google.ads.googleads.v20.common.types.audiences import AudienceSegment
+
+            audience_segment = AudienceSegment()
+            audience_segment.user_interest = interest_segment  # type: ignore
+            segment_dim.segments.append(audience_segment)
             dimension.audience_segments = segment_dim
 
         elif dimension_type == "CUSTOM_AUDIENCE":
             segment_dim = AudienceSegmentDimension()
             custom_segment = CustomAudienceSegment()
             custom_segment.custom_audience = config.get("custom_audience_resource")  # type: ignore
-            segment_dim.segments.append(
-                AudienceSegmentDimension.AudienceSegment(custom_audience=custom_segment)  # type: ignore
-            )
+
+            # Create audience segment manually
+            from google.ads.googleads.v20.common.types.audiences import AudienceSegment
+
+            audience_segment = AudienceSegment()
+            audience_segment.custom_audience = custom_segment  # type: ignore
+            segment_dim.segments.append(audience_segment)
             dimension.audience_segments = segment_dim
 
         elif dimension_type == "LIFE_EVENT":
             segment_dim = AudienceSegmentDimension()
             life_event_segment = LifeEventSegment()
             life_event_segment.life_event = config.get("life_event_resource")  # type: ignore
-            segment_dim.segments.append(
-                AudienceSegmentDimension.AudienceSegment(life_event=life_event_segment)  # type: ignore
-            )
+
+            # Create audience segment manually
+            from google.ads.googleads.v20.common.types.audiences import AudienceSegment
+
+            audience_segment = AudienceSegment()
+            audience_segment.life_event = life_event_segment  # type: ignore
+            segment_dim.segments.append(audience_segment)
             dimension.audience_segments = segment_dim
 
         elif dimension_type == "DETAILED_DEMOGRAPHIC":
@@ -211,24 +294,25 @@ class AudienceService:
     def _create_audience_exclusion_dimension(
         self, config: Dict[str, Any]
     ) -> AudienceExclusionDimension:
-        """Create an audience exclusion dimension from configuration."""
+        """Create an audience exclusion dimension from configuration.
+
+        Note: In v20, exclusions only support audience segments (user lists).
+        """
         exclusion = AudienceExclusionDimension()
 
-        # Exclusions use similar structure but wrapped in exclusion dimension
-        dimension_config = config.copy()
-        dimension = self._create_audience_dimension(dimension_config)
+        dimension_type = config.get("type")
 
-        # Copy the appropriate field to exclusion
-        if dimension.age:
-            exclusion.age = dimension.age
-        elif dimension.gender:
-            exclusion.gender = dimension.gender
-        elif dimension.household_income:
-            exclusion.household_income = dimension.household_income
-        elif dimension.parental_status:
-            exclusion.parental_status = dimension.parental_status
-        elif dimension.audience_segments:
-            exclusion.audience_segments = dimension.audience_segments
+        if dimension_type == "USER_LIST":
+            from google.ads.googleads.v20.common.types.audiences import ExclusionSegment
+
+            exclusion_segment = ExclusionSegment()
+            user_list_segment = UserListSegment()
+            user_list_segment.user_list = config.get("user_list_resource")  # type: ignore
+            exclusion_segment.user_list = user_list_segment
+            exclusion.exclusions.append(exclusion_segment)
+        else:
+            # Other dimension types are not supported for exclusions in v20
+            logger.warning(f"Exclusion type {dimension_type} is not supported in v20")
 
         return exclusion
 
@@ -360,7 +444,7 @@ class AudienceService:
                 audience = row.audience
 
                 audience_dict = {
-                    "audience_id": str(audience.id),
+                    "id": str(audience.id),
                     "name": audience.name,
                     "description": audience.description,
                     "status": audience.status.name if audience.status else "UNKNOWN",
@@ -397,37 +481,13 @@ class AudienceService:
         Returns:
             Removal result
         """
-        try:
-            customer_id = format_customer_id(customer_id)
-            resource_name = f"customers/{customer_id}/audiences/{audience_id}"
-
-            # Create operation
-            operation = AudienceOperation()
-            operation.remove = resource_name
-
-            # Create request
-            request = MutateAudiencesRequest()
-            request.customer_id = customer_id
-            request.operations = [operation]
-
-            # Make the API call
-            response = self.client.mutate_audiences(request=request)
-
-            await ctx.log(
-                level="info",
-                message=f"Removed audience {audience_id}",
-            )
-
-            return serialize_proto_message(response)
-
-        except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
-            await ctx.log(level="error", message=error_msg)
-            raise Exception(error_msg) from e
-        except Exception as e:
-            error_msg = f"Failed to remove audience: {str(e)}"
-            await ctx.log(level="error", message=error_msg)
-            raise Exception(error_msg) from e
+        # Since there's no remove operation, update status to REMOVED
+        return await self.update_audience(
+            ctx=ctx,
+            customer_id=customer_id,
+            audience_id=audience_id,
+            status="REMOVED",
+        )
 
 
 def create_audience_tools(

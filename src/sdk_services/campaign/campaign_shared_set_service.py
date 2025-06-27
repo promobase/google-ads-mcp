@@ -60,7 +60,7 @@ class CampaignSharedSetService:
             customer_id: The customer ID
             campaign_id: The campaign ID
             shared_set_id: The shared set ID
-            status: Status of the attachment (ENABLED, PAUSED, REMOVED)
+            status: Status of the attachment (ENABLED, REMOVED)
 
         Returns:
             Created campaign shared set details
@@ -188,47 +188,71 @@ class CampaignSharedSetService:
     ) -> Dict[str, Any]:
         """Update the status of a campaign shared set attachment.
 
+        Note: Since the API doesn't support update operations, this method
+        removes and re-creates the attachment with the new status.
+
         Args:
             ctx: FastMCP context
             customer_id: The customer ID
             campaign_id: The campaign ID
             shared_set_id: The shared set ID
-            status: New status (ENABLED, PAUSED, REMOVED)
+            status: New status (ENABLED, REMOVED)
 
         Returns:
             Updated campaign shared set details
         """
         try:
             customer_id = format_customer_id(customer_id)
-            # Campaign shared set resource names use ~ as separator
-            resource_name = f"customers/{customer_id}/campaignSharedSets/{campaign_id}~{shared_set_id}"
 
-            # Create campaign shared set with updated status
-            campaign_shared_set = CampaignSharedSet()
-            campaign_shared_set.resource_name = resource_name
-            campaign_shared_set.status = getattr(
-                CampaignSharedSetStatusEnum.CampaignSharedSetStatus, status
-            )
+            if status == "REMOVED":
+                # If setting to REMOVED, just remove it
+                return await self.detach_shared_set_from_campaign(
+                    ctx=ctx,
+                    customer_id=customer_id,
+                    campaign_id=campaign_id,
+                    shared_set_id=shared_set_id,
+                )
+            else:
+                # Otherwise, remove and re-create with new status
+                operations = []
 
-            # Create operation
-            operation = CampaignSharedSetOperation()
-            operation.update = campaign_shared_set
-            operation.update_mask.CopyFrom(field_mask_pb2.FieldMask(paths=["status"]))
+                # First remove the existing attachment
+                resource_name = f"customers/{customer_id}/campaignSharedSets/{campaign_id}~{shared_set_id}"
+                remove_operation = CampaignSharedSetOperation()
+                remove_operation.remove = resource_name
+                operations.append(remove_operation)
 
-            # Create request
-            request = MutateCampaignSharedSetsRequest()
-            request.customer_id = customer_id
-            request.operations = [operation]
+                # Then create with new status
+                campaign_resource = f"customers/{customer_id}/campaigns/{campaign_id}"
+                shared_set_resource = (
+                    f"customers/{customer_id}/sharedSets/{shared_set_id}"
+                )
 
-            # Make the API call
-            response = self.client.mutate_campaign_shared_sets(request=request)
+                campaign_shared_set = CampaignSharedSet()
+                campaign_shared_set.campaign = campaign_resource
+                campaign_shared_set.shared_set = shared_set_resource
+                campaign_shared_set.status = getattr(
+                    CampaignSharedSetStatusEnum.CampaignSharedSetStatus, status
+                )
 
-            await ctx.log(
-                level="info",
-                message=f"Updated campaign shared set status to {status}",
-            )
+                create_operation = CampaignSharedSetOperation()
+                create_operation.create = campaign_shared_set
+                operations.append(create_operation)
 
-            return serialize_proto_message(response)
+                # Create request with both operations
+                request = MutateCampaignSharedSetsRequest()
+                request.customer_id = customer_id
+                request.operations = operations
+
+                # Make the API call
+                response = self.client.mutate_campaign_shared_sets(request=request)
+
+                await ctx.log(
+                    level="info",
+                    message=f"Updated campaign shared set status to {status}",
+                )
+
+                return serialize_proto_message(response)
 
         except GoogleAdsException as e:
             error_msg = f"Google Ads API error: {e.failure}"
@@ -451,7 +475,7 @@ def create_campaign_shared_set_tools(
             customer_id: The customer ID
             campaign_id: The campaign ID
             shared_set_id: The shared set ID to attach
-            status: Status of the attachment - ENABLED, PAUSED, or REMOVED
+            status: Status of the attachment - ENABLED or REMOVED
 
         Returns:
             Created campaign shared set attachment details
@@ -500,7 +524,7 @@ def create_campaign_shared_set_tools(
             customer_id: The customer ID
             campaign_id: The campaign ID
             shared_set_id: The shared set ID
-            status: New status - ENABLED, PAUSED, or REMOVED
+            status: New status - ENABLED or REMOVED
 
         Returns:
             Updated campaign shared set details

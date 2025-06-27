@@ -59,7 +59,7 @@ class CustomAudienceService:
         name: str,
         description: str,
         members: List[Dict[str, Any]],
-        type_: str = "CUSTOM",
+        type_: str = "AUTO",
         status: str = "ENABLED",
     ) -> Dict[str, Any]:
         """Create a new custom audience (custom segment).
@@ -75,7 +75,7 @@ class CustomAudienceService:
                     {"type": "URL", "url": "example.com/shoes"},
                     {"type": "APP", "app": "com.example.app"}
                 ]
-            type_: Type - CUSTOM, INTEREST, PURCHASE_INTENT, or SEARCH
+            type_: Type - AUTO, INTEREST, PURCHASE_INTENT, or SEARCH
             status: Status - ENABLED or REMOVED
 
         Returns:
@@ -386,7 +386,13 @@ class CustomAudienceService:
             # Execute search
             response = google_ads_service.search(customer_id=customer_id, query=query)
 
-            return serialize_proto_message(response)
+            # Check if any results were found
+            for row in response:
+                await ctx.log(
+                    level="info",
+                    message=f"Found custom audience {custom_audience_id}",
+                )
+                return serialize_proto_message(row)
 
             raise Exception(f"Custom audience {custom_audience_id} not found")
 
@@ -412,7 +418,7 @@ def create_custom_audience_tools(
         name: str,
         description: str,
         members: List[Dict[str, Any]],
-        type_: str = "CUSTOM",
+        type_: str = "AUTO",
         status: str = "ENABLED",
     ) -> Dict[str, Any]:
         """Create a new custom audience (custom segment).
@@ -428,7 +434,7 @@ def create_custom_audience_tools(
                 - {"type": "PLACE_CATEGORY", "place_category": 1234}
                 - {"type": "APP", "app": "com.example.app"}
             type_: Type of custom audience:
-                - CUSTOM: Standard custom segment
+                - AUTO: Google Ads will auto-select the best interpretation
                 - INTEREST: Interest-based segment
                 - PURCHASE_INTENT: Purchase intent segment
                 - SEARCH: Search-based segment

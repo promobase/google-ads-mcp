@@ -238,16 +238,16 @@ async def test_create_similar_user_list(
     assert operation.create.name == name
     assert operation.create.description == description
     assert operation.create.similar_user_list is not None
-    # Note: The implementation only uses the last seed list ID
+    # Note: The implementation only uses the first seed list ID
     assert (
         operation.create.similar_user_list.seed_user_list
-        == f"customers/{customer_id}/userLists/300"
+        == f"customers/{customer_id}/userLists/100"
     )
 
     # Verify logging
     mock_ctx.log.assert_called_once_with(  # type: ignore
         level="info",
-        message=f"Created similar user list '{name}' based on 3 seed lists",
+        message=f"Created similar user list '{name}' based on seed list 100",
     )
 
 

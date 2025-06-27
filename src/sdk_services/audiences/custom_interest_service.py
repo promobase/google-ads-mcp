@@ -104,16 +104,8 @@ class CustomInterestService:
                 ci_member = CustomInterestMember()
                 ci_member.member_type = member_type
 
-                if (
-                    member_type
-                    == CustomInterestMemberTypeEnum.CustomInterestMemberType.KEYWORD
-                ):
-                    ci_member.keyword = member["value"]
-                elif (
-                    member_type
-                    == CustomInterestMemberTypeEnum.CustomInterestMemberType.URL
-                ):
-                    ci_member.url = member["value"]
+                # Parameter field holds both keyword and URL values
+                ci_member.parameter = member["value"]
 
                 custom_interest.members.append(ci_member)
 
@@ -210,16 +202,8 @@ class CustomInterestService:
                     ci_member = CustomInterestMember()
                     ci_member.member_type = member_type
 
-                    if (
-                        member_type
-                        == CustomInterestMemberTypeEnum.CustomInterestMemberType.KEYWORD
-                    ):
-                        ci_member.keyword = member["value"]
-                    elif (
-                        member_type
-                        == CustomInterestMemberTypeEnum.CustomInterestMemberType.URL
-                    ):
-                        ci_member.url = member["value"]
+                    # Parameter field holds both keyword and URL values
+                    ci_member.parameter = member["value"]
 
                     custom_interest.members.append(ci_member)
                 update_mask_fields.append("members")
@@ -379,10 +363,8 @@ class CustomInterestService:
                         if member.member_type
                         else "UNKNOWN"
                     }
-                    if member.HasField("keyword"):
-                        member_dict["value"] = member.keyword
-                    elif member.HasField("url"):
-                        member_dict["value"] = member.url
+                    if member.HasField("parameter"):
+                        member_dict["value"] = member.parameter
                     members.append(member_dict)
 
                 await ctx.log(

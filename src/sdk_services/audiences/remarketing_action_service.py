@@ -150,7 +150,12 @@ class RemarketingActionService:
                         }
                     )
 
-            return serialize_proto_message(response)
+                await ctx.log(
+                    level="info",
+                    message=f"Retrieved remarketing action {remarketing_action_id}",
+                )
+
+                return serialize_proto_message(row)
 
             raise Exception(f"Remarketing action {remarketing_action_id} not found")
 

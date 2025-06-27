@@ -49,9 +49,8 @@ class ExperimentService:
         ctx: Context,
         customer_id: str,
         name: str,
-        base_campaign_id: str,
         description: Optional[str] = None,
-        traffic_split_percent: int = 50,
+        suffix: Optional[str] = None,
         experiment_type: str = "SEARCH_CUSTOM",
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
@@ -62,9 +61,8 @@ class ExperimentService:
             ctx: FastMCP context
             customer_id: The customer ID
             name: The experiment name
-            base_campaign_id: The base campaign to experiment on
             description: Optional description
-            traffic_split_percent: Traffic split percentage (0-100)
+            suffix: Optional suffix for experiment campaigns
             experiment_type: Type of experiment (SEARCH_CUSTOM, DISPLAY_CUSTOM, etc.)
             start_date: Start date (YYYY-MM-DD format)
             end_date: End date (YYYY-MM-DD format)
@@ -78,10 +76,6 @@ class ExperimentService:
             # Create experiment
             experiment = Experiment()
             experiment.name = name
-            experiment.campaigns.append(
-                f"customers/{customer_id}/campaigns/{base_campaign_id}"
-            )
-            experiment.traffic_split_percent = traffic_split_percent
             experiment.type_ = getattr(
                 ExperimentTypeEnum.ExperimentType, experiment_type
             )
@@ -89,6 +83,8 @@ class ExperimentService:
 
             if description:
                 experiment.description = description
+            if suffix:
+                experiment.suffix = suffix
 
             # Set dates if provided
             if start_date:
@@ -196,7 +192,7 @@ class ExperimentService:
 
             # Create request
             request = EndExperimentRequest()
-            request.resource_name = resource_name
+            request.experiment = resource_name
             request.validate_only = validate_only
 
             # Make the API call
@@ -357,21 +353,22 @@ def create_experiment_tools(
         ctx: Context,
         customer_id: str,
         name: str,
-        base_campaign_id: str,
         description: Optional[str] = None,
-        traffic_split_percent: int = 50,
+        suffix: Optional[str] = None,
         experiment_type: str = "SEARCH_CUSTOM",
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Create a new experiment for A/B testing campaigns.
 
+        Note: After creating an experiment, you need to create experiment arms
+        to link it to campaigns. Use the ExperimentArm service for that.
+
         Args:
             customer_id: The customer ID
             name: The experiment name
-            base_campaign_id: The campaign ID to run the experiment on
             description: Optional description of the experiment
-            traffic_split_percent: Percentage of traffic for experiment (0-100, default 50)
+            suffix: Optional suffix to append to experiment campaign names
             experiment_type: Type of experiment:
                 - SEARCH_CUSTOM: For search campaigns
                 - DISPLAY_CUSTOM: For display campaigns
@@ -387,9 +384,8 @@ def create_experiment_tools(
             ctx=ctx,
             customer_id=customer_id,
             name=name,
-            base_campaign_id=base_campaign_id,
             description=description,
-            traffic_split_percent=traffic_split_percent,
+            suffix=suffix,
             experiment_type=experiment_type,
             start_date=start_date,
             end_date=end_date,

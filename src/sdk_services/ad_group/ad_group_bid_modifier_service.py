@@ -5,21 +5,17 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
 from google.ads.googleads.v20.common.types.criteria import (
-    AdScheduleInfo,
-    AgeRangeInfo,
     DeviceInfo,
-    GenderInfo,
-    IncomeRangeInfo,
-    ParentalStatusInfo,
+    HotelAdvanceBookingWindowInfo,
+    HotelCheckInDateRangeInfo,
+    HotelCheckInDayInfo,
+    HotelDateSelectionTypeInfo,
+    HotelLengthOfStayInfo,
 )
-from google.ads.googleads.v20.enums.types.age_range_type import AgeRangeTypeEnum
 from google.ads.googleads.v20.enums.types.day_of_week import DayOfWeekEnum
 from google.ads.googleads.v20.enums.types.device import DeviceEnum
-from google.ads.googleads.v20.enums.types.gender_type import GenderTypeEnum
-from google.ads.googleads.v20.enums.types.income_range_type import IncomeRangeTypeEnum
-from google.ads.googleads.v20.enums.types.minute_of_hour import MinuteOfHourEnum
-from google.ads.googleads.v20.enums.types.parental_status_type import (
-    ParentalStatusTypeEnum,
+from google.ads.googleads.v20.enums.types.hotel_date_selection_type import (
+    HotelDateSelectionTypeEnum,
 )
 from google.ads.googleads.v20.resources.types.ad_group_bid_modifier import (
     AdGroupBidModifier,
@@ -123,29 +119,21 @@ class AdGroupBidModifierService:
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
 
-    async def create_ad_schedule_bid_modifier(
+    async def create_hotel_check_in_day_bid_modifier(
         self,
         ctx: Context,
         customer_id: str,
         ad_group_id: str,
         day_of_week: str,
-        start_hour: int,
-        start_minute: str,
-        end_hour: int,
-        end_minute: str,
         bid_modifier: float,
     ) -> Dict[str, Any]:
-        """Create an ad schedule bid modifier for an ad group.
+        """Create a hotel check-in day bid modifier for an ad group.
 
         Args:
             ctx: FastMCP context
             customer_id: The customer ID
             ad_group_id: The ad group ID
             day_of_week: Day of week (MONDAY, TUESDAY, etc.)
-            start_hour: Start hour (0-23)
-            start_minute: Start minute (ZERO, FIFTEEN, THIRTY, FORTY_FIVE)
-            end_hour: End hour (0-23)
-            end_minute: End minute (ZERO, FIFTEEN, THIRTY, FORTY_FIVE)
             bid_modifier: Bid modifier value (0.1-10.0)
 
         Returns:
@@ -155,23 +143,17 @@ class AdGroupBidModifierService:
             customer_id = format_customer_id(customer_id)
             ad_group_resource = f"customers/{customer_id}/adGroups/{ad_group_id}"
 
-            # Create ad schedule bid modifier
+            # Create bid modifier
             bid_modifier_obj = AdGroupBidModifier()
             bid_modifier_obj.ad_group = ad_group_resource
             bid_modifier_obj.bid_modifier = bid_modifier
 
-            # Set ad schedule criterion
-            ad_schedule_info = AdScheduleInfo()
-            ad_schedule_info.day_of_week = getattr(DayOfWeekEnum.DayOfWeek, day_of_week)
-            ad_schedule_info.start_hour = start_hour
-            ad_schedule_info.start_minute = getattr(
-                MinuteOfHourEnum.MinuteOfHour, start_minute
+            # Set hotel check-in day criterion
+            hotel_check_in_day = HotelCheckInDayInfo()
+            hotel_check_in_day.day_of_week = getattr(
+                DayOfWeekEnum.DayOfWeek, day_of_week
             )
-            ad_schedule_info.end_hour = end_hour
-            ad_schedule_info.end_minute = getattr(
-                MinuteOfHourEnum.MinuteOfHour, end_minute
-            )
-            bid_modifier_obj.ad_schedule = ad_schedule_info
+            bid_modifier_obj.hotel_check_in_day = hotel_check_in_day
 
             # Create operation
             operation = AdGroupBidModifierOperation()
@@ -189,7 +171,7 @@ class AdGroupBidModifierService:
 
             await ctx.log(
                 level="info",
-                message=f"Created ad schedule bid modifier for ad group {ad_group_id}",
+                message=f"Created hotel check-in day bid modifier for ad group {ad_group_id}",
             )
 
             return serialize_proto_message(response)
@@ -199,27 +181,25 @@ class AdGroupBidModifierService:
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
-            error_msg = f"Failed to create ad schedule bid modifier: {str(e)}"
+            error_msg = f"Failed to create hotel check-in day bid modifier: {str(e)}"
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
 
-    async def create_demographic_bid_modifier(
+    async def create_hotel_date_selection_bid_modifier(
         self,
         ctx: Context,
         customer_id: str,
         ad_group_id: str,
-        demographic_type: str,
-        demographic_value: str,
+        date_selection_type: str,
         bid_modifier: float,
     ) -> Dict[str, Any]:
-        """Create a demographic bid modifier for an ad group.
+        """Create a hotel date selection bid modifier for an ad group.
 
         Args:
             ctx: FastMCP context
             customer_id: The customer ID
             ad_group_id: The ad group ID
-            demographic_type: Type of demographic (GENDER, AGE_RANGE, INCOME_RANGE, PARENTAL_STATUS)
-            demographic_value: Specific demographic value
+            date_selection_type: Date selection type (DEFAULT_SELECTION or USER_SELECTED)
             bid_modifier: Bid modifier value (0.1-10.0)
 
         Returns:
@@ -229,38 +209,17 @@ class AdGroupBidModifierService:
             customer_id = format_customer_id(customer_id)
             ad_group_resource = f"customers/{customer_id}/adGroups/{ad_group_id}"
 
-            # Create demographic bid modifier
+            # Create bid modifier
             bid_modifier_obj = AdGroupBidModifier()
             bid_modifier_obj.ad_group = ad_group_resource
             bid_modifier_obj.bid_modifier = bid_modifier
 
-            # Set demographic criterion based on type
-            if demographic_type == "GENDER":
-                gender_info = GenderInfo()
-                gender_info.type_ = getattr(
-                    GenderTypeEnum.GenderType, demographic_value
-                )
-                bid_modifier_obj.gender = gender_info
-            elif demographic_type == "AGE_RANGE":
-                age_range_info = AgeRangeInfo()
-                age_range_info.type_ = getattr(
-                    AgeRangeTypeEnum.AgeRangeType, demographic_value
-                )
-                bid_modifier_obj.age_range = age_range_info
-            elif demographic_type == "INCOME_RANGE":
-                income_range_info = IncomeRangeInfo()
-                income_range_info.type_ = getattr(
-                    IncomeRangeTypeEnum.IncomeRangeType, demographic_value
-                )
-                bid_modifier_obj.income_range = income_range_info
-            elif demographic_type == "PARENTAL_STATUS":
-                parental_status_info = ParentalStatusInfo()
-                parental_status_info.type_ = getattr(
-                    ParentalStatusTypeEnum.ParentalStatusType, demographic_value
-                )
-                bid_modifier_obj.parental_status = parental_status_info
-            else:
-                raise ValueError(f"Unsupported demographic type: {demographic_type}")
+            # Set hotel date selection type criterion
+            hotel_date_selection = HotelDateSelectionTypeInfo()
+            hotel_date_selection.type_ = getattr(
+                HotelDateSelectionTypeEnum.HotelDateSelectionType, date_selection_type
+            )
+            bid_modifier_obj.hotel_date_selection_type = hotel_date_selection
 
             # Create operation
             operation = AdGroupBidModifierOperation()
@@ -278,10 +237,9 @@ class AdGroupBidModifierService:
 
             await ctx.log(
                 level="info",
-                message=f"Created {demographic_type} bid modifier for ad group {ad_group_id}",
+                message=f"Created hotel date selection bid modifier for ad group {ad_group_id}",
             )
 
-            # Return serialized response
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
@@ -289,7 +247,7 @@ class AdGroupBidModifierService:
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
-            error_msg = f"Failed to create demographic bid modifier: {str(e)}"
+            error_msg = f"Failed to create hotel date selection bid modifier: {str(e)}"
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
 
@@ -384,15 +342,14 @@ class AdGroupBidModifierService:
                     ad_group_bid_modifier.ad_group,
                     ad_group_bid_modifier.bid_modifier,
                     ad_group_bid_modifier.device.type,
-                    ad_group_bid_modifier.ad_schedule.day_of_week,
-                    ad_group_bid_modifier.ad_schedule.start_hour,
-                    ad_group_bid_modifier.ad_schedule.start_minute,
-                    ad_group_bid_modifier.ad_schedule.end_hour,
-                    ad_group_bid_modifier.ad_schedule.end_minute,
-                    ad_group_bid_modifier.gender.type,
-                    ad_group_bid_modifier.age_range.type,
-                    ad_group_bid_modifier.income_range.type,
-                    ad_group_bid_modifier.parental_status.type,
+                    ad_group_bid_modifier.hotel_date_selection_type.type,
+                    ad_group_bid_modifier.hotel_advance_booking_window.min_days,
+                    ad_group_bid_modifier.hotel_advance_booking_window.max_days,
+                    ad_group_bid_modifier.hotel_length_of_stay.min_nights,
+                    ad_group_bid_modifier.hotel_length_of_stay.max_nights,
+                    ad_group_bid_modifier.hotel_check_in_day.day_of_week,
+                    ad_group_bid_modifier.hotel_check_in_date_range.start_date,
+                    ad_group_bid_modifier.hotel_check_in_date_range.end_date,
                     ad_group.id,
                     ad_group.name,
                     campaign.id,
@@ -438,34 +395,33 @@ class AdGroupBidModifierService:
                     modifier_dict["criterion_details"] = {
                         "device_type": bid_modifier.device.type.name
                     }
-                elif bid_modifier.ad_schedule.day_of_week:
-                    modifier_dict["criterion_type"] = "AD_SCHEDULE"
+                elif bid_modifier.hotel_date_selection_type.type:
+                    modifier_dict["criterion_type"] = "HOTEL_DATE_SELECTION"
                     modifier_dict["criterion_details"] = {
-                        "day_of_week": bid_modifier.ad_schedule.day_of_week.name,
-                        "start_hour": bid_modifier.ad_schedule.start_hour,
-                        "start_minute": bid_modifier.ad_schedule.start_minute.name,
-                        "end_hour": bid_modifier.ad_schedule.end_hour,
-                        "end_minute": bid_modifier.ad_schedule.end_minute.name,
+                        "type": bid_modifier.hotel_date_selection_type.type.name
                     }
-                elif bid_modifier.gender.type:
-                    modifier_dict["criterion_type"] = "GENDER"
+                elif bid_modifier.hotel_advance_booking_window.min_days is not None:
+                    modifier_dict["criterion_type"] = "HOTEL_ADVANCE_BOOKING_WINDOW"
                     modifier_dict["criterion_details"] = {
-                        "gender": bid_modifier.gender.type.name
+                        "min_days": bid_modifier.hotel_advance_booking_window.min_days,
+                        "max_days": bid_modifier.hotel_advance_booking_window.max_days,
                     }
-                elif bid_modifier.age_range.type:
-                    modifier_dict["criterion_type"] = "AGE_RANGE"
+                elif bid_modifier.hotel_length_of_stay.min_nights is not None:
+                    modifier_dict["criterion_type"] = "HOTEL_LENGTH_OF_STAY"
                     modifier_dict["criterion_details"] = {
-                        "age_range": bid_modifier.age_range.type.name
+                        "min_nights": bid_modifier.hotel_length_of_stay.min_nights,
+                        "max_nights": bid_modifier.hotel_length_of_stay.max_nights,
                     }
-                elif bid_modifier.income_range.type:
-                    modifier_dict["criterion_type"] = "INCOME_RANGE"
+                elif bid_modifier.hotel_check_in_day.day_of_week:
+                    modifier_dict["criterion_type"] = "HOTEL_CHECK_IN_DAY"
                     modifier_dict["criterion_details"] = {
-                        "income_range": bid_modifier.income_range.type.name
+                        "day_of_week": bid_modifier.hotel_check_in_day.day_of_week.name
                     }
-                elif bid_modifier.parental_status.type:
-                    modifier_dict["criterion_type"] = "PARENTAL_STATUS"
+                elif bid_modifier.hotel_check_in_date_range.start_date:
+                    modifier_dict["criterion_type"] = "HOTEL_CHECK_IN_DATE_RANGE"
                     modifier_dict["criterion_details"] = {
-                        "parental_status": bid_modifier.parental_status.type.name
+                        "start_date": bid_modifier.hotel_check_in_date_range.start_date,
+                        "end_date": bid_modifier.hotel_check_in_date_range.end_date,
                     }
 
                 bid_modifiers.append(modifier_dict)
@@ -566,74 +522,55 @@ def create_ad_group_bid_modifier_tools(
             bid_modifier=bid_modifier,
         )
 
-    async def create_ad_group_ad_schedule_bid_modifier(
+    async def create_ad_group_hotel_check_in_day_bid_modifier(
         ctx: Context,
         customer_id: str,
         ad_group_id: str,
         day_of_week: str,
-        start_hour: int,
-        start_minute: str,
-        end_hour: int,
-        end_minute: str,
         bid_modifier: float,
     ) -> Dict[str, Any]:
-        """Create an ad schedule bid modifier for an ad group.
+        """Create a hotel check-in day bid modifier for an ad group.
 
         Args:
             customer_id: The customer ID
             ad_group_id: The ad group ID
             day_of_week: Day of week (MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY)
-            start_hour: Start hour (0-23)
-            start_minute: Start minute (ZERO, FIFTEEN, THIRTY, FORTY_FIVE)
-            end_hour: End hour (0-23)
-            end_minute: End minute (ZERO, FIFTEEN, THIRTY, FORTY_FIVE)
             bid_modifier: Bid modifier value (0.1-10.0)
 
         Returns:
             Created bid modifier details
         """
-        return await service.create_ad_schedule_bid_modifier(
+        return await service.create_hotel_check_in_day_bid_modifier(
             ctx=ctx,
             customer_id=customer_id,
             ad_group_id=ad_group_id,
             day_of_week=day_of_week,
-            start_hour=start_hour,
-            start_minute=start_minute,
-            end_hour=end_hour,
-            end_minute=end_minute,
             bid_modifier=bid_modifier,
         )
 
-    async def create_ad_group_demographic_bid_modifier(
+    async def create_ad_group_hotel_date_selection_bid_modifier(
         ctx: Context,
         customer_id: str,
         ad_group_id: str,
-        demographic_type: str,
-        demographic_value: str,
+        date_selection_type: str,
         bid_modifier: float,
     ) -> Dict[str, Any]:
-        """Create a demographic bid modifier for an ad group.
+        """Create a hotel date selection bid modifier for an ad group.
 
         Args:
             customer_id: The customer ID
             ad_group_id: The ad group ID
-            demographic_type: Type of demographic (GENDER, AGE_RANGE, INCOME_RANGE, PARENTAL_STATUS)
-            demographic_value: Specific demographic value:
-                - For GENDER: MALE, FEMALE, UNDETERMINED
-                - For AGE_RANGE: AGE_RANGE_18_24, AGE_RANGE_25_34, AGE_RANGE_35_44, AGE_RANGE_45_54, AGE_RANGE_55_64, AGE_RANGE_65_UP, AGE_RANGE_UNDETERMINED
-                - For INCOME_RANGE: INCOME_RANGE_0_50, INCOME_RANGE_50_60, INCOME_RANGE_60_70, INCOME_RANGE_70_80, INCOME_RANGE_80_90, INCOME_RANGE_90_UP, INCOME_RANGE_UNDETERMINED
-                - For PARENTAL_STATUS: PARENT, NOT_A_PARENT, UNDETERMINED
+            date_selection_type: Date selection type - DEFAULT_SELECTION or USER_SELECTED
             bid_modifier: Bid modifier value (0.1-10.0)
 
         Returns:
             Created bid modifier details
         """
-        return await service.create_demographic_bid_modifier(
+        return await service.create_hotel_date_selection_bid_modifier(
             ctx=ctx,
             customer_id=customer_id,
             ad_group_id=ad_group_id,
-            demographic_type=demographic_type,
-            demographic_value=demographic_value,
+            date_selection_type=date_selection_type,
             bid_modifier=bid_modifier,
         )
 
@@ -706,8 +643,8 @@ def create_ad_group_bid_modifier_tools(
     tools.extend(
         [
             create_ad_group_device_bid_modifier,
-            create_ad_group_ad_schedule_bid_modifier,
-            create_ad_group_demographic_bid_modifier,
+            create_ad_group_hotel_check_in_day_bid_modifier,
+            create_ad_group_hotel_date_selection_bid_modifier,
             update_ad_group_bid_modifier,
             list_ad_group_bid_modifiers,
             remove_ad_group_bid_modifier,
