@@ -23,6 +23,7 @@ from src.sdk_servers.ad_group_criterion_server import ad_group_criterion_sdk_ser
 from src.sdk_servers.ad_group_label_server import register_ad_group_label_server
 from src.sdk_servers.ad_group_server import ad_group_sdk_server
 from src.sdk_servers.ad_server import ad_sdk_server
+from src.sdk_servers.asset_group_asset_server import register_asset_group_asset_server
 from src.sdk_servers.asset_group_server import register_asset_group_server
 from src.sdk_servers.asset_server import asset_sdk_server
 from src.sdk_servers.asset_set_server import register_asset_set_server
@@ -38,7 +39,13 @@ from src.sdk_servers.campaign_asset_server import register_campaign_asset_server
 from src.sdk_servers.campaign_bid_modifier_server import (
     register_campaign_bid_modifier_server,
 )
+from src.sdk_servers.campaign_conversion_goal_server import (
+    register_campaign_conversion_goal_server,
+)
 from src.sdk_servers.campaign_criterion_server import campaign_criterion_sdk_server
+from src.sdk_servers.campaign_customizer_server import (
+    register_campaign_customizer_server,
+)
 from src.sdk_servers.campaign_draft_server import register_campaign_draft_server
 from src.sdk_servers.campaign_label_server import register_campaign_label_server
 from src.sdk_servers.campaign_server import campaign_sdk_server
@@ -47,6 +54,9 @@ from src.sdk_servers.campaign_shared_set_server import (
 )
 from src.sdk_servers.conversion_adjustment_upload_server import (
     register_conversion_adjustment_upload_server,
+)
+from src.sdk_servers.conversion_custom_variable_server import (
+    register_conversion_custom_variable_server,
 )
 from src.sdk_servers.conversion_server import conversion_sdk_server
 from src.sdk_servers.conversion_upload_server import conversion_upload_sdk_server
@@ -178,6 +188,7 @@ mcp.mount(conversion_sdk_server, prefix="conversion")
 mcp.mount(search_sdk_server, prefix="search")
 mcp.mount(asset_sdk_server, prefix="asset")
 register_asset_group_server(mcp)
+register_asset_group_asset_server(mcp)
 register_asset_set_server(mcp)
 mcp.mount(bidding_strategy_sdk_server, prefix="bidding_strategy")
 # mcp.mount(extension_feed_item_sdk_server, prefix="extension")  # Not available in v20
@@ -224,6 +235,9 @@ register_customer_client_link_server(mcp)
 register_audience_insights_server(mcp)
 register_google_ads_server(mcp)
 register_customer_manager_link_server(mcp)
+register_conversion_custom_variable_server(mcp)
+register_campaign_conversion_goal_server(mcp)
+register_campaign_customizer_server(mcp)
 
 
 @mcp.tool
