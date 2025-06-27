@@ -71,6 +71,7 @@ from src.sdk_servers.customer_client_link_server import (
 from src.sdk_servers.customer_manager_link_server import (
     register_customer_manager_link_server,
 )
+from src.sdk_servers.customer_label_server import register_customer_label_server
 from src.sdk_servers.customer_negative_criterion_server import (
     customer_negative_criterion_sdk_server,
 )
@@ -235,6 +236,7 @@ register_customer_client_link_server(mcp)
 register_audience_insights_server(mcp)
 register_google_ads_server(mcp)
 register_customer_manager_link_server(mcp)
+register_customer_label_server(mcp)
 register_conversion_custom_variable_server(mcp)
 register_campaign_conversion_goal_server(mcp)
 register_campaign_customizer_server(mcp)

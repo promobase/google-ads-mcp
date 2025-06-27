@@ -323,4 +323,3 @@ def register_campaign_customizer_tools(
         mcp.tool(tool)
 
     return service
-

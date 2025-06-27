@@ -12,4 +12,3 @@ from src.sdk_services.campaign.campaign_customizer_service import (
 def register_campaign_customizer_server(mcp: FastMCP[Any]) -> None:
     """Register Campaign Customizer server with the MCP server."""
     register_campaign_customizer_tools(mcp)
-
