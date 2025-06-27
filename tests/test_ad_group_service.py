@@ -25,7 +25,7 @@ def ad_group_service(mock_sdk_client: Any) -> AdGroupService:
     """Create an AdGroupService instance with mocked dependencies."""
     # Mock AdGroupService client
     mock_ad_group_service_client = Mock(spec=AdGroupServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_ad_group_service_client
+    mock_sdk_client.client.get_service.return_value = mock_ad_group_service_client  # type: ignore
 
     with patch(
         "src.sdk_services.ad_group.ad_group_service.get_sdk_client",
@@ -282,10 +282,10 @@ def test_register_ad_group_tools() -> None:
     assert isinstance(service, AdGroupService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 2  # 2 tools registered
+    assert mock_mcp.tool.call_count == 2  # 2 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

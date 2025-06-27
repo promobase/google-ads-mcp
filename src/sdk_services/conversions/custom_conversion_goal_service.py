@@ -155,7 +155,7 @@ def register_custom_conversion_goal_tools(mcp: FastMCP[Any]) -> None:
     """Register custom conversion goal tools with the MCP server."""
 
     @mcp.tool
-    async def mutate_custom_conversion_goals(
+    async def mutate_custom_conversion_goals(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         operations: list[dict[str, Any]],
         validate_only: bool = False,
@@ -228,7 +228,7 @@ def register_custom_conversion_goal_tools(mcp: FastMCP[Any]) -> None:
         return f"Successfully processed {len(response.results)} custom conversion goal operations"
 
     @mcp.tool
-    async def create_custom_conversion_goal(
+    async def create_custom_conversion_goal(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         name: str,
         conversion_actions: list[str],
@@ -272,7 +272,7 @@ def register_custom_conversion_goal_tools(mcp: FastMCP[Any]) -> None:
         return f"Created custom conversion goal: {result.resource_name}"
 
     @mcp.tool
-    async def update_custom_conversion_goal(
+    async def update_custom_conversion_goal(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         resource_name: str,
         name: Optional[str] = None,
@@ -323,7 +323,7 @@ def register_custom_conversion_goal_tools(mcp: FastMCP[Any]) -> None:
         return f"Updated custom conversion goal: {result.resource_name}"
 
     @mcp.tool
-    async def remove_custom_conversion_goal(
+    async def remove_custom_conversion_goal(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         resource_name: str,
     ) -> str:

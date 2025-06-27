@@ -35,7 +35,7 @@ def account_budget_proposal_service(
     """Create an AccountBudgetProposalService instance with mocked dependencies."""
     # Mock AccountBudgetProposalService client
     mock_account_budget_proposal_client = Mock(spec=AccountBudgetProposalServiceClient)
-    mock_sdk_client.client.get_service.return_value = (
+    mock_sdk_client.client.get_service.return_value = (  # type: ignore
         mock_account_budget_proposal_client
     )
 
@@ -67,13 +67,13 @@ async def test_create_account_budget_proposal_basic(
     # Create mock response
     mock_response = Mock(spec=MutateAccountBudgetProposalResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = (
+    mock_response.result.resource_name = (  # type: ignore
         "customers/1234567890/accountBudgetProposals/987654321"
     )
 
     # Get the mocked account budget proposal service client
     mock_account_budget_proposal_client = account_budget_proposal_service.client  # type: ignore
-    mock_account_budget_proposal_client.mutate_account_budget_proposal.return_value = (
+    mock_account_budget_proposal_client.mutate_account_budget_proposal.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -105,7 +105,7 @@ async def test_create_account_budget_proposal_basic(
     # Verify the API call
     mock_account_budget_proposal_client.mutate_account_budget_proposal.assert_called_once()  # type: ignore
     call_args = (
-        mock_account_budget_proposal_client.mutate_account_budget_proposal.call_args
+        mock_account_budget_proposal_client.mutate_account_budget_proposal.call_args  # type: ignore
     )  # type: ignore
     request = call_args[1]["request"]
     assert request.customer_id == customer_id
@@ -147,13 +147,13 @@ async def test_create_account_budget_proposal_with_spending_limit(
     # Create mock response
     mock_response = Mock(spec=MutateAccountBudgetProposalResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = (
+    mock_response.result.resource_name = (  # type: ignore
         "customers/1234567890/accountBudgetProposals/987654321"
     )
 
     # Get the mocked account budget proposal service client
     mock_account_budget_proposal_client = account_budget_proposal_service.client  # type: ignore
-    mock_account_budget_proposal_client.mutate_account_budget_proposal.return_value = (
+    mock_account_budget_proposal_client.mutate_account_budget_proposal.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -188,7 +188,7 @@ async def test_create_account_budget_proposal_with_spending_limit(
 
     # Verify the API call
     call_args = (
-        mock_account_budget_proposal_client.mutate_account_budget_proposal.call_args
+        mock_account_budget_proposal_client.mutate_account_budget_proposal.call_args  # type: ignore
     )  # type: ignore
     request = call_args[1]["request"]
     proposal = request.operation.create
@@ -216,13 +216,13 @@ async def test_update_account_budget_proposal_name_only(
     # Create mock response
     mock_response = Mock(spec=MutateAccountBudgetProposalResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = (
+    mock_response.result.resource_name = (  # type: ignore
         "customers/1234567890/accountBudgetProposals/111222333"
     )
 
     # Get the mocked account budget proposal service client
     mock_account_budget_proposal_client = account_budget_proposal_service.client  # type: ignore
-    mock_account_budget_proposal_client.mutate_account_budget_proposal.return_value = (
+    mock_account_budget_proposal_client.mutate_account_budget_proposal.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -252,7 +252,7 @@ async def test_update_account_budget_proposal_name_only(
     # Verify the API call
     mock_account_budget_proposal_client.mutate_account_budget_proposal.assert_called_once()  # type: ignore
     call_args = (
-        mock_account_budget_proposal_client.mutate_account_budget_proposal.call_args
+        mock_account_budget_proposal_client.mutate_account_budget_proposal.call_args  # type: ignore
     )  # type: ignore
     request = call_args[1]["request"]
     assert request.customer_id == customer_id
@@ -293,13 +293,13 @@ async def test_update_account_budget_proposal_all_fields(
     # Create mock response
     mock_response = Mock(spec=MutateAccountBudgetProposalResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = (
+    mock_response.result.resource_name = (  # type: ignore
         "customers/1234567890/accountBudgetProposals/111222333"
     )
 
     # Get the mocked account budget proposal service client
     mock_account_budget_proposal_client = account_budget_proposal_service.client  # type: ignore
-    mock_account_budget_proposal_client.mutate_account_budget_proposal.return_value = (
+    mock_account_budget_proposal_client.mutate_account_budget_proposal.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -331,7 +331,7 @@ async def test_update_account_budget_proposal_all_fields(
 
     # Verify the API call
     call_args = (
-        mock_account_budget_proposal_client.mutate_account_budget_proposal.call_args
+        mock_account_budget_proposal_client.mutate_account_budget_proposal.call_args  # type: ignore
     )  # type: ignore
     request = call_args[1]["request"]
     operation = request.operation
@@ -385,7 +385,7 @@ async def test_list_account_budget_proposals(
         row.account_budget_proposal.approval_date_time = None
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -393,7 +393,7 @@ async def test_list_account_budget_proposals(
             return mock_google_ads_service
         return account_budget_proposal_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Mock serialize_proto_message for each proposal
     def serialize_side_effect(obj: Any):
@@ -467,11 +467,11 @@ async def test_remove_account_budget_proposal(
     # Create mock response
     mock_response = Mock(spec=MutateAccountBudgetProposalResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = proposal_resource_name
+    mock_response.result.resource_name = proposal_resource_name  # type: ignore
 
     # Get the mocked account budget proposal service client
     mock_account_budget_proposal_client = account_budget_proposal_service.client  # type: ignore
-    mock_account_budget_proposal_client.mutate_account_budget_proposal.return_value = (
+    mock_account_budget_proposal_client.mutate_account_budget_proposal.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -495,7 +495,7 @@ async def test_remove_account_budget_proposal(
     # Verify the API call
     mock_account_budget_proposal_client.mutate_account_budget_proposal.assert_called_once()  # type: ignore
     call_args = (
-        mock_account_budget_proposal_client.mutate_account_budget_proposal.call_args
+        mock_account_budget_proposal_client.mutate_account_budget_proposal.call_args  # type: ignore
     )  # type: ignore
     request = call_args[1]["request"]
     assert request.customer_id == customer_id
@@ -526,7 +526,7 @@ async def test_error_handling_create_proposal(
 
     # Get the mocked account budget proposal service client and make it raise exception
     mock_account_budget_proposal_client = account_budget_proposal_service.client  # type: ignore
-    mock_account_budget_proposal_client.mutate_account_budget_proposal.side_effect = (
+    mock_account_budget_proposal_client.mutate_account_budget_proposal.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -566,7 +566,7 @@ async def test_error_handling_update_proposal(
 
     # Get the mocked account budget proposal service client and make it raise exception
     mock_account_budget_proposal_client = account_budget_proposal_service.client  # type: ignore
-    mock_account_budget_proposal_client.mutate_account_budget_proposal.side_effect = (
+    mock_account_budget_proposal_client.mutate_account_budget_proposal.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -602,7 +602,7 @@ async def test_error_handling_list_proposals(
 
     # Mock GoogleAdsService for search and make it raise exception
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.side_effect = Exception("Search failed")
+    mock_google_ads_service.search.side_effect = Exception("Search failed")  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -610,7 +610,7 @@ async def test_error_handling_list_proposals(
             return mock_google_ads_service
         return account_budget_proposal_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.account.account_budget_proposal_service.get_sdk_client",
@@ -647,7 +647,7 @@ async def test_error_handling_remove_proposal(
 
     # Get the mocked account budget proposal service client and make it raise exception
     mock_account_budget_proposal_client = account_budget_proposal_service.client  # type: ignore
-    mock_account_budget_proposal_client.mutate_account_budget_proposal.side_effect = (
+    mock_account_budget_proposal_client.mutate_account_budget_proposal.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -681,10 +681,10 @@ def test_register_account_budget_proposal_tools() -> None:
     assert isinstance(service, AccountBudgetProposalService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

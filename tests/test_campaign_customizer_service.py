@@ -1,6 +1,7 @@
 """Tests for Campaign Customizer service."""
 
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
+from typing import Any
 
 import pytest
 from google.ads.googleads.errors import GoogleAdsException
@@ -52,7 +53,7 @@ class TestCampaignCustomizerService:
     """Test cases for CampaignCustomizerService."""
 
     async def test_create_campaign_customizer_text_success(
-        self, campaign_customizer_service, mock_context, mock_client
+        self, campaign_customizer_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test successful creation of a text campaign customizer."""
         # Mock the client
@@ -65,12 +66,12 @@ class TestCampaignCustomizerService:
         )
 
         # The response includes campaign_customizer field
-        mock_result.campaign_customizer.resource_name = mock_result.resource_name
+        mock_result.campaign_customizer.resource_name = mock_result.resource_name  # type: ignore
 
         mock_response = MutateCampaignCustomizersResponse()
-        mock_response.results.append(mock_result)
+        mock_response.results.append(mock_result)  # type: ignore
 
-        mock_client.mutate_campaign_customizers.return_value = mock_response
+        mock_client.mutate_campaign_customizers.return_value = mock_response  # type: ignore
 
         # Execute
         result = await campaign_customizer_service.create_campaign_customizer(
@@ -83,7 +84,7 @@ class TestCampaignCustomizerService:
         )
 
         # Verify request
-        request = mock_client.mutate_campaign_customizers.call_args[1]["request"]
+        request = mock_client.mutate_campaign_customizers.call_args[1]["request"]  # type: ignore
         assert request.customer_id == "1234567890"
         assert len(request.operations) == 1
         assert request.partial_failure is False
@@ -106,20 +107,20 @@ class TestCampaignCustomizerService:
         assert operation.create.value.string_value == "Summer Sale"
 
         # Verify logging
-        mock_context.log.assert_called_with(
+        mock_context.log.assert_called_with(  # type: ignore
             level="info",
             message="Created campaign customizer: campaign 9876543210, attribute 1111111111, value 'Summer Sale'",
         )
 
     async def test_create_campaign_customizer_different_types(
-        self, campaign_customizer_service, mock_context, mock_client
+        self, campaign_customizer_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test creating customizers with different attribute types."""
         campaign_customizer_service._client = mock_client
 
         mock_response = MutateCampaignCustomizersResponse()
-        mock_response.results.append(MutateCampaignCustomizerResult())
-        mock_client.mutate_campaign_customizers.return_value = mock_response
+        mock_response.results.append(MutateCampaignCustomizerResult())  # type: ignore
+        mock_client.mutate_campaign_customizers.return_value = mock_response  # type: ignore
 
         # Test with NUMBER type
         await campaign_customizer_service.create_campaign_customizer(
@@ -131,7 +132,7 @@ class TestCampaignCustomizerService:
             attribute_type=CustomizerAttributeTypeEnum.CustomizerAttributeType.NUMBER,
         )
 
-        request = mock_client.mutate_campaign_customizers.call_args[1]["request"]
+        request = mock_client.mutate_campaign_customizers.call_args[1]["request"]  # type: ignore
         operation = request.operations[0]
         assert (
             operation.create.value.type_
@@ -149,7 +150,7 @@ class TestCampaignCustomizerService:
             attribute_type=CustomizerAttributeTypeEnum.CustomizerAttributeType.PRICE,
         )
 
-        request = mock_client.mutate_campaign_customizers.call_args[1]["request"]
+        request = mock_client.mutate_campaign_customizers.call_args[1]["request"]  # type: ignore
         operation = request.operations[0]
         assert (
             operation.create.value.type_
@@ -167,7 +168,7 @@ class TestCampaignCustomizerService:
             attribute_type=CustomizerAttributeTypeEnum.CustomizerAttributeType.PERCENT,
         )
 
-        request = mock_client.mutate_campaign_customizers.call_args[1]["request"]
+        request = mock_client.mutate_campaign_customizers.call_args[1]["request"]  # type: ignore
         operation = request.operations[0]
         assert (
             operation.create.value.type_
@@ -176,14 +177,14 @@ class TestCampaignCustomizerService:
         assert operation.create.value.string_value == "25"
 
     async def test_remove_campaign_customizer_success(
-        self, campaign_customizer_service, mock_context, mock_client
+        self, campaign_customizer_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test successful removal of a campaign customizer."""
         campaign_customizer_service._client = mock_client
 
         mock_response = MutateCampaignCustomizersResponse()
-        mock_response.results.append(MutateCampaignCustomizerResult())
-        mock_client.mutate_campaign_customizers.return_value = mock_response
+        mock_response.results.append(MutateCampaignCustomizerResult())  # type: ignore
+        mock_client.mutate_campaign_customizers.return_value = mock_response  # type: ignore
 
         # Execute
         result = await campaign_customizer_service.remove_campaign_customizer(
@@ -194,7 +195,7 @@ class TestCampaignCustomizerService:
         )
 
         # Verify request
-        request = mock_client.mutate_campaign_customizers.call_args[1]["request"]
+        request = mock_client.mutate_campaign_customizers.call_args[1]["request"]  # type: ignore
         operation = request.operations[0]
 
         # Check resource name format with ~ delimiter
@@ -203,27 +204,27 @@ class TestCampaignCustomizerService:
         )
 
         # Verify logging
-        mock_context.log.assert_called_with(
+        mock_context.log.assert_called_with(  # type: ignore
             level="info",
             message="Removed campaign customizer: campaign 9876543210, attribute 1111111111",
         )
 
     async def test_create_with_partial_failure(
-        self, campaign_customizer_service, mock_context, mock_client
+        self, campaign_customizer_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test create with partial failure mode."""
         campaign_customizer_service._client = mock_client
 
         # Create response with partial failure error
         mock_response = MutateCampaignCustomizersResponse()
-        mock_response.results.append(MutateCampaignCustomizerResult())
+        mock_response.results.append(MutateCampaignCustomizerResult())  # type: ignore
 
         partial_error = status_pb2.Status()
         partial_error.code = 3  # INVALID_ARGUMENT
         partial_error.message = "Partial failure occurred"
-        mock_response.partial_failure_error.CopyFrom(partial_error)
+        mock_response.partial_failure_error.CopyFrom(partial_error)  # type: ignore
 
-        mock_client.mutate_campaign_customizers.return_value = mock_response
+        mock_client.mutate_campaign_customizers.return_value = mock_response  # type: ignore
 
         result = await campaign_customizer_service.create_campaign_customizer(
             ctx=mock_context,
@@ -235,11 +236,11 @@ class TestCampaignCustomizerService:
             partial_failure=True,
         )
 
-        request = mock_client.mutate_campaign_customizers.call_args[1]["request"]
+        request = mock_client.mutate_campaign_customizers.call_args[1]["request"]  # type: ignore
         assert request.partial_failure is True
 
     async def test_create_api_error(
-        self, campaign_customizer_service, mock_context, mock_client
+        self, campaign_customizer_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test create with API error."""
         campaign_customizer_service._client = mock_client
@@ -248,7 +249,7 @@ class TestCampaignCustomizerService:
         error = GoogleAdsException(None, None, None, None)
         error.failure = Mock()
         error.failure.__str__ = Mock(return_value="Invalid customizer attribute")
-        mock_client.mutate_campaign_customizers.side_effect = error
+        mock_client.mutate_campaign_customizers.side_effect = error  # type: ignore
 
         with pytest.raises(Exception) as exc_info:
             await campaign_customizer_service.create_campaign_customizer(
@@ -265,11 +266,11 @@ class TestCampaignCustomizerService:
         )
 
     async def test_remove_general_error(
-        self, campaign_customizer_service, mock_context, mock_client
+        self, campaign_customizer_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test remove with general error."""
         campaign_customizer_service._client = mock_client
-        mock_client.mutate_campaign_customizers.side_effect = Exception("Network error")
+        mock_client.mutate_campaign_customizers.side_effect = Exception("Network error")  # type: ignore
 
         with pytest.raises(Exception) as exc_info:
             await campaign_customizer_service.remove_campaign_customizer(
@@ -288,7 +289,7 @@ class TestCampaignCustomizerService:
 class TestCampaignCustomizerTools:
     """Test cases for Campaign Customizer tool functions."""
 
-    async def test_create_campaign_customizer_tool(self, mock_context):
+    async def test_create_campaign_customizer_tool(self, mock_context: Any):
         """Test create_campaign_customizer tool function."""
         service = CampaignCustomizerService()
         tools = create_campaign_customizer_tools(service)
@@ -296,7 +297,7 @@ class TestCampaignCustomizerTools:
 
         # Mock the service method
         with patch.object(service, "create_campaign_customizer") as mock_create:
-            mock_create.return_value = {
+            mock_create.return_value = {  # type: ignore
                 "results": [
                     {"resource_name": "customers/123/campaignCustomizers/456~789"}
                 ]
@@ -311,7 +312,7 @@ class TestCampaignCustomizerTools:
                 attribute_type="PERCENT",
             )
 
-            mock_create.assert_called_once_with(
+            mock_create.assert_called_once_with(  # type: ignore
                 ctx=mock_context,
                 customer_id="1234567890",
                 campaign_id="9876543210",
@@ -322,14 +323,14 @@ class TestCampaignCustomizerTools:
                 validate_only=False,
             )
 
-    async def test_create_tool_with_different_types(self, mock_context):
+    async def test_create_tool_with_different_types(self, mock_context: Any):
         """Test create tool with different attribute types."""
         service = CampaignCustomizerService()
         tools = create_campaign_customizer_tools(service)
         create_tool = tools[0]
 
         with patch.object(service, "create_campaign_customizer") as mock_create:
-            mock_create.return_value = {"results": [{"resource_name": "test"}]}
+            mock_create.return_value = {"results": [{"resource_name": "test"}]}  # type: ignore
 
             # Test TEXT type
             await create_tool(
@@ -341,7 +342,7 @@ class TestCampaignCustomizerTools:
                 attribute_type="TEXT",
             )
 
-            mock_create.assert_called_with(
+            mock_create.assert_called_with(  # type: ignore
                 ctx=mock_context,
                 customer_id="1234567890",
                 campaign_id="1111111111",
@@ -352,14 +353,14 @@ class TestCampaignCustomizerTools:
                 validate_only=False,
             )
 
-    async def test_remove_campaign_customizer_tool(self, mock_context):
+    async def test_remove_campaign_customizer_tool(self, mock_context: Any):
         """Test remove_campaign_customizer tool function."""
         service = CampaignCustomizerService()
         tools = create_campaign_customizer_tools(service)
         remove_tool = tools[1]  # Second tool is remove_campaign_customizer
 
         with patch.object(service, "remove_campaign_customizer") as mock_remove:
-            mock_remove.return_value = {"results": [{"resource_name": "test"}]}
+            mock_remove.return_value = {"results": [{"resource_name": "test"}]}  # type: ignore
 
             await remove_tool(
                 ctx=mock_context,
@@ -369,7 +370,7 @@ class TestCampaignCustomizerTools:
                 validate_only=True,
             )
 
-            mock_remove.assert_called_once_with(
+            mock_remove.assert_called_once_with(  # type: ignore
                 ctx=mock_context,
                 customer_id="1234567890",
                 campaign_id="9876543210",

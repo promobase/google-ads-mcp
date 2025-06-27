@@ -293,7 +293,7 @@ def register_customer_customizer_tools(mcp: FastMCP[Any]) -> None:
     """Register customer customizer tools with the MCP server."""
 
     @mcp.tool
-    async def mutate_customer_customizers(
+    async def mutate_customer_customizers(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         operations: list[dict[str, Any]],
         partial_failure: bool = False,
@@ -355,7 +355,7 @@ def register_customer_customizer_tools(mcp: FastMCP[Any]) -> None:
         # Format response
         results = []
         for result in response.results:
-            result_data = {
+            result_data: dict[str, Any] = {
                 "resource_name": result.resource_name,
             }
             if result.customer_customizer:
@@ -384,7 +384,7 @@ def register_customer_customizer_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def create_customer_customizer(
+    async def create_customer_customizer(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         customizer_attribute: str,
         value_type: str,
@@ -428,7 +428,7 @@ def register_customer_customizer_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def create_text_customizer(
+    async def create_text_customizer(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         customizer_attribute: str,
         text_value: str,
@@ -463,7 +463,7 @@ def register_customer_customizer_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def create_number_customizer(
+    async def create_number_customizer(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         customizer_attribute: str,
         number_value: str,
@@ -498,7 +498,7 @@ def register_customer_customizer_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def create_price_customizer(
+    async def create_price_customizer(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         customizer_attribute: str,
         price_value: str,
@@ -533,7 +533,7 @@ def register_customer_customizer_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def remove_customer_customizer(
+    async def remove_customer_customizer(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         resource_name: str,
         validate_only: bool = False,

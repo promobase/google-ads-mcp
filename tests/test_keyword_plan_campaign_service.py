@@ -1,6 +1,7 @@
 """Tests for Google Ads Keyword Plan Campaign Service"""
 
 import pytest
+from typing import Any
 from unittest.mock import Mock, patch
 
 from google.ads.googleads.v20.enums.types.keyword_plan_network import (
@@ -30,7 +31,7 @@ class TestKeywordPlanCampaignService:
         """Create a mock Google Ads client"""
         client = Mock()
         service = Mock()
-        client.get_service.return_value = service
+        client.get_service.return_value = service  # type: ignore
         return client
 
     @pytest.fixture
@@ -39,7 +40,7 @@ class TestKeywordPlanCampaignService:
         return KeywordPlanCampaignService(mock_client)
 
     def test_mutate_keyword_plan_campaigns(
-        self, keyword_plan_campaign_service, mock_client
+        self, keyword_plan_campaign_service: Any, mock_client: Any
     ):
         """Test mutating keyword plan campaigns"""
         # Setup
@@ -53,7 +54,7 @@ class TestKeywordPlanCampaignService:
                 )
             ]
         )
-        mock_client.get_service.return_value.mutate_keyword_plan_campaigns.return_value = mock_response
+        mock_client.get_service.return_value.mutate_keyword_plan_campaigns.return_value = mock_response  # type: ignore
 
         # Execute
         response = keyword_plan_campaign_service.mutate_keyword_plan_campaigns(
@@ -65,11 +66,11 @@ class TestKeywordPlanCampaignService:
 
         # Verify
         assert response == mock_response
-        mock_client.get_service.assert_called_with("KeywordPlanCampaignService")
+        mock_client.get_service.assert_called_with("KeywordPlanCampaignService")  # type: ignore
 
         # Verify request
         call_args = (
-            mock_client.get_service.return_value.mutate_keyword_plan_campaigns.call_args
+            mock_client.get_service.return_value.mutate_keyword_plan_campaigns.call_args  # type: ignore
         )
         request = call_args.kwargs["request"]
         assert request.customer_id == customer_id
@@ -78,7 +79,7 @@ class TestKeywordPlanCampaignService:
         assert request.validate_only == False
 
     def test_create_keyword_plan_campaign_operation(
-        self, keyword_plan_campaign_service
+        self, keyword_plan_campaign_service: Any
     ):
         """Test creating keyword plan campaign operation for creation"""
         # Setup
@@ -115,7 +116,7 @@ class TestKeywordPlanCampaignService:
         )
 
     def test_create_keyword_plan_campaign_operation_minimal(
-        self, keyword_plan_campaign_service
+        self, keyword_plan_campaign_service: Any
     ):
         """Test creating keyword plan campaign operation with minimal fields"""
         # Setup
@@ -146,7 +147,7 @@ class TestKeywordPlanCampaignService:
         assert operation.create.geo_targets == []
 
     def test_update_keyword_plan_campaign_operation(
-        self, keyword_plan_campaign_service
+        self, keyword_plan_campaign_service: Any
     ):
         """Test creating keyword plan campaign operation for update"""
         # Setup
@@ -190,7 +191,7 @@ class TestKeywordPlanCampaignService:
         }
 
     def test_update_keyword_plan_campaign_operation_partial(
-        self, keyword_plan_campaign_service
+        self, keyword_plan_campaign_service: Any
     ):
         """Test creating keyword plan campaign operation for partial update"""
         # Setup
@@ -211,7 +212,7 @@ class TestKeywordPlanCampaignService:
         assert operation.update_mask.paths == ["name"]
 
     def test_remove_keyword_plan_campaign_operation(
-        self, keyword_plan_campaign_service
+        self, keyword_plan_campaign_service: Any
     ):
         """Test creating keyword plan campaign operation for removal"""
         # Setup

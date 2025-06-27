@@ -308,7 +308,7 @@ def register_ad_group_customizer_tools(mcp: FastMCP[Any]) -> None:
     """Register ad group customizer tools with the MCP server."""
 
     @mcp.tool
-    async def mutate_ad_group_customizers(
+    async def mutate_ad_group_customizers(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         operations: list[dict[str, Any]],
         partial_failure: bool = False,
@@ -371,7 +371,7 @@ def register_ad_group_customizer_tools(mcp: FastMCP[Any]) -> None:
         # Format response
         results = []
         for result in response.results:
-            result_data = {
+            result_data: dict[str, Any] = {
                 "resource_name": result.resource_name,
             }
             if result.ad_group_customizer:
@@ -401,7 +401,7 @@ def register_ad_group_customizer_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def create_ad_group_customizer(
+    async def create_ad_group_customizer(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         ad_group: str,
         customizer_attribute: str,
@@ -449,7 +449,7 @@ def register_ad_group_customizer_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def create_text_customizer(
+    async def create_text_customizer(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         ad_group: str,
         customizer_attribute: str,
@@ -488,7 +488,7 @@ def register_ad_group_customizer_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def create_number_customizer(
+    async def create_number_customizer(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         ad_group: str,
         customizer_attribute: str,
@@ -527,7 +527,7 @@ def register_ad_group_customizer_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def create_price_customizer(
+    async def create_price_customizer(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         ad_group: str,
         customizer_attribute: str,
@@ -566,7 +566,7 @@ def register_ad_group_customizer_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def remove_ad_group_customizer(
+    async def remove_ad_group_customizer(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         resource_name: str,
         validate_only: bool = False,

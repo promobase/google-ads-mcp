@@ -1,6 +1,7 @@
 """Tests for Ad Group Customizer Service."""
 
 import pytest
+from typing import Any
 from unittest.mock import Mock, patch
 
 from google.ads.googleads.v20.services.services.ad_group_customizer_service import (
@@ -41,7 +42,7 @@ class TestAdGroupCustomizerService:
         """Create an AdGroupCustomizerService instance with mock client."""
         return AdGroupCustomizerService(mock_client)
 
-    def test_mutate_ad_group_customizers_success(self, service, mock_client):
+    def test_mutate_ad_group_customizers_success(self, service: Any, mock_client: Any):
         """Test successful ad group customizers mutation."""
         # Arrange
         customer_id = "1234567890"
@@ -53,7 +54,7 @@ class TestAdGroupCustomizerService:
                 )
             ]
         )
-        mock_client.mutate_ad_group_customizers.return_value = expected_response
+        mock_client.mutate_ad_group_customizers.return_value = expected_response  # type: ignore
 
         # Act
         response = service.mutate_ad_group_customizers(
@@ -63,9 +64,9 @@ class TestAdGroupCustomizerService:
 
         # Assert
         assert response == expected_response
-        mock_client.mutate_ad_group_customizers.assert_called_once()
+        mock_client.mutate_ad_group_customizers.assert_called_once()  # type: ignore
 
-        call_args = mock_client.mutate_ad_group_customizers.call_args[1]
+        call_args = mock_client.mutate_ad_group_customizers.call_args[1]  # type: ignore
         request = call_args["request"]
         assert isinstance(request, MutateAdGroupCustomizersRequest)
         assert request.customer_id == customer_id
@@ -73,13 +74,15 @@ class TestAdGroupCustomizerService:
         assert request.partial_failure is False
         assert request.validate_only is False
 
-    def test_mutate_ad_group_customizers_with_options(self, service, mock_client):
+    def test_mutate_ad_group_customizers_with_options(
+        self, service: Any, mock_client: Any
+    ):
         """Test ad group customizers mutation with all options."""
         # Arrange
         customer_id = "1234567890"
         operations = [Mock(spec=AdGroupCustomizerOperation)]
         expected_response = MutateAdGroupCustomizersResponse()
-        mock_client.mutate_ad_group_customizers.return_value = expected_response
+        mock_client.mutate_ad_group_customizers.return_value = expected_response  # type: ignore
 
         # Act
         response = service.mutate_ad_group_customizers(
@@ -92,7 +95,7 @@ class TestAdGroupCustomizerService:
 
         # Assert
         assert response == expected_response
-        call_args = mock_client.mutate_ad_group_customizers.call_args[1]
+        call_args = mock_client.mutate_ad_group_customizers.call_args[1]  # type: ignore
         request = call_args["request"]
         assert request.partial_failure is True
         assert request.validate_only is True
@@ -101,12 +104,12 @@ class TestAdGroupCustomizerService:
             == ResponseContentTypeEnum.ResponseContentType.MUTABLE_RESOURCE
         )
 
-    def test_mutate_ad_group_customizers_failure(self, service, mock_client):
+    def test_mutate_ad_group_customizers_failure(self, service: Any, mock_client: Any):
         """Test ad group customizers mutation failure."""
         # Arrange
         customer_id = "1234567890"
         operations = [Mock(spec=AdGroupCustomizerOperation)]
-        mock_client.mutate_ad_group_customizers.side_effect = Exception("API Error")
+        mock_client.mutate_ad_group_customizers.side_effect = Exception("API Error")  # type: ignore
 
         # Act & Assert
         with pytest.raises(Exception, match="Failed to mutate ad group customizers"):
@@ -115,7 +118,7 @@ class TestAdGroupCustomizerService:
                 operations=operations,
             )
 
-    def test_create_ad_group_customizer_operation(self, service):
+    def test_create_ad_group_customizer_operation(self, service: Any):
         """Test creating ad group customizer operation."""
         # Arrange
         ad_group = "customers/1234567890/adGroups/123"
@@ -138,7 +141,7 @@ class TestAdGroupCustomizerService:
         assert operation.create.value.type_ == value_type
         assert operation.create.value.string_value == string_value
 
-    def test_create_remove_operation(self, service):
+    def test_create_remove_operation(self, service: Any):
         """Test creating remove operation."""
         # Arrange
         resource_name = "customers/1234567890/adGroupCustomizers/123~456"
@@ -151,7 +154,7 @@ class TestAdGroupCustomizerService:
         assert operation.remove == resource_name
         assert not operation.create
 
-    def test_create_ad_group_customizer(self, service, mock_client):
+    def test_create_ad_group_customizer(self, service: Any, mock_client: Any):
         """Test creating a single ad group customizer."""
         # Arrange
         customer_id = "1234567890"
@@ -167,7 +170,7 @@ class TestAdGroupCustomizerService:
                 )
             ]
         )
-        mock_client.mutate_ad_group_customizers.return_value = expected_response
+        mock_client.mutate_ad_group_customizers.return_value = expected_response  # type: ignore
 
         # Act
         response = service.create_ad_group_customizer(
@@ -180,9 +183,9 @@ class TestAdGroupCustomizerService:
 
         # Assert
         assert response == expected_response
-        mock_client.mutate_ad_group_customizers.assert_called_once()
+        mock_client.mutate_ad_group_customizers.assert_called_once()  # type: ignore
 
-    def test_remove_ad_group_customizer(self, service, mock_client):
+    def test_remove_ad_group_customizer(self, service: Any, mock_client: Any):
         """Test removing an ad group customizer."""
         # Arrange
         customer_id = "1234567890"
@@ -191,7 +194,7 @@ class TestAdGroupCustomizerService:
         expected_response = MutateAdGroupCustomizersResponse(
             results=[MutateAdGroupCustomizerResult(resource_name=resource_name)]
         )
-        mock_client.mutate_ad_group_customizers.return_value = expected_response
+        mock_client.mutate_ad_group_customizers.return_value = expected_response  # type: ignore
 
         # Act
         response = service.remove_ad_group_customizer(
@@ -201,9 +204,9 @@ class TestAdGroupCustomizerService:
 
         # Assert
         assert response == expected_response
-        mock_client.mutate_ad_group_customizers.assert_called_once()
+        mock_client.mutate_ad_group_customizers.assert_called_once()  # type: ignore
 
-    def test_create_text_customizer(self, service, mock_client):
+    def test_create_text_customizer(self, service: Any, mock_client: Any):
         """Test creating a text customizer."""
         # Arrange
         customer_id = "1234567890"
@@ -218,7 +221,7 @@ class TestAdGroupCustomizerService:
                 )
             ]
         )
-        mock_client.mutate_ad_group_customizers.return_value = expected_response
+        mock_client.mutate_ad_group_customizers.return_value = expected_response  # type: ignore
 
         # Act
         response = service.create_text_customizer(
@@ -230,9 +233,9 @@ class TestAdGroupCustomizerService:
 
         # Assert
         assert response == expected_response
-        mock_client.mutate_ad_group_customizers.assert_called_once()
+        mock_client.mutate_ad_group_customizers.assert_called_once()  # type: ignore
 
-    def test_create_number_customizer(self, service, mock_client):
+    def test_create_number_customizer(self, service: Any, mock_client: Any):
         """Test creating a number customizer."""
         # Arrange
         customer_id = "1234567890"
@@ -247,7 +250,7 @@ class TestAdGroupCustomizerService:
                 )
             ]
         )
-        mock_client.mutate_ad_group_customizers.return_value = expected_response
+        mock_client.mutate_ad_group_customizers.return_value = expected_response  # type: ignore
 
         # Act
         response = service.create_number_customizer(
@@ -259,9 +262,9 @@ class TestAdGroupCustomizerService:
 
         # Assert
         assert response == expected_response
-        mock_client.mutate_ad_group_customizers.assert_called_once()
+        mock_client.mutate_ad_group_customizers.assert_called_once()  # type: ignore
 
-    def test_create_price_customizer(self, service, mock_client):
+    def test_create_price_customizer(self, service: Any, mock_client: Any):
         """Test creating a price customizer."""
         # Arrange
         customer_id = "1234567890"
@@ -276,7 +279,7 @@ class TestAdGroupCustomizerService:
                 )
             ]
         )
-        mock_client.mutate_ad_group_customizers.return_value = expected_response
+        mock_client.mutate_ad_group_customizers.return_value = expected_response  # type: ignore
 
         # Act
         response = service.create_price_customizer(
@@ -288,9 +291,9 @@ class TestAdGroupCustomizerService:
 
         # Assert
         assert response == expected_response
-        mock_client.mutate_ad_group_customizers.assert_called_once()
+        mock_client.mutate_ad_group_customizers.assert_called_once()  # type: ignore
 
-    def test_create_percent_customizer(self, service, mock_client):
+    def test_create_percent_customizer(self, service: Any, mock_client: Any):
         """Test creating a percent customizer."""
         # Arrange
         customer_id = "1234567890"
@@ -305,7 +308,7 @@ class TestAdGroupCustomizerService:
                 )
             ]
         )
-        mock_client.mutate_ad_group_customizers.return_value = expected_response
+        mock_client.mutate_ad_group_customizers.return_value = expected_response  # type: ignore
 
         # Act
         response = service.create_percent_customizer(
@@ -317,7 +320,7 @@ class TestAdGroupCustomizerService:
 
         # Assert
         assert response == expected_response
-        mock_client.mutate_ad_group_customizers.assert_called_once()
+        mock_client.mutate_ad_group_customizers.assert_called_once()  # type: ignore
 
 
 @pytest.mark.asyncio
@@ -325,7 +328,7 @@ class TestAdGroupCustomizerMCPServer:
     """Test cases for Ad Group Customizer MCP server."""
 
     @patch("src.sdk_servers.ad_group_customizer_server.get_client")
-    async def test_create_text_customizer_tool(self, mock_get_client):
+    async def test_create_text_customizer_tool(self, mock_get_client: Any):
         """Test create text customizer MCP tool."""
         # Arrange
         from src.sdk_servers.ad_group_customizer_server import (
@@ -333,7 +336,7 @@ class TestAdGroupCustomizerMCPServer:
         )
 
         mock_client = Mock(spec=AdGroupCustomizerServiceClient)
-        mock_get_client.return_value = mock_client
+        mock_get_client.return_value = mock_client  # type: ignore
 
         mock_response = MutateAdGroupCustomizersResponse(
             results=[
@@ -342,7 +345,7 @@ class TestAdGroupCustomizerMCPServer:
                 )
             ]
         )
-        mock_client.mutate_ad_group_customizers.return_value = mock_response
+        mock_client.mutate_ad_group_customizers.return_value = mock_response  # type: ignore
 
         server = create_ad_group_customizer_server()
 
@@ -363,7 +366,7 @@ class TestAdGroupCustomizerMCPServer:
         assert "create_text_customizer" in response[0].text
 
     @patch("src.sdk_servers.ad_group_customizer_server.get_client")
-    async def test_create_price_customizer_tool(self, mock_get_client):
+    async def test_create_price_customizer_tool(self, mock_get_client: Any):
         """Test create price customizer MCP tool."""
         # Arrange
         from src.sdk_servers.ad_group_customizer_server import (
@@ -371,7 +374,7 @@ class TestAdGroupCustomizerMCPServer:
         )
 
         mock_client = Mock(spec=AdGroupCustomizerServiceClient)
-        mock_get_client.return_value = mock_client
+        mock_get_client.return_value = mock_client  # type: ignore
 
         mock_response = MutateAdGroupCustomizersResponse(
             results=[
@@ -380,7 +383,7 @@ class TestAdGroupCustomizerMCPServer:
                 )
             ]
         )
-        mock_client.mutate_ad_group_customizers.return_value = mock_response
+        mock_client.mutate_ad_group_customizers.return_value = mock_response  # type: ignore
 
         server = create_ad_group_customizer_server()
 

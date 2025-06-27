@@ -36,7 +36,7 @@ def account_link_service(mock_sdk_client: Any) -> AccountLinkService:
     """Create an AccountLinkService instance with mocked dependencies."""
     # Mock AccountLinkService client
     mock_account_link_client = Mock(spec=AccountLinkServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_account_link_client
+    mock_sdk_client.client.get_service.return_value = mock_account_link_client  # type: ignore
 
     with patch(
         "src.sdk_services.account.account_link_service.get_sdk_client",
@@ -129,7 +129,7 @@ async def test_update_account_link(
     # Create mock response
     mock_response = Mock(spec=MutateAccountLinkResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = account_link_resource_name
+    mock_response.result.resource_name = account_link_resource_name  # type: ignore
 
     # Get the mocked account link service client
     mock_account_link_client = account_link_service.client  # type: ignore
@@ -185,7 +185,7 @@ async def test_update_account_link_no_changes(
     # Create mock response
     mock_response = Mock(spec=MutateAccountLinkResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = account_link_resource_name
+    mock_response.result.resource_name = account_link_resource_name  # type: ignore
 
     # Get the mocked account link service client
     mock_account_link_client = account_link_service.client  # type: ignore
@@ -249,7 +249,7 @@ async def test_list_account_links(
         row.account_link.third_party_app_analytics.app_vendor.name = "GOOGLE_APP_STORE"
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -257,7 +257,7 @@ async def test_list_account_links(
             return mock_google_ads_service
         return account_link_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Mock serialize_proto_message for each account link
     def serialize_side_effect(obj: Any):
@@ -334,7 +334,7 @@ async def test_list_account_links_include_removed(
 
     # Mock GoogleAdsService for search
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.return_value = []
+    mock_google_ads_service.search.return_value = []  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -342,7 +342,7 @@ async def test_list_account_links_include_removed(
             return mock_google_ads_service
         return account_link_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.account.account_link_service.get_sdk_client",
@@ -375,7 +375,7 @@ async def test_remove_account_link(
     # Create mock response
     mock_response = Mock(spec=MutateAccountLinkResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = account_link_resource_name
+    mock_response.result.resource_name = account_link_resource_name  # type: ignore
 
     # Get the mocked account link service client
     mock_account_link_client = account_link_service.client  # type: ignore
@@ -499,7 +499,7 @@ async def test_error_handling_list_account_links(
 
     # Mock GoogleAdsService for search and make it raise exception
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.side_effect = Exception("Search failed")
+    mock_google_ads_service.search.side_effect = Exception("Search failed")  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -507,7 +507,7 @@ async def test_error_handling_list_account_links(
             return mock_google_ads_service
         return account_link_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.account.account_link_service.get_sdk_client",
@@ -576,10 +576,10 @@ def test_register_account_link_tools() -> None:
     assert isinstance(service, AccountLinkService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

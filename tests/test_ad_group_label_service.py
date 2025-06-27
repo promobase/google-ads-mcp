@@ -27,7 +27,7 @@ def ad_group_label_service(mock_sdk_client: Any) -> AdGroupLabelService:
     """Create an AdGroupLabelService instance with mocked dependencies."""
     # Mock AdGroupLabelService client
     mock_ad_group_label_client = Mock(spec=AdGroupLabelServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_ad_group_label_client
+    mock_sdk_client.client.get_service.return_value = mock_ad_group_label_client  # type: ignore
 
     with patch(
         "src.sdk_services.ad_group.ad_group_label_service.get_sdk_client",
@@ -314,7 +314,7 @@ async def test_list_ad_group_labels(
 
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -322,7 +322,7 @@ async def test_list_ad_group_labels(
             return mock_google_ads_service
         return ad_group_label_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.ad_group.ad_group_label_service.get_sdk_client",
@@ -377,7 +377,7 @@ async def test_list_ad_group_labels_with_filters(
 
     # Mock GoogleAdsService for search
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.return_value = []
+    mock_google_ads_service.search.return_value = []  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -385,7 +385,7 @@ async def test_list_ad_group_labels_with_filters(
             return mock_google_ads_service
         return ad_group_label_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.ad_group.ad_group_label_service.get_sdk_client",
@@ -456,10 +456,10 @@ def test_register_ad_group_label_tools() -> None:
     assert isinstance(service, AdGroupLabelService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

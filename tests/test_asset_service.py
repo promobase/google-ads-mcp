@@ -28,7 +28,7 @@ def asset_service(mock_sdk_client: Any) -> AssetService:
     """Create an AssetService instance with mocked dependencies."""
     # Mock AssetService client
     mock_asset_service_client = Mock(spec=AssetServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_asset_service_client
+    mock_sdk_client.client.get_service.return_value = mock_asset_service_client  # type: ignore
 
     with patch(
         "src.sdk_services.assets.asset_service.get_sdk_client",
@@ -294,7 +294,7 @@ async def test_search_assets(
 
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -302,7 +302,7 @@ async def test_search_assets(
             return mock_google_ads_service
         return asset_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Act
     with patch(
@@ -405,10 +405,10 @@ def test_register_asset_tools() -> None:
     assert isinstance(service, AssetService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

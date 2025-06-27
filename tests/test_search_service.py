@@ -20,7 +20,7 @@ def search_service(mock_sdk_client: Any) -> SearchService:
     """Create a SearchService instance with mocked dependencies."""
     # Mock GoogleAdsService
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_google_ads_service
+    mock_sdk_client.client.get_service.return_value = mock_google_ads_service  # type: ignore
 
     with patch(
         "src.sdk_services.metadata.search_service.get_sdk_client",
@@ -320,10 +320,10 @@ def test_register_search_tools() -> None:
     assert isinstance(service, SearchService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

@@ -31,7 +31,7 @@ def ad_group_bid_modifier_service(mock_sdk_client: Any) -> AdGroupBidModifierSer
     """Create an AdGroupBidModifierService instance with mocked dependencies."""
     # Mock AdGroupBidModifierService client
     mock_bid_modifier_client = Mock(spec=AdGroupBidModifierServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_bid_modifier_client
+    mock_sdk_client.client.get_service.return_value = mock_bid_modifier_client  # type: ignore
 
     with patch(
         "src.sdk_services.ad_group.ad_group_bid_modifier_service.get_sdk_client",
@@ -368,7 +368,7 @@ async def test_list_ad_group_bid_modifiers(
     row2.campaign = Mock(id="222", name="Test Campaign")
     mock_results.append(row2)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -376,7 +376,7 @@ async def test_list_ad_group_bid_modifiers(
             return mock_google_ads_service
         return ad_group_bid_modifier_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.ad_group.ad_group_bid_modifier_service.get_sdk_client",
@@ -485,7 +485,7 @@ async def test_error_handling(
 
     # Get the mocked bid modifier service client and make it raise exception
     mock_bid_modifier_client = ad_group_bid_modifier_service.client  # type: ignore
-    mock_bid_modifier_client.mutate_ad_group_bid_modifiers.side_effect = (
+    mock_bid_modifier_client.mutate_ad_group_bid_modifiers.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -521,10 +521,10 @@ def test_register_ad_group_bid_modifier_tools() -> None:
     assert isinstance(service, AdGroupBidModifierService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 6  # 6 tools registered
+    assert mock_mcp.tool.call_count == 6  # 6 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

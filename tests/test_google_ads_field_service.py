@@ -32,7 +32,7 @@ def google_ads_field_service(
     mock_sdk_client: Any, mock_field_service_client: Mock
 ) -> GoogleAdsFieldService:
     """Create a GoogleAdsFieldService instance with mocked dependencies."""
-    mock_sdk_client.client.get_service.return_value = mock_field_service_client
+    mock_sdk_client.client.get_service.return_value = mock_field_service_client  # type: ignore
 
     with patch(
         "src.sdk_services.metadata.google_ads_field_service.get_sdk_client",
@@ -104,7 +104,7 @@ async def test_get_field_metadata(
     # Arrange
     field_name = "campaign.id"
     mock_field = create_mock_google_ads_field(name=field_name)
-    mock_field_service_client.get_google_ads_field.return_value = mock_field
+    mock_field_service_client.get_google_ads_field.return_value = mock_field  # type: ignore
 
     # Mock serialize_proto_message
     expected_result = {
@@ -128,8 +128,8 @@ async def test_get_field_metadata(
     assert result == expected_result
 
     # Verify the request was made correctly
-    mock_field_service_client.get_google_ads_field.assert_called_once()
-    call_args = mock_field_service_client.get_google_ads_field.call_args[1]
+    mock_field_service_client.get_google_ads_field.assert_called_once()  # type: ignore
+    call_args = mock_field_service_client.get_google_ads_field.call_args[1]  # type: ignore
     assert isinstance(call_args["request"], GetGoogleAdsFieldRequest)
     assert call_args["request"].resource_name == f"googleAdsFields/{field_name}"
 
@@ -158,7 +158,7 @@ async def test_search_fields(
     ]
 
     # Mock the search response
-    mock_field_service_client.search_google_ads_fields.return_value = mock_fields
+    mock_field_service_client.search_google_ads_fields.return_value = mock_fields  # type: ignore
 
     # Mock serialize_proto_message for each field
     expected_results = [
@@ -183,8 +183,8 @@ async def test_search_fields(
     assert results == expected_results
 
     # Verify the request
-    mock_field_service_client.search_google_ads_fields.assert_called_once()
-    call_args = mock_field_service_client.search_google_ads_fields.call_args[1]
+    mock_field_service_client.search_google_ads_fields.assert_called_once()  # type: ignore
+    call_args = mock_field_service_client.search_google_ads_fields.call_args[1]  # type: ignore
     assert isinstance(call_args["request"], SearchGoogleAdsFieldsRequest)
     # The service adds a LIMIT clause, so check that the query contains our original query
     assert query in call_args["request"].query
@@ -216,7 +216,7 @@ async def test_get_resource_fields(
 
     # Since get_resource_fields calls search_fields multiple times,
     # we need to mock the responses for each call
-    mock_field_service_client.search_google_ads_fields.side_effect = [
+    mock_field_service_client.search_google_ads_fields.side_effect = [  # type: ignore
         mock_resource_fields,  # First call for resource fields
         [],  # Second call for metrics (empty)
         [],  # Third call for segments (empty)
@@ -267,7 +267,7 @@ async def test_validate_query_fields(
         mock_fields.append(mock_field)
 
     # Mock the get calls
-    mock_field_service_client.get_google_ads_field.side_effect = mock_fields
+    mock_field_service_client.get_google_ads_field.side_effect = mock_fields  # type: ignore
 
     with patch(
         "src.sdk_services.metadata.google_ads_field_service.serialize_proto_message",
@@ -303,7 +303,7 @@ async def test_error_handling(
     """Test error handling when API call fails."""
     # Arrange
     field_name = "invalid.field"
-    mock_field_service_client.get_google_ads_field.side_effect = google_ads_exception
+    mock_field_service_client.get_google_ads_field.side_effect = google_ads_exception  # type: ignore
 
     # Act & Assert
     with pytest.raises(Exception) as exc_info:
@@ -335,10 +335,10 @@ def test_register_google_ads_field_tools() -> None:
     assert isinstance(service, GoogleAdsFieldService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

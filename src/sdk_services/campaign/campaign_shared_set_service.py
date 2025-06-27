@@ -21,7 +21,6 @@ from google.ads.googleads.v20.services.types.campaign_shared_set_service import 
     MutateCampaignSharedSetsRequest,
     MutateCampaignSharedSetsResponse,
 )
-from google.protobuf import field_mask_pb2
 
 from src.sdk_client import get_sdk_client
 from src.utils import format_customer_id, get_logger, serialize_proto_message

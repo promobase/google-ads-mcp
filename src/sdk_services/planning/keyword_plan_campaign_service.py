@@ -42,7 +42,7 @@ class KeywordPlanCampaignService:
         assert self._client is not None
         return self._client
 
-    def mutate_keyword_plan_campaigns(
+    def mutate_keyword_plan_campaigns(  # pyright: ignore[reportUnusedFunction]
         self,
         customer_id: str,
         operations: List[KeywordPlanCampaignOperation],
@@ -68,7 +68,7 @@ class KeywordPlanCampaignService:
         )
         return self.client.mutate_keyword_plan_campaigns(request=request)
 
-    def create_keyword_plan_campaign_operation(
+    def create_keyword_plan_campaign_operation(  # pyright: ignore[reportUnusedFunction]
         self,
         keyword_plan: str,
         name: str,
@@ -108,7 +108,7 @@ class KeywordPlanCampaignService:
 
         return KeywordPlanCampaignOperation(create=keyword_plan_campaign)
 
-    def update_keyword_plan_campaign_operation(
+    def update_keyword_plan_campaign_operation(  # pyright: ignore[reportUnusedFunction]
         self,
         resource_name: str,
         name: Optional[str] = None,
@@ -160,7 +160,7 @@ class KeywordPlanCampaignService:
             update_mask={"paths": update_mask},
         )
 
-    def remove_keyword_plan_campaign_operation(
+    def remove_keyword_plan_campaign_operation(  # pyright: ignore[reportUnusedFunction]
         self, resource_name: str
     ) -> KeywordPlanCampaignOperation:
         """Create a keyword plan campaign operation for removal.
@@ -178,7 +178,7 @@ def register_keyword_plan_campaign_tools(mcp: FastMCP[Any]) -> None:
     """Register keyword plan campaign tools with the MCP server."""
 
     @mcp.tool
-    async def mutate_keyword_plan_campaigns(
+    async def mutate_keyword_plan_campaigns(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         operations: list[dict[str, Any]],
         partial_failure: bool = False,
@@ -257,7 +257,7 @@ def register_keyword_plan_campaign_tools(mcp: FastMCP[Any]) -> None:
         return f"Successfully processed {len(response.results)} keyword plan campaign operations"
 
     @mcp.tool
-    async def create_keyword_plan_campaign(
+    async def create_keyword_plan_campaign(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         keyword_plan: str,
         name: str,
@@ -312,7 +312,7 @@ def register_keyword_plan_campaign_tools(mcp: FastMCP[Any]) -> None:
         return f"Created keyword plan campaign: {result.resource_name}"
 
     @mcp.tool
-    async def update_keyword_plan_campaign(
+    async def update_keyword_plan_campaign(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         resource_name: str,
         name: Optional[str] = None,
@@ -371,7 +371,7 @@ def register_keyword_plan_campaign_tools(mcp: FastMCP[Any]) -> None:
         return f"Updated keyword plan campaign: {result.resource_name}"
 
     @mcp.tool
-    async def remove_keyword_plan_campaign(
+    async def remove_keyword_plan_campaign(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         resource_name: str,
     ) -> str:

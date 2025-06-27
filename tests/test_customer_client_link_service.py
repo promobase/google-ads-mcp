@@ -29,7 +29,7 @@ def customer_client_link_service(mock_sdk_client: Any) -> CustomerClientLinkServ
     """Create a CustomerClientLinkService instance with mocked dependencies."""
     # Mock CustomerClientLinkService client
     mock_customer_client_link_client = Mock(spec=CustomerClientLinkServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_customer_client_link_client
+    mock_sdk_client.client.get_service.return_value = mock_customer_client_link_client  # type: ignore
 
     with patch(
         "src.sdk_services.account.customer_client_link_service.get_sdk_client",
@@ -57,13 +57,13 @@ async def test_create_customer_client_link(
     # Create mock response
     mock_response = Mock(spec=MutateCustomerClientLinkResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = (
+    mock_response.result.resource_name = (  # type: ignore
         "customers/1234567890/customerClientLinks/111222333"
     )
 
     # Get the mocked customer client link service client
     mock_customer_client_link_client = customer_client_link_service.client  # type: ignore
-    mock_customer_client_link_client.mutate_customer_client_link.return_value = (
+    mock_customer_client_link_client.mutate_customer_client_link.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -119,13 +119,13 @@ async def test_create_customer_client_link_with_hidden(
     # Create mock response
     mock_response = Mock(spec=MutateCustomerClientLinkResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = (
+    mock_response.result.resource_name = (  # type: ignore
         "customers/1234567890/customerClientLinks/111222333"
     )
 
     # Get the mocked customer client link service client
     mock_customer_client_link_client = customer_client_link_service.client  # type: ignore
-    mock_customer_client_link_client.mutate_customer_client_link.return_value = (
+    mock_customer_client_link_client.mutate_customer_client_link.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -175,11 +175,11 @@ async def test_update_customer_client_link(
     # Create mock response
     mock_response = Mock(spec=MutateCustomerClientLinkResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = link_resource_name
+    mock_response.result.resource_name = link_resource_name  # type: ignore
 
     # Get the mocked customer client link service client
     mock_customer_client_link_client = customer_client_link_service.client  # type: ignore
-    mock_customer_client_link_client.mutate_customer_client_link.return_value = (
+    mock_customer_client_link_client.mutate_customer_client_link.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -236,11 +236,11 @@ async def test_update_customer_client_link_status_only(
     # Create mock response
     mock_response = Mock(spec=MutateCustomerClientLinkResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = link_resource_name
+    mock_response.result.resource_name = link_resource_name  # type: ignore
 
     # Get the mocked customer client link service client
     mock_customer_client_link_client = customer_client_link_service.client  # type: ignore
-    mock_customer_client_link_client.mutate_customer_client_link.return_value = (
+    mock_customer_client_link_client.mutate_customer_client_link.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -311,7 +311,7 @@ async def test_list_customer_client_links(
 
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -319,7 +319,7 @@ async def test_list_customer_client_links(
             return mock_google_ads_service
         return customer_client_link_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Create expected results
     expected_links = []
@@ -421,7 +421,7 @@ async def test_list_customer_client_links_with_status_filter(
 
     # Mock GoogleAdsService for search
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.return_value = []
+    mock_google_ads_service.search.return_value = []  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -429,7 +429,7 @@ async def test_list_customer_client_links_with_status_filter(
             return mock_google_ads_service
         return customer_client_link_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.account.customer_client_link_service.get_sdk_client",
@@ -462,7 +462,7 @@ async def test_error_handling_create_customer_client_link(
 
     # Get the mocked customer client link service client and make it raise exception
     mock_customer_client_link_client = customer_client_link_service.client  # type: ignore
-    mock_customer_client_link_client.mutate_customer_client_link.side_effect = (
+    mock_customer_client_link_client.mutate_customer_client_link.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -498,7 +498,7 @@ async def test_error_handling_update_customer_client_link(
 
     # Get the mocked customer client link service client and make it raise exception
     mock_customer_client_link_client = customer_client_link_service.client  # type: ignore
-    mock_customer_client_link_client.mutate_customer_client_link.side_effect = (
+    mock_customer_client_link_client.mutate_customer_client_link.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -533,7 +533,7 @@ async def test_error_handling_list_customer_client_links(
 
     # Mock GoogleAdsService for search and make it raise exception
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.side_effect = Exception("Search failed")
+    mock_google_ads_service.search.side_effect = Exception("Search failed")  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -541,7 +541,7 @@ async def test_error_handling_list_customer_client_links(
             return mock_google_ads_service
         return customer_client_link_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.account.customer_client_link_service.get_sdk_client",
@@ -576,10 +576,10 @@ def test_register_customer_client_link_tools() -> None:
     assert isinstance(service, CustomerClientLinkService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 3  # 3 tools registered
+    assert mock_mcp.tool.call_count == 3  # 3 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

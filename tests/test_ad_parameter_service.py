@@ -1,6 +1,7 @@
 """Tests for ad parameter service."""
 
 import pytest
+from typing import Any
 from unittest.mock import Mock, AsyncMock, patch
 from fastmcp import Context
 
@@ -37,7 +38,7 @@ class TestAdParameterService:
 
     @pytest.mark.asyncio
     async def test_mutate_ad_parameters_create(
-        self, service, mock_context, mock_client
+        self, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test creating ad parameters."""
         # Mock response
@@ -49,7 +50,7 @@ class TestAdParameterService:
         mock_response.results = [mock_result]
         mock_response.partial_failure_error = None
 
-        mock_client.mutate_ad_parameters.return_value = mock_response
+        mock_client.mutate_ad_parameters.return_value = mock_response  # type: ignore
 
         # Test data
         operations = [
@@ -77,8 +78,8 @@ class TestAdParameterService:
         assert result["partial_failure_error"] is None
 
         # Verify the API call
-        mock_client.mutate_ad_parameters.assert_called_once()
-        call_args = mock_client.mutate_ad_parameters.call_args[1]
+        mock_client.mutate_ad_parameters.assert_called_once()  # type: ignore
+        call_args = mock_client.mutate_ad_parameters.call_args[1]  # type: ignore
         request = call_args["request"]
 
         assert request.customer_id == "123"
@@ -92,7 +93,7 @@ class TestAdParameterService:
 
     @pytest.mark.asyncio
     async def test_mutate_ad_parameters_update(
-        self, service, mock_context, mock_client
+        self, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test updating ad parameters."""
         # Mock response
@@ -104,7 +105,7 @@ class TestAdParameterService:
         mock_response.results = [mock_result]
         mock_response.partial_failure_error = None
 
-        mock_client.mutate_ad_parameters.return_value = mock_response
+        mock_client.mutate_ad_parameters.return_value = mock_response  # type: ignore
 
         # Test data
         operations = [
@@ -130,8 +131,8 @@ class TestAdParameterService:
         )
 
         # Verify the API call
-        mock_client.mutate_ad_parameters.assert_called_once()
-        call_args = mock_client.mutate_ad_parameters.call_args[1]
+        mock_client.mutate_ad_parameters.assert_called_once()  # type: ignore
+        call_args = mock_client.mutate_ad_parameters.call_args[1]  # type: ignore
         request = call_args["request"]
 
         assert request.customer_id == "123"
@@ -145,7 +146,7 @@ class TestAdParameterService:
 
     @pytest.mark.asyncio
     async def test_mutate_ad_parameters_remove(
-        self, service, mock_context, mock_client
+        self, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test removing ad parameters."""
         # Mock response
@@ -157,7 +158,7 @@ class TestAdParameterService:
         mock_response.results = [mock_result]
         mock_response.partial_failure_error = None
 
-        mock_client.mutate_ad_parameters.return_value = mock_response
+        mock_client.mutate_ad_parameters.return_value = mock_response  # type: ignore
 
         # Test data
         operations = [{"remove": "customers/123/adParameters/456~789~1"}]
@@ -176,8 +177,8 @@ class TestAdParameterService:
         )
 
         # Verify the API call
-        mock_client.mutate_ad_parameters.assert_called_once()
-        call_args = mock_client.mutate_ad_parameters.call_args[1]
+        mock_client.mutate_ad_parameters.assert_called_once()  # type: ignore
+        call_args = mock_client.mutate_ad_parameters.call_args[1]  # type: ignore
         request = call_args["request"]
 
         assert request.customer_id == "123"
@@ -186,7 +187,7 @@ class TestAdParameterService:
 
     @pytest.mark.asyncio
     async def test_mutate_ad_parameters_parameter_index_2(
-        self, service, mock_context, mock_client
+        self, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test creating ad parameters with parameter index 2."""
         # Mock response
@@ -198,7 +199,7 @@ class TestAdParameterService:
         mock_response.results = [mock_result]
         mock_response.partial_failure_error = None
 
-        mock_client.mutate_ad_parameters.return_value = mock_response
+        mock_client.mutate_ad_parameters.return_value = mock_response  # type: ignore
 
         # Test data
         operations = [
@@ -219,8 +220,8 @@ class TestAdParameterService:
         )
 
         # Verify the API call
-        mock_client.mutate_ad_parameters.assert_called_once()
-        call_args = mock_client.mutate_ad_parameters.call_args[1]
+        mock_client.mutate_ad_parameters.assert_called_once()  # type: ignore
+        call_args = mock_client.mutate_ad_parameters.call_args[1]  # type: ignore
         request = call_args["request"]
 
         assert request.operations[0].create.parameter_index == 2
@@ -228,7 +229,7 @@ class TestAdParameterService:
 
     @pytest.mark.asyncio
     async def test_mutate_ad_parameters_with_partial_failure(
-        self, service, mock_context, mock_client
+        self, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test mutating ad parameters with partial failure."""
         # Mock response with partial failure
@@ -245,7 +246,7 @@ class TestAdParameterService:
         mock_response.results = [mock_result]
         mock_response.partial_failure_error = mock_error
 
-        mock_client.mutate_ad_parameters.return_value = mock_response
+        mock_client.mutate_ad_parameters.return_value = mock_response  # type: ignore
 
         # Test data
         operations = [
@@ -275,7 +276,7 @@ class TestAdParameterTools:
     """Test cases for ad parameter tools."""
 
     @pytest.mark.asyncio
-    async def test_create_tools(self, mock_context):
+    async def test_create_tools(self, mock_context: Any):
         """Test creating ad parameter tools."""
         service = Mock()
         service.mutate_ad_parameters = AsyncMock(
@@ -295,7 +296,7 @@ class TestAdParameterTools:
             operations=[],
         )
 
-        service.mutate_ad_parameters.assert_called_once_with(
+        service.mutate_ad_parameters.assert_called_once_with(  # type: ignore
             ctx=mock_context,
             customer_id="123",
             operations=[],

@@ -1,6 +1,7 @@
 """Tests for customer conversion goal service."""
 
 import pytest
+from typing import Any
 from unittest.mock import Mock, AsyncMock, patch
 from fastmcp import Context
 
@@ -37,7 +38,7 @@ class TestCustomerConversionGoalService:
 
     @pytest.mark.asyncio
     async def test_mutate_customer_conversion_goals_update(
-        self, service, mock_context, mock_client
+        self, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test updating customer conversion goals."""
         # Mock response
@@ -49,7 +50,7 @@ class TestCustomerConversionGoalService:
         mock_response = Mock()
         mock_response.results = [mock_result]
 
-        mock_client.mutate_customer_conversion_goals.return_value = mock_response
+        mock_client.mutate_customer_conversion_goals.return_value = mock_response  # type: ignore
 
         # Test data
         operations = [
@@ -75,8 +76,8 @@ class TestCustomerConversionGoalService:
         )
 
         # Verify the API call
-        mock_client.mutate_customer_conversion_goals.assert_called_once()
-        call_args = mock_client.mutate_customer_conversion_goals.call_args[1]
+        mock_client.mutate_customer_conversion_goals.assert_called_once()  # type: ignore
+        call_args = mock_client.mutate_customer_conversion_goals.call_args[1]  # type: ignore
         request = call_args["request"]
 
         assert request.customer_id == "123"
@@ -90,7 +91,7 @@ class TestCustomerConversionGoalService:
 
     @pytest.mark.asyncio
     async def test_mutate_customer_conversion_goals_disable_biddable(
-        self, service, mock_context, mock_client
+        self, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test disabling biddability for customer conversion goals."""
         # Mock response
@@ -100,7 +101,7 @@ class TestCustomerConversionGoalService:
         mock_response = Mock()
         mock_response.results = [mock_result]
 
-        mock_client.mutate_customer_conversion_goals.return_value = mock_response
+        mock_client.mutate_customer_conversion_goals.return_value = mock_response  # type: ignore
 
         # Test data
         operations = [
@@ -126,15 +127,15 @@ class TestCustomerConversionGoalService:
         )
 
         # Verify the API call
-        mock_client.mutate_customer_conversion_goals.assert_called_once()
-        call_args = mock_client.mutate_customer_conversion_goals.call_args[1]
+        mock_client.mutate_customer_conversion_goals.assert_called_once()  # type: ignore
+        call_args = mock_client.mutate_customer_conversion_goals.call_args[1]  # type: ignore
         request = call_args["request"]
 
         assert request.operations[0].update.biddable == False
 
     @pytest.mark.asyncio
     async def test_mutate_customer_conversion_goals_with_category_and_origin(
-        self, service, mock_context, mock_client
+        self, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test updating customer conversion goals with category and origin."""
         # Mock response
@@ -146,7 +147,7 @@ class TestCustomerConversionGoalService:
         mock_response = Mock()
         mock_response.results = [mock_result]
 
-        mock_client.mutate_customer_conversion_goals.return_value = mock_response
+        mock_client.mutate_customer_conversion_goals.return_value = mock_response  # type: ignore
 
         # Test data
         operations = [
@@ -168,8 +169,8 @@ class TestCustomerConversionGoalService:
         )
 
         # Verify the API call
-        mock_client.mutate_customer_conversion_goals.assert_called_once()
-        call_args = mock_client.mutate_customer_conversion_goals.call_args[1]
+        mock_client.mutate_customer_conversion_goals.assert_called_once()  # type: ignore
+        call_args = mock_client.mutate_customer_conversion_goals.call_args[1]  # type: ignore
         request = call_args["request"]
 
         # Note: category and origin are typically immutable, but we include them for completeness
@@ -177,7 +178,7 @@ class TestCustomerConversionGoalService:
 
     @pytest.mark.asyncio
     async def test_mutate_customer_conversion_goals_multiple_operations(
-        self, service, mock_context, mock_client
+        self, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test updating multiple customer conversion goals."""
         # Mock response
@@ -193,7 +194,7 @@ class TestCustomerConversionGoalService:
         mock_response = Mock()
         mock_response.results = [mock_result1, mock_result2]
 
-        mock_client.mutate_customer_conversion_goals.return_value = mock_response
+        mock_client.mutate_customer_conversion_goals.return_value = mock_response  # type: ignore
 
         # Test data
         operations = [
@@ -230,8 +231,8 @@ class TestCustomerConversionGoalService:
         )
 
         # Verify the API call
-        mock_client.mutate_customer_conversion_goals.assert_called_once()
-        call_args = mock_client.mutate_customer_conversion_goals.call_args[1]
+        mock_client.mutate_customer_conversion_goals.assert_called_once()  # type: ignore
+        call_args = mock_client.mutate_customer_conversion_goals.call_args[1]  # type: ignore
         request = call_args["request"]
 
         assert len(request.operations) == 2
@@ -240,14 +241,14 @@ class TestCustomerConversionGoalService:
 
     @pytest.mark.asyncio
     async def test_mutate_customer_conversion_goals_validate_only(
-        self, service, mock_context, mock_client
+        self, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test validating customer conversion goals without executing."""
         # Mock response
         mock_response = Mock()
         mock_response.results = []
 
-        mock_client.mutate_customer_conversion_goals.return_value = mock_response
+        mock_client.mutate_customer_conversion_goals.return_value = mock_response  # type: ignore
 
         # Test data
         operations = [
@@ -268,8 +269,8 @@ class TestCustomerConversionGoalService:
         )
 
         # Verify the API call
-        mock_client.mutate_customer_conversion_goals.assert_called_once()
-        call_args = mock_client.mutate_customer_conversion_goals.call_args[1]
+        mock_client.mutate_customer_conversion_goals.assert_called_once()  # type: ignore
+        call_args = mock_client.mutate_customer_conversion_goals.call_args[1]  # type: ignore
         request = call_args["request"]
 
         assert request.validate_only == True
@@ -279,7 +280,7 @@ class TestCustomerConversionGoalTools:
     """Test cases for customer conversion goal tools."""
 
     @pytest.mark.asyncio
-    async def test_create_tools(self, mock_context):
+    async def test_create_tools(self, mock_context: Any):
         """Test creating customer conversion goal tools."""
         service = Mock()
         service.mutate_customer_conversion_goals = AsyncMock(
@@ -299,7 +300,7 @@ class TestCustomerConversionGoalTools:
             operations=[],
         )
 
-        service.mutate_customer_conversion_goals.assert_called_once_with(
+        service.mutate_customer_conversion_goals.assert_called_once_with(  # type: ignore
             ctx=mock_context,
             customer_id="123",
             operations=[],

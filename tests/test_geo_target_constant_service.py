@@ -23,7 +23,7 @@ def geo_target_constant_service(mock_sdk_client: Any) -> GeoTargetConstantServic
     """Create a GeoTargetConstantService instance with mocked dependencies."""
     # Mock GeoTargetConstantService client
     mock_geo_target_client = Mock(spec=GeoTargetConstantServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_geo_target_client
+    mock_sdk_client.client.get_service.return_value = mock_geo_target_client  # type: ignore
 
     with patch(
         "src.sdk_services.targeting.geo_target_constant_service.get_sdk_client",
@@ -396,7 +396,7 @@ async def test_error_handling_location(
 
     # Get the mocked geo target constant service client and make it raise exception
     mock_geo_target_client = geo_target_constant_service.client  # type: ignore
-    mock_geo_target_client.suggest_geo_target_constants.side_effect = (
+    mock_geo_target_client.suggest_geo_target_constants.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -430,7 +430,7 @@ async def test_error_handling_address(
 
     # Get the mocked geo target constant service client and make it raise exception
     mock_geo_target_client = geo_target_constant_service.client  # type: ignore
-    mock_geo_target_client.suggest_geo_target_constants.side_effect = (
+    mock_geo_target_client.suggest_geo_target_constants.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -464,7 +464,7 @@ async def test_error_handling_search(
 
     # Get the mocked geo target constant service client and make it raise exception
     mock_geo_target_client = geo_target_constant_service.client  # type: ignore
-    mock_geo_target_client.suggest_geo_target_constants.side_effect = (
+    mock_geo_target_client.suggest_geo_target_constants.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -494,10 +494,10 @@ def test_register_geo_target_constant_tools() -> None:
     assert isinstance(service, GeoTargetConstantService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 3  # 3 tools registered
+    assert mock_mcp.tool.call_count == 3  # 3 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

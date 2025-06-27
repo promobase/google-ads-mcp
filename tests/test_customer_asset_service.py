@@ -1,6 +1,7 @@
 """Tests for Customer Asset Service."""
 
 import pytest
+from typing import Any
 from unittest.mock import Mock, patch
 
 from google.ads.googleads.v20.services.services.customer_asset_service import (
@@ -41,7 +42,7 @@ class TestCustomerAssetService:
         """Create a CustomerAssetService instance with mock client."""
         return CustomerAssetService(mock_client)
 
-    def test_mutate_customer_assets_success(self, service, mock_client):
+    def test_mutate_customer_assets_success(self, service: Any, mock_client: Any):
         """Test successful customer assets mutation."""
         # Arrange
         customer_id = "1234567890"
@@ -53,7 +54,7 @@ class TestCustomerAssetService:
                 )
             ]
         )
-        mock_client.mutate_customer_assets.return_value = expected_response
+        mock_client.mutate_customer_assets.return_value = expected_response  # type: ignore
 
         # Act
         response = service.mutate_customer_assets(
@@ -63,9 +64,9 @@ class TestCustomerAssetService:
 
         # Assert
         assert response == expected_response
-        mock_client.mutate_customer_assets.assert_called_once()
+        mock_client.mutate_customer_assets.assert_called_once()  # type: ignore
 
-        call_args = mock_client.mutate_customer_assets.call_args[1]
+        call_args = mock_client.mutate_customer_assets.call_args[1]  # type: ignore
         request = call_args["request"]
         assert isinstance(request, MutateCustomerAssetsRequest)
         assert request.customer_id == customer_id
@@ -73,13 +74,13 @@ class TestCustomerAssetService:
         assert request.partial_failure is False
         assert request.validate_only is False
 
-    def test_mutate_customer_assets_with_options(self, service, mock_client):
+    def test_mutate_customer_assets_with_options(self, service: Any, mock_client: Any):
         """Test customer assets mutation with all options."""
         # Arrange
         customer_id = "1234567890"
         operations = [Mock(spec=CustomerAssetOperation)]
         expected_response = MutateCustomerAssetsResponse()
-        mock_client.mutate_customer_assets.return_value = expected_response
+        mock_client.mutate_customer_assets.return_value = expected_response  # type: ignore
 
         # Act
         response = service.mutate_customer_assets(
@@ -92,7 +93,7 @@ class TestCustomerAssetService:
 
         # Assert
         assert response == expected_response
-        call_args = mock_client.mutate_customer_assets.call_args[1]
+        call_args = mock_client.mutate_customer_assets.call_args[1]  # type: ignore
         request = call_args["request"]
         assert request.partial_failure is True
         assert request.validate_only is True
@@ -101,12 +102,12 @@ class TestCustomerAssetService:
             == ResponseContentTypeEnum.ResponseContentType.MUTABLE_RESOURCE
         )
 
-    def test_mutate_customer_assets_failure(self, service, mock_client):
+    def test_mutate_customer_assets_failure(self, service: Any, mock_client: Any):
         """Test customer assets mutation failure."""
         # Arrange
         customer_id = "1234567890"
         operations = [Mock(spec=CustomerAssetOperation)]
-        mock_client.mutate_customer_assets.side_effect = Exception("API Error")
+        mock_client.mutate_customer_assets.side_effect = Exception("API Error")  # type: ignore
 
         # Act & Assert
         with pytest.raises(
@@ -117,7 +118,7 @@ class TestCustomerAssetService:
                 operations=operations,
             )
 
-    def test_create_customer_asset_operation(self, service):
+    def test_create_customer_asset_operation(self, service: Any):
         """Test creating customer asset operation."""
         # Arrange
         asset = "customers/1234567890/assets/123"
@@ -137,7 +138,7 @@ class TestCustomerAssetService:
         assert operation.create.field_type == field_type
         assert operation.create.status == status
 
-    def test_create_update_operation(self, service):
+    def test_create_update_operation(self, service: Any):
         """Test creating update operation."""
         # Arrange
         resource_name = "customers/1234567890/customerAssets/123~LOGO"
@@ -155,7 +156,7 @@ class TestCustomerAssetService:
         assert operation.update.status == status
         assert operation.update_mask.paths == ["status"]
 
-    def test_create_update_operation_with_custom_mask(self, service):
+    def test_create_update_operation_with_custom_mask(self, service: Any):
         """Test creating update operation with custom field mask."""
         # Arrange
         resource_name = "customers/1234567890/customerAssets/123~LOGO"
@@ -173,7 +174,7 @@ class TestCustomerAssetService:
         assert isinstance(operation, CustomerAssetOperation)
         assert operation.update_mask == update_mask
 
-    def test_create_remove_operation(self, service):
+    def test_create_remove_operation(self, service: Any):
         """Test creating remove operation."""
         # Arrange
         resource_name = "customers/1234567890/customerAssets/123~LOGO"
@@ -187,7 +188,7 @@ class TestCustomerAssetService:
         assert not operation.create
         assert not operation.update
 
-    def test_create_customer_asset(self, service, mock_client):
+    def test_create_customer_asset(self, service: Any, mock_client: Any):
         """Test creating a single customer asset."""
         # Arrange
         customer_id = "1234567890"
@@ -202,7 +203,7 @@ class TestCustomerAssetService:
                 )
             ]
         )
-        mock_client.mutate_customer_assets.return_value = expected_response
+        mock_client.mutate_customer_assets.return_value = expected_response  # type: ignore
 
         # Act
         response = service.create_customer_asset(
@@ -214,9 +215,9 @@ class TestCustomerAssetService:
 
         # Assert
         assert response == expected_response
-        mock_client.mutate_customer_assets.assert_called_once()
+        mock_client.mutate_customer_assets.assert_called_once()  # type: ignore
 
-    def test_update_customer_asset_status(self, service, mock_client):
+    def test_update_customer_asset_status(self, service: Any, mock_client: Any):
         """Test updating customer asset status."""
         # Arrange
         customer_id = "1234567890"
@@ -226,7 +227,7 @@ class TestCustomerAssetService:
         expected_response = MutateCustomerAssetsResponse(
             results=[MutateCustomerAssetResult(resource_name=resource_name)]
         )
-        mock_client.mutate_customer_assets.return_value = expected_response
+        mock_client.mutate_customer_assets.return_value = expected_response  # type: ignore
 
         # Act
         response = service.update_customer_asset_status(
@@ -237,9 +238,9 @@ class TestCustomerAssetService:
 
         # Assert
         assert response == expected_response
-        mock_client.mutate_customer_assets.assert_called_once()
+        mock_client.mutate_customer_assets.assert_called_once()  # type: ignore
 
-    def test_remove_customer_asset(self, service, mock_client):
+    def test_remove_customer_asset(self, service: Any, mock_client: Any):
         """Test removing customer asset."""
         # Arrange
         customer_id = "1234567890"
@@ -248,7 +249,7 @@ class TestCustomerAssetService:
         expected_response = MutateCustomerAssetsResponse(
             results=[MutateCustomerAssetResult(resource_name=resource_name)]
         )
-        mock_client.mutate_customer_assets.return_value = expected_response
+        mock_client.mutate_customer_assets.return_value = expected_response  # type: ignore
 
         # Act
         response = service.remove_customer_asset(
@@ -258,7 +259,7 @@ class TestCustomerAssetService:
 
         # Assert
         assert response == expected_response
-        mock_client.mutate_customer_assets.assert_called_once()
+        mock_client.mutate_customer_assets.assert_called_once()  # type: ignore
 
 
 @pytest.mark.asyncio
@@ -266,13 +267,13 @@ class TestCustomerAssetMCPServer:
     """Test cases for Customer Asset MCP server."""
 
     @patch("src.sdk_servers.customer_asset_server.get_client")
-    async def test_create_customer_asset_tool(self, mock_get_client):
+    async def test_create_customer_asset_tool(self, mock_get_client: Any):
         """Test create customer asset MCP tool."""
         # Arrange
         from src.sdk_servers.customer_asset_server import create_customer_asset_server
 
         mock_client = Mock(spec=CustomerAssetServiceClient)
-        mock_get_client.return_value = mock_client
+        mock_get_client.return_value = mock_client  # type: ignore
 
         mock_response = MutateCustomerAssetsResponse(
             results=[
@@ -281,7 +282,7 @@ class TestCustomerAssetMCPServer:
                 )
             ]
         )
-        mock_client.mutate_customer_assets.return_value = mock_response
+        mock_client.mutate_customer_assets.return_value = mock_response  # type: ignore
 
         server = create_customer_asset_server()
 
@@ -302,13 +303,13 @@ class TestCustomerAssetMCPServer:
         assert "create" in response[0].text
 
     @patch("src.sdk_servers.customer_asset_server.get_client")
-    async def test_update_customer_asset_status_tool(self, mock_get_client):
+    async def test_update_customer_asset_status_tool(self, mock_get_client: Any):
         """Test update customer asset status MCP tool."""
         # Arrange
         from src.sdk_servers.customer_asset_server import create_customer_asset_server
 
         mock_client = Mock(spec=CustomerAssetServiceClient)
-        mock_get_client.return_value = mock_client
+        mock_get_client.return_value = mock_client  # type: ignore
 
         mock_response = MutateCustomerAssetsResponse(
             results=[
@@ -317,7 +318,7 @@ class TestCustomerAssetMCPServer:
                 )
             ]
         )
-        mock_client.mutate_customer_assets.return_value = mock_response
+        mock_client.mutate_customer_assets.return_value = mock_response  # type: ignore
 
         server = create_customer_asset_server()
 

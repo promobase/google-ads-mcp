@@ -62,7 +62,7 @@ class ProductLinkService:
         )
         return self.client.create_product_link(request=request)
 
-    def remove_product_link(
+    def remove_product_link(  # pyright: ignore[reportUnusedFunction]
         self,
         customer_id: str,
         resource_name: str,
@@ -82,7 +82,7 @@ class ProductLinkService:
         )
         return self.client.remove_product_link(request=request)
 
-    def create_merchant_center_link(
+    def create_merchant_center_link(  # pyright: ignore[reportUnusedFunction]
         self,
         customer_id: str,
         merchant_center_id: int,
@@ -106,7 +106,7 @@ class ProductLinkService:
             customer_id=customer_id, product_link=product_link
         )
 
-    def create_google_ads_link(
+    def create_google_ads_link(  # pyright: ignore[reportUnusedFunction]
         self,
         customer_id: str,
         linked_customer_id: int,
@@ -130,7 +130,7 @@ class ProductLinkService:
             customer_id=customer_id, product_link=product_link
         )
 
-    def create_data_partner_link(
+    def create_data_partner_link(  # pyright: ignore[reportUnusedFunction]
         self,
         customer_id: str,
         data_partner_id: int,
@@ -157,7 +157,7 @@ def register_product_link_tools(mcp: FastMCP[Any]) -> None:
     """Register product link tools with the MCP server."""
 
     @mcp.tool
-    async def create_merchant_center_link(
+    async def create_merchant_center_link(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         merchant_center_id: int,
     ) -> str:
@@ -180,7 +180,7 @@ def register_product_link_tools(mcp: FastMCP[Any]) -> None:
         return f"Created Merchant Center link: {response.resource_name}"
 
     @mcp.tool
-    async def create_google_ads_link(
+    async def create_google_ads_link(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         linked_customer_id: int,
     ) -> str:
@@ -203,7 +203,7 @@ def register_product_link_tools(mcp: FastMCP[Any]) -> None:
         return f"Created Google Ads link: {response.resource_name}"
 
     @mcp.tool
-    async def create_data_partner_link(
+    async def create_data_partner_link(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         data_partner_id: int,
     ) -> str:
@@ -226,7 +226,7 @@ def register_product_link_tools(mcp: FastMCP[Any]) -> None:
         return f"Created Data Partner link: {response.resource_name}"
 
     @mcp.tool
-    async def remove_product_link(
+    async def remove_product_link(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         resource_name: str,
     ) -> str:

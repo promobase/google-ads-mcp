@@ -234,7 +234,7 @@ def register_campaign_asset_set_tools(mcp: FastMCP[Any]) -> None:
     """Register campaign asset set tools with the MCP server."""
 
     @mcp.tool
-    async def mutate_campaign_asset_sets(
+    async def mutate_campaign_asset_sets(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         operations: list[dict[str, Any]],
         partial_failure: bool = False,
@@ -289,7 +289,7 @@ def register_campaign_asset_set_tools(mcp: FastMCP[Any]) -> None:
         # Format response
         results = []
         for result in response.results:
-            result_data = {
+            result_data: dict[str, Any] = {
                 "resource_name": result.resource_name,
             }
             if result.campaign_asset_set:
@@ -311,7 +311,7 @@ def register_campaign_asset_set_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def link_asset_set_to_campaign(
+    async def link_asset_set_to_campaign(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         campaign: str,
         asset_set: str,
@@ -346,7 +346,7 @@ def register_campaign_asset_set_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def unlink_asset_set_from_campaign(
+    async def unlink_asset_set_from_campaign(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         resource_name: str,
         validate_only: bool = False,
@@ -377,7 +377,7 @@ def register_campaign_asset_set_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def link_multiple_asset_sets_to_campaign(
+    async def link_multiple_asset_sets_to_campaign(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         campaign: str,
         asset_sets: list[str],
@@ -411,7 +411,7 @@ def register_campaign_asset_set_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def link_asset_set_to_multiple_campaigns(
+    async def link_asset_set_to_multiple_campaigns(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         campaigns: list[str],
         asset_set: str,

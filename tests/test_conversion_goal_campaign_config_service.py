@@ -1,6 +1,7 @@
 """Tests for Google Ads Conversion Goal Campaign Config Service"""
 
 import pytest
+from typing import Any
 from unittest.mock import Mock
 
 from google.ads.googleads.v20.enums.types.goal_config_level import GoalConfigLevelEnum
@@ -27,7 +28,7 @@ class TestConversionGoalCampaignConfigService:
         """Create a mock Google Ads client"""
         client = Mock()
         service = Mock()
-        client.get_service.return_value = service
+        client.get_service.return_value = service  # type: ignore
         return client
 
     @pytest.fixture
@@ -36,7 +37,7 @@ class TestConversionGoalCampaignConfigService:
         return ConversionGoalCampaignConfigService(mock_client)
 
     def test_mutate_conversion_goal_campaign_configs(
-        self, conversion_goal_campaign_config_service, mock_client
+        self, conversion_goal_campaign_config_service: Any, mock_client: Any
     ):
         """Test mutating conversion goal campaign configs"""
         # Setup
@@ -50,7 +51,7 @@ class TestConversionGoalCampaignConfigService:
                 )
             ]
         )
-        mock_client.get_service.return_value.mutate_conversion_goal_campaign_configs.return_value = mock_response
+        mock_client.get_service.return_value.mutate_conversion_goal_campaign_configs.return_value = mock_response  # type: ignore
 
         # Execute
         response = conversion_goal_campaign_config_service.mutate_conversion_goal_campaign_configs(
@@ -59,19 +60,19 @@ class TestConversionGoalCampaignConfigService:
 
         # Verify
         assert response == mock_response
-        mock_client.get_service.assert_called_with(
+        mock_client.get_service.assert_called_with(  # type: ignore
             "ConversionGoalCampaignConfigService"
         )
 
         # Verify request
-        call_args = mock_client.get_service.return_value.mutate_conversion_goal_campaign_configs.call_args
+        call_args = mock_client.get_service.return_value.mutate_conversion_goal_campaign_configs.call_args  # type: ignore
         request = call_args.kwargs["request"]
         assert request.customer_id == customer_id
         assert request.operations == operations
         assert request.validate_only == False
 
     def test_update_conversion_goal_campaign_config_operation(
-        self, conversion_goal_campaign_config_service
+        self, conversion_goal_campaign_config_service: Any
     ):
         """Test creating conversion goal campaign config operation for update"""
         # Setup
@@ -97,7 +98,7 @@ class TestConversionGoalCampaignConfigService:
         }
 
     def test_update_conversion_goal_campaign_config_operation_partial(
-        self, conversion_goal_campaign_config_service
+        self, conversion_goal_campaign_config_service: Any
     ):
         """Test creating conversion goal campaign config operation for partial update"""
         # Setup

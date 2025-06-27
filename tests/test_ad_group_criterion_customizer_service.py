@@ -1,6 +1,7 @@
 """Tests for ad group criterion customizer service."""
 
 import pytest
+from typing import Any
 from unittest.mock import Mock, AsyncMock, patch
 from fastmcp import Context
 
@@ -37,7 +38,7 @@ class TestAdGroupCriterionCustomizerService:
 
     @pytest.mark.asyncio
     async def test_mutate_ad_group_criterion_customizers_create(
-        self, service, mock_context, mock_client
+        self, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test creating ad group criterion customizers."""
         # Mock response
@@ -51,7 +52,7 @@ class TestAdGroupCriterionCustomizerService:
         mock_response.results = [mock_result]
         mock_response.partial_failure_error = None
 
-        mock_client.mutate_ad_group_criterion_customizers.return_value = mock_response
+        mock_client.mutate_ad_group_criterion_customizers.return_value = mock_response  # type: ignore
 
         # Test data
         operations = [
@@ -79,8 +80,8 @@ class TestAdGroupCriterionCustomizerService:
         assert result["partial_failure_error"] is None
 
         # Verify the API call
-        mock_client.mutate_ad_group_criterion_customizers.assert_called_once()
-        call_args = mock_client.mutate_ad_group_criterion_customizers.call_args[1]
+        mock_client.mutate_ad_group_criterion_customizers.assert_called_once()  # type: ignore
+        call_args = mock_client.mutate_ad_group_criterion_customizers.call_args[1]  # type: ignore
         request = call_args["request"]
 
         assert request.customer_id == "123"
@@ -97,7 +98,7 @@ class TestAdGroupCriterionCustomizerService:
 
     @pytest.mark.asyncio
     async def test_mutate_ad_group_criterion_customizers_remove(
-        self, service, mock_context, mock_client
+        self, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test removing ad group criterion customizers."""
         # Mock response
@@ -111,7 +112,7 @@ class TestAdGroupCriterionCustomizerService:
         mock_response.results = [mock_result]
         mock_response.partial_failure_error = None
 
-        mock_client.mutate_ad_group_criterion_customizers.return_value = mock_response
+        mock_client.mutate_ad_group_criterion_customizers.return_value = mock_response  # type: ignore
 
         # Test data
         operations = [
@@ -132,8 +133,8 @@ class TestAdGroupCriterionCustomizerService:
         )
 
         # Verify the API call
-        mock_client.mutate_ad_group_criterion_customizers.assert_called_once()
-        call_args = mock_client.mutate_ad_group_criterion_customizers.call_args[1]
+        mock_client.mutate_ad_group_criterion_customizers.assert_called_once()  # type: ignore
+        call_args = mock_client.mutate_ad_group_criterion_customizers.call_args[1]  # type: ignore
         request = call_args["request"]
 
         assert request.customer_id == "123"
@@ -145,7 +146,7 @@ class TestAdGroupCriterionCustomizerService:
 
     @pytest.mark.asyncio
     async def test_mutate_ad_group_criterion_customizers_number_value(
-        self, service, mock_context, mock_client
+        self, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test creating ad group criterion customizers with number value."""
         # Mock response
@@ -159,7 +160,7 @@ class TestAdGroupCriterionCustomizerService:
         mock_response.results = [mock_result]
         mock_response.partial_failure_error = None
 
-        mock_client.mutate_ad_group_criterion_customizers.return_value = mock_response
+        mock_client.mutate_ad_group_criterion_customizers.return_value = mock_response  # type: ignore
 
         # Test data
         operations = [
@@ -180,15 +181,15 @@ class TestAdGroupCriterionCustomizerService:
         )
 
         # Verify the API call
-        mock_client.mutate_ad_group_criterion_customizers.assert_called_once()
-        call_args = mock_client.mutate_ad_group_criterion_customizers.call_args[1]
+        mock_client.mutate_ad_group_criterion_customizers.assert_called_once()  # type: ignore
+        call_args = mock_client.mutate_ad_group_criterion_customizers.call_args[1]  # type: ignore
         request = call_args["request"]
 
         assert request.operations[0].create.value.string_value == "99.99"
 
     @pytest.mark.asyncio
     async def test_mutate_ad_group_criterion_customizers_with_partial_failure(
-        self, service, mock_context, mock_client
+        self, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test mutating ad group criterion customizers with partial failure."""
         # Mock response with partial failure
@@ -207,7 +208,7 @@ class TestAdGroupCriterionCustomizerService:
         mock_response.results = [mock_result]
         mock_response.partial_failure_error = mock_error
 
-        mock_client.mutate_ad_group_criterion_customizers.return_value = mock_response
+        mock_client.mutate_ad_group_criterion_customizers.return_value = mock_response  # type: ignore
 
         # Test data
         operations = [
@@ -239,7 +240,7 @@ class TestAdGroupCriterionCustomizerTools:
     """Test cases for ad group criterion customizer tools."""
 
     @pytest.mark.asyncio
-    async def test_create_tools(self, mock_context):
+    async def test_create_tools(self, mock_context: Any):
         """Test creating ad group criterion customizer tools."""
         service = Mock()
         service.mutate_ad_group_criterion_customizers = AsyncMock(
@@ -259,7 +260,7 @@ class TestAdGroupCriterionCustomizerTools:
             operations=[],
         )
 
-        service.mutate_ad_group_criterion_customizers.assert_called_once_with(
+        service.mutate_ad_group_criterion_customizers.assert_called_once_with(  # type: ignore
             ctx=mock_context,
             customer_id="123",
             operations=[],

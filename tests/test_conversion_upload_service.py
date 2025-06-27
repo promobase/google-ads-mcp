@@ -25,7 +25,7 @@ def conversion_upload_service(mock_sdk_client: Any) -> ConversionUploadService:
     """Create a ConversionUploadService instance with mocked dependencies."""
     # Mock ConversionUploadService client
     mock_conversion_upload_client = Mock(spec=ConversionUploadServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_conversion_upload_client
+    mock_sdk_client.client.get_service.return_value = mock_conversion_upload_client  # type: ignore
 
     with patch(
         "src.sdk_services.conversions.conversion_upload_service.get_sdk_client",
@@ -94,7 +94,7 @@ async def test_upload_click_conversions_basic(
         result = Mock()
         result.gclid = conversions[i]["gclid"]
         result.conversion_action = f"customers/{customer_id}/conversionActions/{conversions[i]['conversion_action_id']}"
-        mock_response.results.append(result)
+        mock_response.results.append(result)  # type: ignore
 
     # Get the mocked conversion upload service client
     mock_conversion_upload_client = conversion_upload_service.client  # type: ignore
@@ -205,7 +205,7 @@ async def test_upload_click_conversions_with_user_identifiers(
     mock_response.results = []
     result = Mock()
     result.gclid = "gclid123"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked conversion upload service client
     mock_conversion_upload_client = conversion_upload_service.client  # type: ignore
@@ -287,7 +287,7 @@ async def test_upload_click_conversions_partial_address(
     mock_response.results = []
     result = Mock()
     result.gclid = "gclid123"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked conversion upload service client
     mock_conversion_upload_client = conversion_upload_service.client  # type: ignore
@@ -364,7 +364,7 @@ async def test_upload_call_conversions(
         result = Mock()
         result.caller_id = conversions[i]["caller_id"]
         result.conversion_action = f"customers/{customer_id}/conversionActions/{conversions[i]['conversion_action_id']}"
-        mock_response.results.append(result)
+        mock_response.results.append(result)  # type: ignore
 
     # Get the mocked conversion upload service client
     mock_conversion_upload_client = conversion_upload_service.client  # type: ignore
@@ -463,7 +463,7 @@ async def test_upload_click_conversions_no_partial_failure(
     mock_response.results = []
     result = Mock()
     result.gclid = "gclid123"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked conversion upload service client
     mock_conversion_upload_client = conversion_upload_service.client  # type: ignore
@@ -513,7 +513,7 @@ async def test_error_handling_click_conversions(
 
     # Get the mocked conversion upload service client and make it raise exception
     mock_conversion_upload_client = conversion_upload_service.client  # type: ignore
-    mock_conversion_upload_client.upload_click_conversions.side_effect = (
+    mock_conversion_upload_client.upload_click_conversions.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -556,7 +556,7 @@ async def test_error_handling_call_conversions(
 
     # Get the mocked conversion upload service client and make it raise exception
     mock_conversion_upload_client = conversion_upload_service.client  # type: ignore
-    mock_conversion_upload_client.upload_call_conversions.side_effect = (
+    mock_conversion_upload_client.upload_call_conversions.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -597,7 +597,7 @@ async def test_error_handling_generic_exception(
 
     # Get the mocked conversion upload service client and make it raise generic exception
     mock_conversion_upload_client = conversion_upload_service.client  # type: ignore
-    mock_conversion_upload_client.upload_click_conversions.side_effect = ValueError(
+    mock_conversion_upload_client.upload_click_conversions.side_effect = ValueError(  # type: ignore
         "Invalid data format"
     )  # type: ignore
 
@@ -631,10 +631,10 @@ def test_register_conversion_upload_tools() -> None:
     assert isinstance(service, ConversionUploadService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 2  # 2 tools registered
+    assert mock_mcp.tool.call_count == 2  # 2 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

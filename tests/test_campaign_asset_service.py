@@ -27,7 +27,7 @@ def campaign_asset_service(mock_sdk_client: Any) -> CampaignAssetService:
     """Create a CampaignAssetService instance with mocked dependencies."""
     # Mock CampaignAssetService client
     mock_campaign_asset_client = Mock(spec=CampaignAssetServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_campaign_asset_client
+    mock_sdk_client.client.get_service.return_value = mock_campaign_asset_client  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.campaign_asset_service.get_sdk_client",
@@ -59,7 +59,7 @@ async def test_link_asset_to_campaign(
     result.resource_name = (
         f"customers/{customer_id}/campaignAssets/{campaign_id}~{asset_id}~SITELINK"
     )
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked campaign asset service client
     mock_campaign_asset_client = campaign_asset_service.client  # type: ignore
@@ -132,7 +132,7 @@ async def test_link_multiple_assets_to_campaign(
     for i, link in enumerate(asset_links):
         result = Mock()
         result.resource_name = f"customers/{customer_id}/campaignAssets/{campaign_id}~{link['asset_id']}~{link['field_type']}"
-        mock_response.results.append(result)
+        mock_response.results.append(result)  # type: ignore
 
     # Get the mocked campaign asset service client
     mock_campaign_asset_client = campaign_asset_service.client  # type: ignore
@@ -236,7 +236,7 @@ async def test_list_campaign_assets(
 
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -244,7 +244,7 @@ async def test_list_campaign_assets(
             return mock_google_ads_service
         return campaign_asset_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.campaign_asset_service.get_sdk_client",
@@ -304,7 +304,7 @@ async def test_list_campaign_assets_no_filters(
 
     # Mock GoogleAdsService for search
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.return_value = []
+    mock_google_ads_service.search.return_value = []  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -312,7 +312,7 @@ async def test_list_campaign_assets_no_filters(
             return mock_google_ads_service
         return campaign_asset_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.campaign_asset_service.get_sdk_client",
@@ -351,7 +351,7 @@ async def test_list_campaign_assets_include_system_managed(
 
     # Mock GoogleAdsService for search
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.return_value = []
+    mock_google_ads_service.search.return_value = []  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -359,7 +359,7 @@ async def test_list_campaign_assets_include_system_managed(
             return mock_google_ads_service
         return campaign_asset_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.campaign_asset_service.get_sdk_client",
@@ -421,7 +421,7 @@ async def test_list_campaign_assets_with_none_values(
     row.asset.type_ = None
 
     mock_results.append(row)
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -429,7 +429,7 @@ async def test_list_campaign_assets_with_none_values(
             return mock_google_ads_service
         return campaign_asset_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.campaign_asset_service.get_sdk_client",
@@ -472,7 +472,7 @@ async def test_remove_asset_from_campaign(
     mock_response.results = []
     result = Mock()
     result.resource_name = campaign_asset_resource
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked campaign asset service client
     mock_campaign_asset_client = campaign_asset_service.client  # type: ignore
@@ -598,7 +598,7 @@ async def test_error_handling_list_assets(
 
     # Mock GoogleAdsService for search and make it raise exception
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.side_effect = Exception("Search failed")
+    mock_google_ads_service.search.side_effect = Exception("Search failed")  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -606,7 +606,7 @@ async def test_error_handling_list_assets(
             return mock_google_ads_service
         return campaign_asset_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.campaign_asset_service.get_sdk_client",
@@ -678,10 +678,10 @@ def test_register_campaign_asset_tools() -> None:
     assert isinstance(service, CampaignAssetService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

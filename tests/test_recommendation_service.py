@@ -24,7 +24,7 @@ def recommendation_service(mock_sdk_client: Any) -> RecommendationService:
     """Create a RecommendationService instance with mocked dependencies."""
     # Mock RecommendationService client
     mock_recommendation_client = Mock(spec=RecommendationServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_recommendation_client
+    mock_sdk_client.client.get_service.return_value = mock_recommendation_client  # type: ignore
 
     with patch(
         "src.sdk_services.planning.recommendation_service.get_sdk_client",
@@ -87,10 +87,10 @@ async def test_get_recommendations(
             mock_budget_option = Mock()
             mock_budget_option.budget_amount_micros = 100000000
             mock_budget_option.impact = Mock()
-            mock_budget_option.impact.impressions = 1000
-            mock_budget_option.impact.clicks = 100
-            mock_budget_option.impact.cost_micros = 50000000
-            mock_budget_option.impact.conversions = 10
+            mock_budget_option.impact.impressions = 1000  # type: ignore
+            mock_budget_option.impact.clicks = 100  # type: ignore
+            mock_budget_option.impact.cost_micros = 50000000  # type: ignore
+            mock_budget_option.impact.conversions = 10  # type: ignore
             row.recommendation.campaign_budget_recommendation.budget_options = [
                 mock_budget_option
             ]
@@ -138,14 +138,14 @@ async def test_get_recommendations(
 
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     def get_service_side_effect(service_name: str):
         if service_name == "GoogleAdsService":
             return mock_google_ads_service
         return recommendation_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Act
     with patch(
@@ -259,7 +259,7 @@ async def test_dismiss_recommendation(
     for resource_name in recommendation_resource_names:
         result = Mock()
         result.resource_name = resource_name
-        mock_response.results.append(result)
+        mock_response.results.append(result)  # type: ignore
 
     # Get the mocked recommendation service client
     mock_recommendation_client = recommendation_service.client  # type: ignore
@@ -310,14 +310,14 @@ async def test_get_recommendations_minimal(
 
     # Mock GoogleAdsService for search
     mock_google_ads_service = Mock()
-    mock_google_ads_service.search.return_value = []
+    mock_google_ads_service.search.return_value = []  # type: ignore
 
     def get_service_side_effect(service_name: str):
         if service_name == "GoogleAdsService":
             return mock_google_ads_service
         return recommendation_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Act
     with patch(
@@ -386,10 +386,10 @@ def test_register_recommendation_tools() -> None:
     assert isinstance(service, RecommendationService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 3  # 3 tools registered
+    assert mock_mcp.tool.call_count == 3  # 3 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

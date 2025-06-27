@@ -24,7 +24,7 @@ def label_service(mock_sdk_client: Any) -> LabelService:
     """Create a LabelService instance with mocked dependencies."""
     # Mock LabelService client
     mock_label_service_client = Mock(spec=LabelServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_label_service_client
+    mock_sdk_client.client.get_service.return_value = mock_label_service_client  # type: ignore
 
     with patch(
         "src.sdk_services.shared.label_service.get_sdk_client",
@@ -242,14 +242,14 @@ async def test_list_labels(
         # Mock serialize_proto_message to return dict
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     def get_service_side_effect(service_name: str):
         if service_name == "GoogleAdsService":
             return mock_google_ads_service
         return label_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Act
     with (
@@ -333,10 +333,10 @@ def test_register_label_tools() -> None:
     assert isinstance(service, LabelService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 5  # 5 tools registered
+    assert mock_mcp.tool.call_count == 5  # 5 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

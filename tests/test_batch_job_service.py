@@ -26,7 +26,7 @@ def batch_job_service(mock_sdk_client: Any) -> BatchJobService:
     """Create a BatchJobService instance with mocked dependencies."""
     # Mock BatchJobService client
     mock_batch_job_client = Mock(spec=BatchJobServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_batch_job_client
+    mock_sdk_client.client.get_service.return_value = mock_batch_job_client  # type: ignore
 
     with patch(
         "src.sdk_services.data_import.batch_job_service.get_sdk_client",
@@ -51,7 +51,7 @@ async def test_create_batch_job(
     # Create mock response
     mock_response = Mock(spec=MutateBatchJobResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = f"customers/{customer_id}/batchJobs/123"
+    mock_response.result.resource_name = f"customers/{customer_id}/batchJobs/123"  # type: ignore
 
     # Get the mocked batch job service client
     mock_batch_job_client = batch_job_service.client  # type: ignore
@@ -106,26 +106,26 @@ async def test_get_batch_job(
     # Create mock search result
     mock_row = Mock()
     mock_row.batch_job = Mock()
-    mock_row.batch_job.resource_name = batch_job_resource_name
-    mock_row.batch_job.id = 123
-    mock_row.batch_job.status = BatchJobStatusEnum.BatchJobStatus.PENDING
-    mock_row.batch_job.long_running_operation = ""
-    mock_row.batch_job.metadata = Mock()
-    mock_row.batch_job.metadata.creation_date_time = "2024-01-01 12:00:00"
-    mock_row.batch_job.metadata.start_date_time = ""
-    mock_row.batch_job.metadata.completion_date_time = ""
-    mock_row.batch_job.metadata.estimated_completion_ratio = 0.0
-    mock_row.batch_job.metadata.operation_count = 0
-    mock_row.batch_job.metadata.executed_operation_count = 0
+    mock_row.batch_job.resource_name = batch_job_resource_name  # type: ignore
+    mock_row.batch_job.id = 123  # type: ignore
+    mock_row.batch_job.status = BatchJobStatusEnum.BatchJobStatus.PENDING  # type: ignore
+    mock_row.batch_job.long_running_operation = ""  # type: ignore
+    mock_row.batch_job.metadata = Mock()  # type: ignore
+    mock_row.batch_job.metadata.creation_date_time = "2024-01-01 12:00:00"  # type: ignore
+    mock_row.batch_job.metadata.start_date_time = ""  # type: ignore
+    mock_row.batch_job.metadata.completion_date_time = ""  # type: ignore
+    mock_row.batch_job.metadata.estimated_completion_ratio = 0.0  # type: ignore
+    mock_row.batch_job.metadata.operation_count = 0  # type: ignore
+    mock_row.batch_job.metadata.executed_operation_count = 0  # type: ignore
 
-    mock_google_ads_service.search.return_value = [mock_row]
+    mock_google_ads_service.search.return_value = [mock_row]  # type: ignore
 
     def get_service_side_effect(service_name: str):
         if service_name == "GoogleAdsService":
             return mock_google_ads_service
         return batch_job_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Mock serialize_proto_message
     expected_result = {
@@ -307,7 +307,7 @@ async def test_list_batch_job_results(
         f"customers/{customer_id}/adGroups/789"
     )
 
-    mock_response.results.extend([result1, result2])
+    mock_response.results.extend([result1, result2])  # type: ignore
     mock_response.next_page_token = "next123"
 
     # Get the mocked batch job service client
@@ -391,14 +391,14 @@ async def test_list_batch_jobs(
         row.batch_job.status = BatchJobStatusEnum.BatchJobStatus.PENDING
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     def get_service_side_effect(service_name: str):
         if service_name == "GoogleAdsService":
             return mock_google_ads_service
         return batch_job_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Act
     with (
@@ -481,10 +481,10 @@ def test_register_batch_job_tools() -> None:
     assert isinstance(service, BatchJobService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 6  # 6 tools registered
+    assert mock_mcp.tool.call_count == 6  # 6 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

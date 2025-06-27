@@ -17,7 +17,6 @@ from google.ads.googleads.v20.services.services.google_ads_service import (
 from google.ads.googleads.v20.services.types.customer_user_access_service import (
     CustomerUserAccessOperation,
     MutateCustomerUserAccessRequest,
-    MutateCustomerUserAccessResponse,
 )
 from google.protobuf import field_mask_pb2
 

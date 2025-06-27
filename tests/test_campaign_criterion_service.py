@@ -25,7 +25,7 @@ def campaign_criterion_service(mock_sdk_client: Any) -> CampaignCriterionService
     """Create a CampaignCriterionService instance with mocked dependencies."""
     # Mock CampaignCriterionService client
     mock_campaign_criterion_client = Mock(spec=CampaignCriterionServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_campaign_criterion_client
+    mock_sdk_client.client.get_service.return_value = mock_campaign_criterion_client  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.campaign_criterion_service.get_sdk_client",
@@ -59,7 +59,7 @@ async def test_add_location_criteria(
         result.resource_name = (
             f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 100}"
         )
-        mock_response.results.append(result)
+        mock_response.results.append(result)  # type: ignore
 
     # Get the mocked campaign criterion service client
     mock_campaign_criterion_client = campaign_criterion_service.client  # type: ignore
@@ -135,7 +135,7 @@ async def test_add_location_criteria_negative(
     mock_response.results = []
     result = Mock()
     result.resource_name = f"customers/{customer_id}/campaignCriteria/{campaign_id}~101"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked campaign criterion service client
     mock_campaign_criterion_client = campaign_criterion_service.client  # type: ignore
@@ -197,7 +197,7 @@ async def test_add_language_criteria(
         result.resource_name = (
             f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 200}"
         )
-        mock_response.results.append(result)
+        mock_response.results.append(result)  # type: ignore
 
     # Get the mocked campaign criterion service client
     mock_campaign_criterion_client = campaign_criterion_service.client  # type: ignore
@@ -272,7 +272,7 @@ async def test_add_device_criteria(
         result.resource_name = (
             f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 300}"
         )
-        mock_response.results.append(result)
+        mock_response.results.append(result)  # type: ignore
 
     # Get the mocked campaign criterion service client
     mock_campaign_criterion_client = campaign_criterion_service.client  # type: ignore
@@ -350,7 +350,7 @@ async def test_add_device_criteria_no_bid_modifiers(
     mock_response.results = []
     result = Mock()
     result.resource_name = f"customers/{customer_id}/campaignCriteria/{campaign_id}~301"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked campaign criterion service client
     mock_campaign_criterion_client = campaign_criterion_service.client  # type: ignore
@@ -414,7 +414,7 @@ async def test_add_negative_keyword_criteria(
         result.resource_name = (
             f"customers/{customer_id}/campaignCriteria/{campaign_id}~{i + 400}"
         )
-        mock_response.results.append(result)
+        mock_response.results.append(result)  # type: ignore
 
     # Get the mocked campaign criterion service client
     mock_campaign_criterion_client = campaign_criterion_service.client  # type: ignore
@@ -489,7 +489,7 @@ async def test_remove_campaign_criterion(
     mock_response.results = []
     result = Mock()
     result.resource_name = criterion_resource_name
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked campaign criterion service client
     mock_campaign_criterion_client = campaign_criterion_service.client  # type: ignore
@@ -543,7 +543,7 @@ async def test_error_handling(
 
     # Get the mocked campaign criterion service client and make it raise exception
     mock_campaign_criterion_client = campaign_criterion_service.client  # type: ignore
-    mock_campaign_criterion_client.mutate_campaign_criteria.side_effect = (
+    mock_campaign_criterion_client.mutate_campaign_criteria.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -578,10 +578,10 @@ def test_register_campaign_criterion_tools() -> None:
     assert isinstance(service, CampaignCriterionService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 5  # 5 tools registered
+    assert mock_mcp.tool.call_count == 5  # 5 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

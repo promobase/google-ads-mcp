@@ -27,7 +27,7 @@ def ad_group_ad_service(mock_sdk_client: Any) -> AdGroupAdService:
     """Create an AdGroupAdService instance with mocked dependencies."""
     # Mock AdGroupAdService client
     mock_ad_group_ad_client = Mock(spec=AdGroupAdServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_ad_group_ad_client
+    mock_sdk_client.client.get_service.return_value = mock_ad_group_ad_client  # type: ignore
 
     with patch(
         "src.sdk_services.ad_group.ad_group_ad_service.get_sdk_client",
@@ -57,7 +57,7 @@ async def test_create_ad_group_ad(
     mock_response.results = []
     result = Mock()
     result.resource_name = f"customers/{customer_id}/adGroupAds/{ad_group_id}~456"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group ad service client
     mock_ad_group_ad_client = ad_group_ad_service.client  # type: ignore
@@ -118,7 +118,7 @@ async def test_update_ad_group_ad_status(
     mock_response.results = []
     result = Mock()
     result.resource_name = ad_group_ad_resource_name
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group ad service client
     mock_ad_group_ad_client = ad_group_ad_service.client  # type: ignore
@@ -205,7 +205,7 @@ async def test_list_ad_group_ads(
 
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -213,7 +213,7 @@ async def test_list_ad_group_ads(
             return mock_google_ads_service
         return ad_group_ad_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Mock serialize_proto_message
     def serialize_side_effect(obj: Any):
@@ -295,7 +295,7 @@ async def test_list_ad_group_ads_no_filter(
 
     # Mock GoogleAdsService for search
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.return_value = []
+    mock_google_ads_service.search.return_value = []  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -303,7 +303,7 @@ async def test_list_ad_group_ads_no_filter(
             return mock_google_ads_service
         return ad_group_ad_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.ad_group.ad_group_ad_service.get_sdk_client",
@@ -343,7 +343,7 @@ async def test_remove_ad_group_ad(
     mock_response.results = []
     result = Mock()
     result.resource_name = ad_group_ad_resource_name
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group ad service client
     mock_ad_group_ad_client = ad_group_ad_service.client  # type: ignore
@@ -430,10 +430,10 @@ def test_register_ad_group_ad_tools() -> None:
     assert isinstance(service, AdGroupAdService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

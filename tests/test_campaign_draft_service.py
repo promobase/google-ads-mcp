@@ -29,7 +29,7 @@ def campaign_draft_service(mock_sdk_client: Any) -> CampaignDraftService:
     """Create a CampaignDraftService instance with mocked dependencies."""
     # Mock CampaignDraftService client
     mock_draft_client = Mock(spec=CampaignDraftServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_draft_client
+    mock_sdk_client.client.get_service.return_value = mock_draft_client  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.campaign_draft_service.get_sdk_client",
@@ -214,7 +214,7 @@ async def test_list_campaign_drafts(
         )
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -222,7 +222,7 @@ async def test_list_campaign_drafts(
             return mock_google_ads_service
         return campaign_draft_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.campaign_draft_service.get_sdk_client",
@@ -537,10 +537,10 @@ def test_register_campaign_draft_tools() -> None:
     assert isinstance(service, CampaignDraftService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 6  # 6 tools registered
+    assert mock_mcp.tool.call_count == 6  # 6 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

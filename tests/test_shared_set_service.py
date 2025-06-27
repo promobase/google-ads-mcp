@@ -28,7 +28,7 @@ def shared_set_service(mock_sdk_client: Any) -> SharedSetService:
     """Create a SharedSetService instance with mocked dependencies."""
     # Mock SharedSetService client
     mock_shared_set_client = Mock(spec=SharedSetServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_shared_set_client
+    mock_sdk_client.client.get_service.return_value = mock_shared_set_client  # type: ignore
 
     with patch(
         "src.sdk_services.shared.shared_set_service.get_sdk_client",
@@ -58,7 +58,7 @@ async def test_create_shared_set(
     mock_response.results = []
     result = Mock()
     result.resource_name = f"customers/{customer_id}/sharedSets/123456"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked shared set service client
     mock_shared_set_client = shared_set_service.client  # type: ignore
@@ -123,7 +123,7 @@ async def test_create_shared_set_negative_placements(
     mock_response.results = []
     result = Mock()
     result.resource_name = f"customers/{customer_id}/sharedSets/654321"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked shared set service client
     mock_shared_set_client = shared_set_service.client  # type: ignore
@@ -177,7 +177,7 @@ async def test_update_shared_set_name_only(
     mock_response.results = []
     result = Mock()
     result.resource_name = f"customers/{customer_id}/sharedSets/{shared_set_id}"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked shared set service client
     mock_shared_set_client = shared_set_service.client  # type: ignore
@@ -246,7 +246,7 @@ async def test_update_shared_set_status_only(
     mock_response.results = []
     result = Mock()
     result.resource_name = f"customers/{customer_id}/sharedSets/{shared_set_id}"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked shared set service client
     mock_shared_set_client = shared_set_service.client  # type: ignore
@@ -306,7 +306,7 @@ async def test_update_shared_set_both_fields(
     mock_response.results = []
     result = Mock()
     result.resource_name = f"customers/{customer_id}/sharedSets/{shared_set_id}"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked shared set service client
     mock_shared_set_client = shared_set_service.client  # type: ignore
@@ -379,7 +379,7 @@ async def test_list_shared_sets_no_filters(
         row.shared_set.resource_name = f"customers/{customer_id}/sharedSets/{i + 100}"
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -387,7 +387,7 @@ async def test_list_shared_sets_no_filters(
             return mock_google_ads_service
         return shared_set_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Mock serialize_proto_message for each row
     def serialize_side_effect(obj: Any):
@@ -461,7 +461,7 @@ async def test_list_shared_sets_with_filters(
 
     # Mock GoogleAdsService for search
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.return_value = []
+    mock_google_ads_service.search.return_value = []  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -469,7 +469,7 @@ async def test_list_shared_sets_with_filters(
             return mock_google_ads_service
         return shared_set_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.shared.shared_set_service.get_sdk_client",
@@ -510,7 +510,7 @@ async def test_list_shared_sets_type_filter_only(
 
     # Mock GoogleAdsService for search
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.return_value = []
+    mock_google_ads_service.search.return_value = []  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -518,7 +518,7 @@ async def test_list_shared_sets_type_filter_only(
             return mock_google_ads_service
         return shared_set_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.shared.shared_set_service.get_sdk_client",
@@ -654,7 +654,7 @@ async def test_error_handling_list_shared_sets(
 
     # Mock GoogleAdsService for search and make it raise exception
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.side_effect = Exception("Search failed")
+    mock_google_ads_service.search.side_effect = Exception("Search failed")  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -662,7 +662,7 @@ async def test_error_handling_list_shared_sets(
             return mock_google_ads_service
         return shared_set_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.shared.shared_set_service.get_sdk_client",
@@ -697,10 +697,10 @@ def test_register_shared_set_tools() -> None:
     assert isinstance(service, SharedSetService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

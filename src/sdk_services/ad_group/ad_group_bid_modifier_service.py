@@ -6,11 +6,8 @@ from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
 from google.ads.googleads.v20.common.types.criteria import (
     DeviceInfo,
-    HotelAdvanceBookingWindowInfo,
-    HotelCheckInDateRangeInfo,
     HotelCheckInDayInfo,
     HotelDateSelectionTypeInfo,
-    HotelLengthOfStayInfo,
 )
 from google.ads.googleads.v20.enums.types.day_of_week import DayOfWeekEnum
 from google.ads.googleads.v20.enums.types.device import DeviceEnum

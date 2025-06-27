@@ -146,7 +146,7 @@ def register_experiment_arm_tools(mcp: FastMCP[Any]) -> None:
     """Register experiment arm tools with the MCP server."""
 
     @mcp.tool
-    async def mutate_experiment_arms(
+    async def mutate_experiment_arms(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         operations: list[dict[str, Any]],
         partial_failure: bool = False,
@@ -205,7 +205,7 @@ def register_experiment_arm_tools(mcp: FastMCP[Any]) -> None:
         )
 
     @mcp.tool
-    async def create_experiment_arm(
+    async def create_experiment_arm(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         experiment: str,
         name: str,
@@ -244,7 +244,7 @@ def register_experiment_arm_tools(mcp: FastMCP[Any]) -> None:
         return f"Created experiment arm: {result.resource_name}"
 
     @mcp.tool
-    async def update_experiment_arm(
+    async def update_experiment_arm(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         resource_name: str,
         name: Optional[str] = None,
@@ -280,7 +280,7 @@ def register_experiment_arm_tools(mcp: FastMCP[Any]) -> None:
         return f"Updated experiment arm: {result.resource_name}"
 
     @mcp.tool
-    async def remove_experiment_arm(
+    async def remove_experiment_arm(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         resource_name: str,
     ) -> str:

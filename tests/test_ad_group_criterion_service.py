@@ -33,7 +33,7 @@ def ad_group_criterion_service(mock_sdk_client: Any) -> AdGroupCriterionService:
     """Create an AdGroupCriterionService instance with mocked dependencies."""
     # Mock AdGroupCriterionService client
     mock_ad_group_criterion_client = Mock(spec=AdGroupCriterionServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_ad_group_criterion_client
+    mock_sdk_client.client.get_service.return_value = mock_ad_group_criterion_client  # type: ignore
 
     with patch(
         "src.sdk_services.ad_group.ad_group_criterion_service.get_sdk_client",
@@ -70,7 +70,7 @@ async def test_add_keywords(
         result.resource_name = (
             f"customers/{customer_id}/adGroupCriteria/{ad_group_id}~{i + 100}"
         )
-        mock_response.results.append(result)
+        mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group criterion service client
     mock_ad_group_criterion_client = ad_group_criterion_service.client  # type: ignore
@@ -157,7 +157,7 @@ async def test_add_negative_keywords(
         result.resource_name = (
             f"customers/{customer_id}/adGroupCriteria/{ad_group_id}~{i + 200}"
         )
-        mock_response.results.append(result)
+        mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group criterion service client
     mock_ad_group_criterion_client = ad_group_criterion_service.client  # type: ignore
@@ -220,7 +220,7 @@ async def test_add_audience_criteria(
         result.resource_name = (
             f"customers/{customer_id}/adGroupCriteria/{ad_group_id}~{i + 300}"
         )
-        mock_response.results.append(result)
+        mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group criterion service client
     mock_ad_group_criterion_client = ad_group_criterion_service.client  # type: ignore
@@ -291,7 +291,7 @@ async def test_add_audience_criteria_no_bid_modifier(
     mock_response.results = []
     result = Mock()
     result.resource_name = f"customers/{customer_id}/adGroupCriteria/{ad_group_id}~301"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group criterion service client
     mock_ad_group_criterion_client = ad_group_criterion_service.client  # type: ignore
@@ -343,7 +343,7 @@ async def test_add_demographic_criteria(
         result.resource_name = (
             f"customers/{customer_id}/adGroupCriteria/{ad_group_id}~{i + 400}"
         )
-        mock_response.results.append(result)
+        mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group criterion service client
     mock_ad_group_criterion_client = ad_group_criterion_service.client  # type: ignore
@@ -441,7 +441,7 @@ async def test_add_demographic_criteria_unknown_type(
     mock_response.results = []
     result = Mock()
     result.resource_name = f"customers/{customer_id}/adGroupCriteria/{ad_group_id}~401"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group criterion service client
     mock_ad_group_criterion_client = ad_group_criterion_service.client  # type: ignore
@@ -486,7 +486,7 @@ async def test_update_criterion_bid(
     mock_response.results = []
     result = Mock()
     result.resource_name = criterion_resource_name
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group criterion service client
     mock_ad_group_criterion_client = ad_group_criterion_service.client  # type: ignore
@@ -550,7 +550,7 @@ async def test_update_criterion_bid_partial(
     mock_response.results = []
     result = Mock()
     result.resource_name = criterion_resource_name
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group criterion service client
     mock_ad_group_criterion_client = ad_group_criterion_service.client  # type: ignore
@@ -601,7 +601,7 @@ async def test_remove_ad_group_criterion(
     mock_response.results = []
     result = Mock()
     result.resource_name = criterion_resource_name
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group criterion service client
     mock_ad_group_criterion_client = ad_group_criterion_service.client  # type: ignore
@@ -655,7 +655,7 @@ async def test_error_handling_keywords(
 
     # Get the mocked ad group criterion service client and make it raise exception
     mock_ad_group_criterion_client = ad_group_criterion_service.client  # type: ignore
-    mock_ad_group_criterion_client.mutate_ad_group_criteria.side_effect = (
+    mock_ad_group_criterion_client.mutate_ad_group_criteria.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -692,7 +692,7 @@ async def test_error_handling_audience_criteria(
 
     # Get the mocked ad group criterion service client and make it raise exception
     mock_ad_group_criterion_client = ad_group_criterion_service.client  # type: ignore
-    mock_ad_group_criterion_client.mutate_ad_group_criteria.side_effect = (
+    mock_ad_group_criterion_client.mutate_ad_group_criteria.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -729,7 +729,7 @@ async def test_error_handling_demographic_criteria(
 
     # Get the mocked ad group criterion service client and make it raise exception
     mock_ad_group_criterion_client = ad_group_criterion_service.client  # type: ignore
-    mock_ad_group_criterion_client.mutate_ad_group_criteria.side_effect = (
+    mock_ad_group_criterion_client.mutate_ad_group_criteria.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -766,7 +766,7 @@ async def test_error_handling_update_criterion_bid(
 
     # Get the mocked ad group criterion service client and make it raise exception
     mock_ad_group_criterion_client = ad_group_criterion_service.client  # type: ignore
-    mock_ad_group_criterion_client.mutate_ad_group_criteria.side_effect = (
+    mock_ad_group_criterion_client.mutate_ad_group_criteria.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -803,7 +803,7 @@ async def test_error_handling_remove_criterion(
 
     # Get the mocked ad group criterion service client and make it raise exception
     mock_ad_group_criterion_client = ad_group_criterion_service.client  # type: ignore
-    mock_ad_group_criterion_client.mutate_ad_group_criteria.side_effect = (
+    mock_ad_group_criterion_client.mutate_ad_group_criteria.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -837,10 +837,10 @@ def test_register_ad_group_criterion_tools() -> None:
     assert isinstance(service, AdGroupCriterionService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 5  # 5 tools registered
+    assert mock_mcp.tool.call_count == 5  # 5 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

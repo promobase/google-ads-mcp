@@ -28,7 +28,7 @@ def ad_group_asset_service(mock_sdk_client: Any) -> AdGroupAssetService:
     """Create an AdGroupAssetService instance with mocked dependencies."""
     # Mock AdGroupAssetService client
     mock_ad_group_asset_client = Mock(spec=AdGroupAssetServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_ad_group_asset_client
+    mock_sdk_client.client.get_service.return_value = mock_ad_group_asset_client  # type: ignore
 
     with patch(
         "src.sdk_services.ad_group.ad_group_asset_service.get_sdk_client",
@@ -336,7 +336,7 @@ async def test_list_ad_group_assets(
 
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -344,7 +344,7 @@ async def test_list_ad_group_assets(
             return mock_google_ads_service
         return ad_group_asset_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.ad_group.ad_group_asset_service.get_sdk_client",
@@ -399,7 +399,7 @@ async def test_list_ad_group_assets_with_campaign_filter(
 
     # Mock GoogleAdsService for search
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.return_value = []
+    mock_google_ads_service.search.return_value = []  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -407,7 +407,7 @@ async def test_list_ad_group_assets_with_campaign_filter(
             return mock_google_ads_service
         return ad_group_asset_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.ad_group.ad_group_asset_service.get_sdk_client",
@@ -549,10 +549,10 @@ def test_register_ad_group_asset_tools() -> None:
     assert isinstance(service, AdGroupAssetService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 5  # 5 tools registered
+    assert mock_mcp.tool.call_count == 5  # 5 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

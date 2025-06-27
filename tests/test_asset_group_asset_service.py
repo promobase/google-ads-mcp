@@ -1,6 +1,7 @@
 """Tests for Asset Group Asset service."""
 
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
+from typing import Any
 
 import pytest
 from google.ads.googleads.errors import GoogleAdsException
@@ -45,7 +46,7 @@ class TestAssetGroupAssetService:
     """Test cases for AssetGroupAssetService."""
 
     async def test_create_asset_group_asset_success(
-        self, asset_group_asset_service, mock_context, mock_client
+        self, asset_group_asset_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test successful creation of an asset group asset link."""
         # Mock the client
@@ -58,9 +59,9 @@ class TestAssetGroupAssetService:
         )
 
         mock_response = MutateAssetGroupAssetsResponse()
-        mock_response.results.append(mock_result)
+        mock_response.results.append(mock_result)  # type: ignore
 
-        mock_client.mutate_asset_group_assets.return_value = mock_response
+        mock_client.mutate_asset_group_assets.return_value = mock_response  # type: ignore
 
         # Execute
         result = await asset_group_asset_service.create_asset_group_asset(
@@ -72,7 +73,7 @@ class TestAssetGroupAssetService:
         )
 
         # Verify request
-        request = mock_client.mutate_asset_group_assets.call_args[1]["request"]
+        request = mock_client.mutate_asset_group_assets.call_args[1]["request"]  # type: ignore
         assert request.customer_id == "1234567890"
         assert len(request.operations) == 1
         assert request.partial_failure is False
@@ -87,20 +88,20 @@ class TestAssetGroupAssetService:
         assert operation.create.field_type == AssetFieldTypeEnum.AssetFieldType.HEADLINE
 
         # Verify logging
-        mock_context.log.assert_called_with(
+        mock_context.log.assert_called_with(  # type: ignore
             level="info",
             message="Created asset group asset link: asset 1111111111 to asset group 9876543210 as HEADLINE",
         )
 
     async def test_create_with_different_field_types(
-        self, asset_group_asset_service, mock_context, mock_client
+        self, asset_group_asset_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test creating assets with different field types."""
         asset_group_asset_service._client = mock_client
 
         mock_response = MutateAssetGroupAssetsResponse()
-        mock_response.results.append(MutateAssetGroupAssetResult())
-        mock_client.mutate_asset_group_assets.return_value = mock_response
+        mock_response.results.append(MutateAssetGroupAssetResult())  # type: ignore
+        mock_client.mutate_asset_group_assets.return_value = mock_response  # type: ignore
 
         # Test with MARKETING_IMAGE
         await asset_group_asset_service.create_asset_group_asset(
@@ -111,7 +112,7 @@ class TestAssetGroupAssetService:
             field_type=AssetFieldTypeEnum.AssetFieldType.MARKETING_IMAGE,
         )
 
-        request = mock_client.mutate_asset_group_assets.call_args[1]["request"]
+        request = mock_client.mutate_asset_group_assets.call_args[1]["request"]  # type: ignore
         operation = request.operations[0]
         assert (
             operation.create.field_type
@@ -119,14 +120,14 @@ class TestAssetGroupAssetService:
         )
 
     async def test_update_asset_group_asset_status_success(
-        self, asset_group_asset_service, mock_context, mock_client
+        self, asset_group_asset_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test successful update of asset group asset status."""
         asset_group_asset_service._client = mock_client
 
         mock_response = MutateAssetGroupAssetsResponse()
-        mock_response.results.append(MutateAssetGroupAssetResult())
-        mock_client.mutate_asset_group_assets.return_value = mock_response
+        mock_response.results.append(MutateAssetGroupAssetResult())  # type: ignore
+        mock_client.mutate_asset_group_assets.return_value = mock_response  # type: ignore
 
         # Execute
         result = await asset_group_asset_service.update_asset_group_asset_status(
@@ -139,7 +140,7 @@ class TestAssetGroupAssetService:
         )
 
         # Verify request
-        request = mock_client.mutate_asset_group_assets.call_args[1]["request"]
+        request = mock_client.mutate_asset_group_assets.call_args[1]["request"]  # type: ignore
         operation = request.operations[0]
 
         # Check resource name format with ~ delimiter
@@ -150,14 +151,14 @@ class TestAssetGroupAssetService:
         assert list(operation.update_mask.paths) == ["status"]
 
     async def test_remove_asset_group_asset_success(
-        self, asset_group_asset_service, mock_context, mock_client
+        self, asset_group_asset_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test successful removal of an asset group asset."""
         asset_group_asset_service._client = mock_client
 
         mock_response = MutateAssetGroupAssetsResponse()
-        mock_response.results.append(MutateAssetGroupAssetResult())
-        mock_client.mutate_asset_group_assets.return_value = mock_response
+        mock_response.results.append(MutateAssetGroupAssetResult())  # type: ignore
+        mock_client.mutate_asset_group_assets.return_value = mock_response  # type: ignore
 
         # Execute
         result = await asset_group_asset_service.remove_asset_group_asset(
@@ -169,7 +170,7 @@ class TestAssetGroupAssetService:
         )
 
         # Verify request
-        request = mock_client.mutate_asset_group_assets.call_args[1]["request"]
+        request = mock_client.mutate_asset_group_assets.call_args[1]["request"]  # type: ignore
         operation = request.operations[0]
 
         # Check resource name format with ~ delimiter
@@ -178,27 +179,27 @@ class TestAssetGroupAssetService:
         )
 
         # Verify logging
-        mock_context.log.assert_called_with(
+        mock_context.log.assert_called_with(  # type: ignore
             level="info",
             message="Removed asset group asset: asset 3333333333 from asset group 9876543210",
         )
 
     async def test_create_with_partial_failure(
-        self, asset_group_asset_service, mock_context, mock_client
+        self, asset_group_asset_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test create with partial failure mode."""
         asset_group_asset_service._client = mock_client
 
         # Create response with partial failure error
         mock_response = MutateAssetGroupAssetsResponse()
-        mock_response.results.append(MutateAssetGroupAssetResult())
+        mock_response.results.append(MutateAssetGroupAssetResult())  # type: ignore
 
         partial_error = status_pb2.Status()
         partial_error.code = 3  # INVALID_ARGUMENT
         partial_error.message = "Partial failure occurred"
-        mock_response.partial_failure_error.CopyFrom(partial_error)
+        mock_response.partial_failure_error.CopyFrom(partial_error)  # type: ignore
 
-        mock_client.mutate_asset_group_assets.return_value = mock_response
+        mock_client.mutate_asset_group_assets.return_value = mock_response  # type: ignore
 
         result = await asset_group_asset_service.create_asset_group_asset(
             ctx=mock_context,
@@ -209,11 +210,11 @@ class TestAssetGroupAssetService:
             partial_failure=True,
         )
 
-        request = mock_client.mutate_asset_group_assets.call_args[1]["request"]
+        request = mock_client.mutate_asset_group_assets.call_args[1]["request"]  # type: ignore
         assert request.partial_failure is True
 
     async def test_create_api_error(
-        self, asset_group_asset_service, mock_context, mock_client
+        self, asset_group_asset_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test create with API error."""
         asset_group_asset_service._client = mock_client
@@ -222,7 +223,7 @@ class TestAssetGroupAssetService:
         error = GoogleAdsException(None, None, None, None)
         error.failure = Mock()
         error.failure.__str__ = Mock(return_value="Asset not found")
-        mock_client.mutate_asset_group_assets.side_effect = error
+        mock_client.mutate_asset_group_assets.side_effect = error  # type: ignore
 
         with pytest.raises(Exception) as exc_info:
             await asset_group_asset_service.create_asset_group_asset(
@@ -236,11 +237,11 @@ class TestAssetGroupAssetService:
         assert "Google Ads API error: Asset not found" in str(exc_info.value)
 
     async def test_update_general_error(
-        self, asset_group_asset_service, mock_context, mock_client
+        self, asset_group_asset_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test update with general error."""
         asset_group_asset_service._client = mock_client
-        mock_client.mutate_asset_group_assets.side_effect = Exception("Network error")
+        mock_client.mutate_asset_group_assets.side_effect = Exception("Network error")  # type: ignore
 
         with pytest.raises(Exception) as exc_info:
             await asset_group_asset_service.update_asset_group_asset_status(
@@ -261,7 +262,7 @@ class TestAssetGroupAssetService:
 class TestAssetGroupAssetTools:
     """Test cases for Asset Group Asset tool functions."""
 
-    async def test_create_asset_group_asset_tool(self, mock_context):
+    async def test_create_asset_group_asset_tool(self, mock_context: Any):
         """Test create_asset_group_asset tool function."""
         service = AssetGroupAssetService()
         tools = create_asset_group_asset_tools(service)
@@ -269,7 +270,7 @@ class TestAssetGroupAssetTools:
 
         # Mock the service method
         with patch.object(service, "create_asset_group_asset") as mock_create:
-            mock_create.return_value = {
+            mock_create.return_value = {  # type: ignore
                 "results": [
                     {"resource_name": "customers/123/assetGroupAssets/456~789~HEADLINE"}
                 ]
@@ -283,7 +284,7 @@ class TestAssetGroupAssetTools:
                 field_type="HEADLINE",
             )
 
-            mock_create.assert_called_once_with(
+            mock_create.assert_called_once_with(  # type: ignore
                 ctx=mock_context,
                 customer_id="1234567890",
                 asset_group_id="9876543210",
@@ -293,14 +294,14 @@ class TestAssetGroupAssetTools:
                 validate_only=False,
             )
 
-    async def test_update_asset_group_asset_status_tool(self, mock_context):
+    async def test_update_asset_group_asset_status_tool(self, mock_context: Any):
         """Test update_asset_group_asset_status tool function."""
         service = AssetGroupAssetService()
         tools = create_asset_group_asset_tools(service)
         update_tool = tools[1]  # Second tool is update_asset_group_asset_status
 
         with patch.object(service, "update_asset_group_asset_status") as mock_update:
-            mock_update.return_value = {"results": [{"resource_name": "test"}]}
+            mock_update.return_value = {"results": [{"resource_name": "test"}]}  # type: ignore
 
             await update_tool(
                 ctx=mock_context,
@@ -312,7 +313,7 @@ class TestAssetGroupAssetTools:
                 validate_only=True,
             )
 
-            mock_update.assert_called_once_with(
+            mock_update.assert_called_once_with(  # type: ignore
                 ctx=mock_context,
                 customer_id="1234567890",
                 asset_group_id="9876543210",
@@ -323,14 +324,14 @@ class TestAssetGroupAssetTools:
                 validate_only=True,
             )
 
-    async def test_remove_asset_group_asset_tool(self, mock_context):
+    async def test_remove_asset_group_asset_tool(self, mock_context: Any):
         """Test remove_asset_group_asset tool function."""
         service = AssetGroupAssetService()
         tools = create_asset_group_asset_tools(service)
         remove_tool = tools[2]  # Third tool is remove_asset_group_asset
 
         with patch.object(service, "remove_asset_group_asset") as mock_remove:
-            mock_remove.return_value = {"results": [{"resource_name": "test"}]}
+            mock_remove.return_value = {"results": [{"resource_name": "test"}]}  # type: ignore
 
             await remove_tool(
                 ctx=mock_context,
@@ -340,7 +341,7 @@ class TestAssetGroupAssetTools:
                 field_type="YOUTUBE_VIDEO",
             )
 
-            mock_remove.assert_called_once_with(
+            mock_remove.assert_called_once_with(  # type: ignore
                 ctx=mock_context,
                 customer_id="1234567890",
                 asset_group_id="9876543210",

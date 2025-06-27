@@ -30,7 +30,7 @@ def campaign_service(mock_sdk_client: Any) -> CampaignService:
     """Create a CampaignService instance with mocked dependencies."""
     # Mock CampaignService client
     mock_campaign_client = Mock(spec=CampaignServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_campaign_client
+    mock_sdk_client.client.get_service.return_value = mock_campaign_client  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.campaign_service.get_sdk_client",
@@ -591,10 +591,10 @@ def test_register_campaign_tools() -> None:
     assert isinstance(service, CampaignService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 2  # 2 tools registered
+    assert mock_mcp.tool.call_count == 2  # 2 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = ["create_campaign", "update_campaign"]

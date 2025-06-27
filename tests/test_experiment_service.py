@@ -28,7 +28,7 @@ def experiment_service(mock_sdk_client: Any) -> ExperimentService:
     """Create an ExperimentService instance with mocked dependencies."""
     # Mock ExperimentService client
     mock_experiment_client = Mock(spec=ExperimentServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_experiment_client
+    mock_sdk_client.client.get_service.return_value = mock_experiment_client  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.experiment_service.get_sdk_client",
@@ -444,7 +444,7 @@ async def test_list_experiments(
         )
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Mock serialize_proto_message
     def mock_serialize(obj):
@@ -456,7 +456,7 @@ async def test_list_experiments(
             return mock_google_ads_service
         return experiment_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with (
         patch(
@@ -510,7 +510,7 @@ async def test_list_experiments_no_filters(
 
     # Mock GoogleAdsService for search
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.return_value = []
+    mock_google_ads_service.search.return_value = []  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -518,7 +518,7 @@ async def test_list_experiments_no_filters(
             return mock_google_ads_service
         return experiment_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.experiment_service.get_sdk_client",
@@ -620,10 +620,10 @@ def test_register_experiment_tools() -> None:
     assert isinstance(service, ExperimentService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 5  # 5 tools registered
+    assert mock_mcp.tool.call_count == 5  # 5 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

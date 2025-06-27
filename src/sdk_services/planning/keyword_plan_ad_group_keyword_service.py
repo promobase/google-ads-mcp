@@ -41,7 +41,7 @@ class KeywordPlanAdGroupKeywordService:
         assert self._client is not None
         return self._client
 
-    def mutate_keyword_plan_ad_group_keywords(
+    def mutate_keyword_plan_ad_group_keywords(  # pyright: ignore[reportUnusedFunction]
         self,
         customer_id: str,
         operations: List[KeywordPlanAdGroupKeywordOperation],
@@ -67,7 +67,7 @@ class KeywordPlanAdGroupKeywordService:
         )
         return self.client.mutate_keyword_plan_ad_group_keywords(request=request)
 
-    def create_keyword_plan_ad_group_keyword_operation(
+    def create_keyword_plan_ad_group_keyword_operation(  # pyright: ignore[reportUnusedFunction]
         self,
         keyword_plan_ad_group: str,
         text: str,
@@ -99,7 +99,7 @@ class KeywordPlanAdGroupKeywordService:
 
         return KeywordPlanAdGroupKeywordOperation(create=keyword_plan_ad_group_keyword)
 
-    def update_keyword_plan_ad_group_keyword_operation(
+    def update_keyword_plan_ad_group_keyword_operation(  # pyright: ignore[reportUnusedFunction]
         self,
         resource_name: str,
         text: Optional[str] = None,
@@ -137,7 +137,7 @@ class KeywordPlanAdGroupKeywordService:
             update_mask={"paths": update_mask},
         )
 
-    def remove_keyword_plan_ad_group_keyword_operation(
+    def remove_keyword_plan_ad_group_keyword_operation(  # pyright: ignore[reportUnusedFunction]
         self, resource_name: str
     ) -> KeywordPlanAdGroupKeywordOperation:
         """Create a keyword plan ad group keyword operation for removal.
@@ -155,7 +155,7 @@ def register_keyword_plan_ad_group_keyword_tools(mcp: FastMCP[Any]) -> None:
     """Register keyword plan ad group keyword tools with the MCP server."""
 
     @mcp.tool
-    async def mutate_keyword_plan_ad_group_keywords(
+    async def mutate_keyword_plan_ad_group_keywords(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         operations: list[dict[str, Any]],
         partial_failure: bool = False,
@@ -229,7 +229,7 @@ def register_keyword_plan_ad_group_keyword_tools(mcp: FastMCP[Any]) -> None:
         return f"Successfully processed {len(response.results)} keyword plan ad group keyword operations"
 
     @mcp.tool
-    async def create_keyword_plan_ad_group_keyword(
+    async def create_keyword_plan_ad_group_keyword(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         keyword_plan_ad_group: str,
         text: str,
@@ -281,7 +281,7 @@ def register_keyword_plan_ad_group_keyword_tools(mcp: FastMCP[Any]) -> None:
         return f"Created keyword plan ad group keyword: {result.resource_name}"
 
     @mcp.tool
-    async def update_keyword_plan_ad_group_keyword(
+    async def update_keyword_plan_ad_group_keyword(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         resource_name: str,
         text: Optional[str] = None,
@@ -334,7 +334,7 @@ def register_keyword_plan_ad_group_keyword_tools(mcp: FastMCP[Any]) -> None:
         return f"Updated keyword plan ad group keyword: {result.resource_name}"
 
     @mcp.tool
-    async def remove_keyword_plan_ad_group_keyword(
+    async def remove_keyword_plan_ad_group_keyword(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         resource_name: str,
     ) -> str:

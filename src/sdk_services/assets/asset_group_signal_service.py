@@ -196,7 +196,7 @@ def register_asset_group_signal_tools(mcp: FastMCP[Any]) -> None:
     """Register asset group signal tools with the MCP server."""
 
     @mcp.tool
-    async def mutate_asset_group_signals(
+    async def mutate_asset_group_signals(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         operations: list[dict[str, Any]],
         partial_failure: bool = False,
@@ -262,7 +262,7 @@ def register_asset_group_signal_tools(mcp: FastMCP[Any]) -> None:
         # Format response
         results = []
         for result in response.results:
-            result_data = {
+            result_data: dict[str, Any] = {
                 "resource_name": result.resource_name,
             }
             if result.asset_group_signal:
@@ -292,7 +292,7 @@ def register_asset_group_signal_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def create_audience_signal(
+    async def create_audience_signal(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         asset_group: str,
         audience_resource_name: str,
@@ -331,7 +331,7 @@ def register_asset_group_signal_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def create_search_theme_signal(
+    async def create_search_theme_signal(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         asset_group: str,
         search_theme: str,
@@ -370,7 +370,7 @@ def register_asset_group_signal_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def remove_asset_group_signal(
+    async def remove_asset_group_signal(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         resource_name: str,
         validate_only: bool = False,

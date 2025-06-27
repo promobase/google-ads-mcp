@@ -17,7 +17,7 @@ from google.ads.googleads.v20.enums.types.identity_verification_program import (
 from google.ads.googleads.errors import GoogleAdsException
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import format_customer_id, get_logger
 
 logger = get_logger(__name__)
 
@@ -118,7 +118,7 @@ class IdentityVerificationService:
             # Process results
             verifications = []
             for verification in response.identity_verification:
-                verification_dict = {
+                verification_dict: dict[str, Any] = {
                     "verification_program": verification.verification_program.name
                     if verification.verification_program
                     else "UNKNOWN",

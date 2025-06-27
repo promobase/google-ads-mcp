@@ -24,7 +24,7 @@ def ad_service(mock_sdk_client: Any) -> AdService:
     """Create an AdService instance with mocked dependencies."""
     # Mock AdGroupAdService client
     mock_ad_group_ad_client = Mock(spec=AdGroupAdServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_ad_group_ad_client
+    mock_sdk_client.client.get_service.return_value = mock_ad_group_ad_client  # type: ignore
 
     with patch(
         "src.sdk_services.ad_group.ad_service.get_sdk_client",
@@ -66,7 +66,7 @@ async def test_create_responsive_search_ad(
     mock_response.results = []
     result = Mock()
     result.resource_name = f"customers/{customer_id}/adGroupAds/{ad_group_id}~123"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group ad service client
     mock_ad_group_ad_client = ad_service.client  # type: ignore
@@ -150,7 +150,7 @@ async def test_create_responsive_search_ad_minimal(
     mock_response.results = []
     result = Mock()
     result.resource_name = f"customers/{customer_id}/adGroupAds/{ad_group_id}~124"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group ad service client
     mock_ad_group_ad_client = ad_service.client  # type: ignore
@@ -217,7 +217,7 @@ async def test_create_expanded_text_ad(
     mock_response.results = []
     result = Mock()
     result.resource_name = f"customers/{customer_id}/adGroupAds/{ad_group_id}~125"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group ad service client
     mock_ad_group_ad_client = ad_service.client  # type: ignore
@@ -308,7 +308,7 @@ async def test_create_expanded_text_ad_minimal(
     mock_response.results = []
     result = Mock()
     result.resource_name = f"customers/{customer_id}/adGroupAds/{ad_group_id}~126"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group ad service client
     mock_ad_group_ad_client = ad_service.client  # type: ignore
@@ -372,7 +372,7 @@ async def test_update_ad_status(
     mock_response.results = []
     result = Mock()
     result.resource_name = f"customers/{customer_id}/adGroupAds/{ad_group_id}~{ad_id}"
-    mock_response.results.append(result)
+    mock_response.results.append(result)  # type: ignore
 
     # Get the mocked ad group ad service client
     mock_ad_group_ad_client = ad_service.client  # type: ignore
@@ -552,10 +552,10 @@ def test_register_ad_tools() -> None:
     assert isinstance(service, AdService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 3  # 3 tools registered
+    assert mock_mcp.tool.call_count == 3  # 3 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

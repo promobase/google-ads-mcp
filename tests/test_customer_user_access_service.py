@@ -27,7 +27,7 @@ def customer_user_access_service(mock_sdk_client: Any) -> CustomerUserAccessServ
     """Create a CustomerUserAccessService instance with mocked dependencies."""
     # Mock CustomerUserAccessService client
     mock_customer_user_access_client = Mock(spec=CustomerUserAccessServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_customer_user_access_client
+    mock_sdk_client.client.get_service.return_value = mock_customer_user_access_client  # type: ignore
 
     with patch(
         "src.sdk_services.account.customer_user_access_service.get_sdk_client",
@@ -59,11 +59,11 @@ async def test_update_user_access(
     # Create mock response
     mock_response = Mock(spec=MutateCustomerUserAccessResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = user_access_resource_name
+    mock_response.result.resource_name = user_access_resource_name  # type: ignore
 
     # Get the mocked customer user access service client
     mock_customer_user_access_client = customer_user_access_service.client  # type: ignore
-    mock_customer_user_access_client.mutate_customer_user_access.return_value = (
+    mock_customer_user_access_client.mutate_customer_user_access.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -117,11 +117,11 @@ async def test_update_user_access_no_changes(
     # Create mock response
     mock_response = Mock(spec=MutateCustomerUserAccessResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = user_access_resource_name
+    mock_response.result.resource_name = user_access_resource_name  # type: ignore
 
     # Get the mocked customer user access service client
     mock_customer_user_access_client = customer_user_access_service.client  # type: ignore
-    mock_customer_user_access_client.mutate_customer_user_access.return_value = (
+    mock_customer_user_access_client.mutate_customer_user_access.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -186,7 +186,7 @@ async def test_list_user_access(
         row.customer_user_access.inviter_user_email_address = "admin@example.com"
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -194,7 +194,7 @@ async def test_list_user_access(
             return mock_google_ads_service
         return customer_user_access_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Mock serialize_proto_message for each user access
     def serialize_side_effect(obj: Any):
@@ -270,11 +270,11 @@ async def test_revoke_user_access(
     # Create mock response
     mock_response = Mock(spec=MutateCustomerUserAccessResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = user_access_resource_name
+    mock_response.result.resource_name = user_access_resource_name  # type: ignore
 
     # Get the mocked customer user access service client
     mock_customer_user_access_client = customer_user_access_service.client  # type: ignore
-    mock_customer_user_access_client.mutate_customer_user_access.return_value = (
+    mock_customer_user_access_client.mutate_customer_user_access.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -329,7 +329,7 @@ async def test_error_handling_update_user_access(
 
     # Get the mocked customer user access service client and make it raise exception
     mock_customer_user_access_client = customer_user_access_service.client  # type: ignore
-    mock_customer_user_access_client.mutate_customer_user_access.side_effect = (
+    mock_customer_user_access_client.mutate_customer_user_access.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -364,7 +364,7 @@ async def test_error_handling_list_user_access(
 
     # Mock GoogleAdsService for search and make it raise exception
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.side_effect = Exception("Search failed")
+    mock_google_ads_service.search.side_effect = Exception("Search failed")  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -372,7 +372,7 @@ async def test_error_handling_list_user_access(
             return mock_google_ads_service
         return customer_user_access_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.account.customer_user_access_service.get_sdk_client",
@@ -409,7 +409,7 @@ async def test_error_handling_revoke_user_access(
 
     # Get the mocked customer user access service client and make it raise exception
     mock_customer_user_access_client = customer_user_access_service.client  # type: ignore
-    mock_customer_user_access_client.mutate_customer_user_access.side_effect = (
+    mock_customer_user_access_client.mutate_customer_user_access.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -443,10 +443,12 @@ def test_register_customer_user_access_tools() -> None:
     assert isinstance(service, CustomerUserAccessService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 3  # 3 tools registered (no grant_user_access)
+    assert (
+        mock_mcp.tool.call_count == 3
+    )  # 3 tools registered (no grant_user_access)  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

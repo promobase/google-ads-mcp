@@ -1,6 +1,7 @@
 """Tests for Google Ads Experiment Arm Service"""
 
 import pytest
+from typing import Any
 from unittest.mock import Mock, patch
 
 from google.ads.googleads.v20.resources.types.experiment_arm import ExperimentArm
@@ -22,7 +23,7 @@ class TestExperimentArmService:
         """Create a mock Google Ads client"""
         client = Mock()
         service = Mock()
-        client.get_service.return_value = service
+        client.get_service.return_value = service  # type: ignore
         return client
 
     @pytest.fixture
@@ -30,7 +31,9 @@ class TestExperimentArmService:
         """Create ExperimentArmService instance with mock client"""
         return ExperimentArmService(mock_client)
 
-    def test_mutate_experiment_arms(self, experiment_arm_service, mock_client):
+    def test_mutate_experiment_arms(
+        self, experiment_arm_service: Any, mock_client: Any
+    ):
         """Test mutating experiment arms"""
         # Setup
         customer_id = "1234567890"
@@ -43,7 +46,7 @@ class TestExperimentArmService:
                 )
             ]
         )
-        mock_client.get_service.return_value.mutate_experiment_arms.return_value = (
+        mock_client.get_service.return_value.mutate_experiment_arms.return_value = (  # type: ignore
             mock_response
         )
 
@@ -57,11 +60,11 @@ class TestExperimentArmService:
 
         # Verify
         assert response == mock_response
-        mock_client.get_service.assert_called_with("ExperimentArmService")
+        mock_client.get_service.assert_called_with("ExperimentArmService")  # type: ignore
 
         # Verify request
         call_args = (
-            mock_client.get_service.return_value.mutate_experiment_arms.call_args
+            mock_client.get_service.return_value.mutate_experiment_arms.call_args  # type: ignore
         )
         request = call_args.kwargs["request"]
         assert request.customer_id == customer_id
@@ -69,7 +72,7 @@ class TestExperimentArmService:
         assert request.partial_failure == True
         assert request.validate_only == False
 
-    def test_create_experiment_arm_operation(self, experiment_arm_service):
+    def test_create_experiment_arm_operation(self, experiment_arm_service: Any):
         """Test creating experiment arm operation for creation"""
         # Setup
         experiment = "customers/1234567890/experiments/123"
@@ -96,7 +99,7 @@ class TestExperimentArmService:
         assert operation.create.campaigns == campaigns
 
     def test_create_experiment_arm_operation_without_campaigns(
-        self, experiment_arm_service
+        self, experiment_arm_service: Any
     ):
         """Test creating experiment arm operation without campaigns"""
         # Setup
@@ -121,7 +124,7 @@ class TestExperimentArmService:
         assert operation.create.traffic_split == traffic_split
         assert operation.create.campaigns == []
 
-    def test_update_experiment_arm_operation(self, experiment_arm_service):
+    def test_update_experiment_arm_operation(self, experiment_arm_service: Any):
         """Test creating experiment arm operation for update"""
         # Setup
         resource_name = "customers/1234567890/experimentArms/123~456"
@@ -149,7 +152,7 @@ class TestExperimentArmService:
             "campaigns",
         }
 
-    def test_update_experiment_arm_operation_partial(self, experiment_arm_service):
+    def test_update_experiment_arm_operation_partial(self, experiment_arm_service: Any):
         """Test creating experiment arm operation for partial update"""
         # Setup
         resource_name = "customers/1234567890/experimentArms/123~456"
@@ -166,7 +169,7 @@ class TestExperimentArmService:
         assert operation.update.name == name
         assert operation.update_mask.paths == ["name"]
 
-    def test_remove_experiment_arm_operation(self, experiment_arm_service):
+    def test_remove_experiment_arm_operation(self, experiment_arm_service: Any):
         """Test creating experiment arm operation for removal"""
         # Setup
         resource_name = "customers/1234567890/experimentArms/123~456"

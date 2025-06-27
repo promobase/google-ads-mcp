@@ -1,6 +1,7 @@
 """Tests for Customer Manager Link service."""
 
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
+from typing import Any
 
 import pytest
 from google.ads.googleads.errors import GoogleAdsException
@@ -48,7 +49,7 @@ class TestCustomerManagerLinkService:
     """Test cases for CustomerManagerLinkService."""
 
     async def test_update_manager_link_status_accept(
-        self, customer_manager_link_service, mock_context, mock_client
+        self, customer_manager_link_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test accepting a manager invitation."""
         # Mock the client
@@ -61,9 +62,9 @@ class TestCustomerManagerLinkService:
         )
 
         mock_response = MutateCustomerManagerLinkResponse()
-        mock_response.results.append(mock_result)
+        mock_response.results.append(mock_result)  # type: ignore
 
-        mock_client.mutate_customer_manager_link.return_value = mock_response
+        mock_client.mutate_customer_manager_link.return_value = mock_response  # type: ignore
 
         # Execute
         result = await customer_manager_link_service.update_manager_link_status(
@@ -75,7 +76,7 @@ class TestCustomerManagerLinkService:
         )
 
         # Verify request
-        request = mock_client.mutate_customer_manager_link.call_args[1]["request"]
+        request = mock_client.mutate_customer_manager_link.call_args[1]["request"]  # type: ignore
         assert request.customer_id == "1234567890"
         assert len(request.operations) == 1
         assert request.validate_only is False
@@ -88,13 +89,13 @@ class TestCustomerManagerLinkService:
         assert list(operation.update_mask.paths) == ["status"]
 
         # Verify logging
-        mock_context.log.assert_called_with(
+        mock_context.log.assert_called_with(  # type: ignore
             level="info",
             message="Updated manager link status to ACTIVE for customer 1234567890",
         )
 
     async def test_update_manager_link_status_refuse(
-        self, customer_manager_link_service, mock_context, mock_client
+        self, customer_manager_link_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test declining a manager invitation."""
         customer_manager_link_service._client = mock_client
@@ -105,9 +106,9 @@ class TestCustomerManagerLinkService:
         )
 
         mock_response = MutateCustomerManagerLinkResponse()
-        mock_response.results.append(mock_result)
+        mock_response.results.append(mock_result)  # type: ignore
 
-        mock_client.mutate_customer_manager_link.return_value = mock_response
+        mock_client.mutate_customer_manager_link.return_value = mock_response  # type: ignore
 
         result = await customer_manager_link_service.update_manager_link_status(
             ctx=mock_context,
@@ -118,14 +119,14 @@ class TestCustomerManagerLinkService:
             validate_only=True,
         )
 
-        request = mock_client.mutate_customer_manager_link.call_args[1]["request"]
+        request = mock_client.mutate_customer_manager_link.call_args[1]["request"]  # type: ignore
         assert request.validate_only is True
         assert request.operations[0].update.status == (
             ManagerLinkStatusEnum.ManagerLinkStatus.REFUSED
         )
 
     async def test_update_manager_link_status_terminate(
-        self, customer_manager_link_service, mock_context, mock_client
+        self, customer_manager_link_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test terminating a manager link."""
         customer_manager_link_service._client = mock_client
@@ -136,9 +137,9 @@ class TestCustomerManagerLinkService:
         )
 
         mock_response = MutateCustomerManagerLinkResponse()
-        mock_response.results.append(mock_result)
+        mock_response.results.append(mock_result)  # type: ignore
 
-        mock_client.mutate_customer_manager_link.return_value = mock_response
+        mock_client.mutate_customer_manager_link.return_value = mock_response  # type: ignore
 
         result = await customer_manager_link_service.update_manager_link_status(
             ctx=mock_context,
@@ -148,13 +149,13 @@ class TestCustomerManagerLinkService:
             status=ManagerLinkStatusEnum.ManagerLinkStatus.INACTIVE,
         )
 
-        request = mock_client.mutate_customer_manager_link.call_args[1]["request"]
+        request = mock_client.mutate_customer_manager_link.call_args[1]["request"]  # type: ignore
         assert request.operations[0].update.status == (
             ManagerLinkStatusEnum.ManagerLinkStatus.INACTIVE
         )
 
     async def test_move_manager_link_success(
-        self, customer_manager_link_service, mock_context, mock_client
+        self, customer_manager_link_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test moving a client to a new manager."""
         customer_manager_link_service._client = mock_client
@@ -165,7 +166,7 @@ class TestCustomerManagerLinkService:
             "customers/1234567890/customerManagerLinks/5555555555~456"
         )
 
-        mock_client.move_manager_link.return_value = mock_response
+        mock_client.move_manager_link.return_value = mock_response  # type: ignore
 
         # Execute
         result = await customer_manager_link_service.move_manager_link(
@@ -177,7 +178,7 @@ class TestCustomerManagerLinkService:
         )
 
         # Verify request
-        request = mock_client.move_manager_link.call_args[1]["request"]
+        request = mock_client.move_manager_link.call_args[1]["request"]  # type: ignore
         assert request.customer_id == "1234567890"
         assert request.previous_customer_manager_link == (
             "customers/1234567890/customerManagerLinks/9876543210~123"
@@ -186,13 +187,13 @@ class TestCustomerManagerLinkService:
         assert request.validate_only is False
 
         # Verify logging
-        mock_context.log.assert_called_with(
+        mock_context.log.assert_called_with(  # type: ignore
             level="info",
             message=("Moved customer 1234567890 from manager 9876543210 to 5555555555"),
         )
 
     async def test_update_manager_link_api_error(
-        self, customer_manager_link_service, mock_context, mock_client
+        self, customer_manager_link_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test update with API error."""
         customer_manager_link_service._client = mock_client
@@ -201,7 +202,7 @@ class TestCustomerManagerLinkService:
         error = GoogleAdsException(None, None, None, None)
         error.failure = Mock()
         error.failure.__str__ = Mock(return_value="Permission denied")
-        mock_client.mutate_customer_manager_link.side_effect = error
+        mock_client.mutate_customer_manager_link.side_effect = error  # type: ignore
 
         with pytest.raises(Exception) as exc_info:
             await customer_manager_link_service.update_manager_link_status(
@@ -215,11 +216,11 @@ class TestCustomerManagerLinkService:
         assert "Google Ads API error: Permission denied" in str(exc_info.value)
 
     async def test_move_manager_link_general_error(
-        self, customer_manager_link_service, mock_context, mock_client
+        self, customer_manager_link_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test move with general error."""
         customer_manager_link_service._client = mock_client
-        mock_client.move_manager_link.side_effect = Exception("Network error")
+        mock_client.move_manager_link.side_effect = Exception("Network error")  # type: ignore
 
         with pytest.raises(Exception) as exc_info:
             await customer_manager_link_service.move_manager_link(
@@ -237,7 +238,7 @@ class TestCustomerManagerLinkService:
 class TestCustomerManagerLinkTools:
     """Test cases for Customer Manager Link tool functions."""
 
-    async def test_accept_manager_invitation_tool(self, mock_context):
+    async def test_accept_manager_invitation_tool(self, mock_context: Any):
         """Test accept_manager_invitation tool function."""
         service = CustomerManagerLinkService()
         tools = create_customer_manager_link_tools(service)
@@ -245,7 +246,7 @@ class TestCustomerManagerLinkTools:
 
         # Mock the service method
         with patch.object(service, "update_manager_link_status") as mock_update:
-            mock_update.return_value = {"results": [{"resource_name": "test"}]}
+            mock_update.return_value = {"results": [{"resource_name": "test"}]}  # type: ignore
 
             await accept_tool(
                 ctx=mock_context,
@@ -254,7 +255,7 @@ class TestCustomerManagerLinkTools:
                 manager_link_id=123,
             )
 
-            mock_update.assert_called_once_with(
+            mock_update.assert_called_once_with(  # type: ignore
                 ctx=mock_context,
                 customer_id="1234567890",
                 manager_customer_id="9876543210",
@@ -263,14 +264,14 @@ class TestCustomerManagerLinkTools:
                 validate_only=False,
             )
 
-    async def test_decline_manager_invitation_tool(self, mock_context):
+    async def test_decline_manager_invitation_tool(self, mock_context: Any):
         """Test decline_manager_invitation tool function."""
         service = CustomerManagerLinkService()
         tools = create_customer_manager_link_tools(service)
         decline_tool = tools[1]  # Second tool is decline_manager_invitation
 
         with patch.object(service, "update_manager_link_status") as mock_update:
-            mock_update.return_value = {"results": [{"resource_name": "test"}]}
+            mock_update.return_value = {"results": [{"resource_name": "test"}]}  # type: ignore
 
             await decline_tool(
                 ctx=mock_context,
@@ -280,7 +281,7 @@ class TestCustomerManagerLinkTools:
                 validate_only=True,
             )
 
-            mock_update.assert_called_once_with(
+            mock_update.assert_called_once_with(  # type: ignore
                 ctx=mock_context,
                 customer_id="1234567890",
                 manager_customer_id="9876543210",
@@ -289,14 +290,14 @@ class TestCustomerManagerLinkTools:
                 validate_only=True,
             )
 
-    async def test_terminate_manager_link_tool(self, mock_context):
+    async def test_terminate_manager_link_tool(self, mock_context: Any):
         """Test terminate_manager_link tool function."""
         service = CustomerManagerLinkService()
         tools = create_customer_manager_link_tools(service)
         terminate_tool = tools[2]  # Third tool is terminate_manager_link
 
         with patch.object(service, "update_manager_link_status") as mock_update:
-            mock_update.return_value = {"results": [{"resource_name": "test"}]}
+            mock_update.return_value = {"results": [{"resource_name": "test"}]}  # type: ignore
 
             await terminate_tool(
                 ctx=mock_context,
@@ -305,7 +306,7 @@ class TestCustomerManagerLinkTools:
                 manager_link_id=123,
             )
 
-            mock_update.assert_called_once_with(
+            mock_update.assert_called_once_with(  # type: ignore
                 ctx=mock_context,
                 customer_id="1234567890",
                 manager_customer_id="9876543210",
@@ -314,14 +315,14 @@ class TestCustomerManagerLinkTools:
                 validate_only=False,
             )
 
-    async def test_move_client_to_new_manager_tool(self, mock_context):
+    async def test_move_client_to_new_manager_tool(self, mock_context: Any):
         """Test move_client_to_new_manager tool function."""
         service = CustomerManagerLinkService()
         tools = create_customer_manager_link_tools(service)
         move_tool = tools[3]  # Fourth tool is move_client_to_new_manager
 
         with patch.object(service, "move_manager_link") as mock_move:
-            mock_move.return_value = {"resource_name": "new_link"}
+            mock_move.return_value = {"resource_name": "new_link"}  # type: ignore
 
             await move_tool(
                 ctx=mock_context,
@@ -331,7 +332,7 @@ class TestCustomerManagerLinkTools:
                 new_manager_customer_id="5555555555",
             )
 
-            mock_move.assert_called_once_with(
+            mock_move.assert_called_once_with(  # type: ignore
                 ctx=mock_context,
                 customer_id="1234567890",
                 previous_manager_customer_id="9876543210",

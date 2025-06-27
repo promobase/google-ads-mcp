@@ -24,7 +24,7 @@ def invoice_service(mock_sdk_client: Any) -> InvoiceService:
     """Create an InvoiceService instance with mocked dependencies."""
     # Mock InvoiceService client
     mock_invoice_client = Mock(spec=InvoiceServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_invoice_client
+    mock_sdk_client.client.get_service.return_value = mock_invoice_client  # type: ignore
 
     with patch(
         "src.sdk_services.account.invoice_service.get_sdk_client",
@@ -487,10 +487,10 @@ def test_register_invoice_tools() -> None:
     assert isinstance(service, InvoiceService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 1  # Only 1 tool (list_invoices)
+    assert mock_mcp.tool.call_count == 1  # Only 1 tool (list_invoices)  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = ["list_invoices"]

@@ -26,7 +26,7 @@ def budget_service(mock_sdk_client: Any) -> BudgetService:
     """Create a BudgetService instance with mocked dependencies."""
     # Mock BudgetService client
     mock_budget_client = Mock(spec=CampaignBudgetServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_budget_client
+    mock_sdk_client.client.get_service.return_value = mock_budget_client  # type: ignore
 
     with patch(
         "src.sdk_services.bidding.budget_service.get_sdk_client",
@@ -293,10 +293,10 @@ def test_register_budget_tools() -> None:
     assert isinstance(service, BudgetService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 2  # 2 tools registered
+    assert mock_mcp.tool.call_count == 2  # 2 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

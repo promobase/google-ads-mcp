@@ -35,7 +35,7 @@ def custom_audience_service(mock_sdk_client: Any) -> CustomAudienceService:
     """Create a CustomAudienceService instance with mocked dependencies."""
     # Mock CustomAudienceService client
     mock_custom_client = Mock(spec=CustomAudienceServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_custom_client
+    mock_sdk_client.client.get_service.return_value = mock_custom_client  # type: ignore
 
     with patch(
         "src.sdk_services.audiences.custom_audience_service.get_sdk_client",
@@ -423,7 +423,7 @@ async def test_list_custom_audiences(
         )
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Mock serialize_proto_message
     def mock_serialize(obj):
@@ -435,7 +435,7 @@ async def test_list_custom_audiences(
             return mock_google_ads_service
         return custom_audience_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with (
         patch(
@@ -491,14 +491,14 @@ async def test_get_custom_audience_details(
     # Create mock search result
     mock_row = Mock()
     mock_row.custom_audience = Mock()
-    mock_row.custom_audience.id = custom_audience_id
-    mock_row.custom_audience.name = "Tech Enthusiasts"
-    mock_row.custom_audience.description = "Technology interested users"
-    mock_row.custom_audience.type = CustomAudienceTypeEnum.CustomAudienceType.AUTO
-    mock_row.custom_audience.status = (
+    mock_row.custom_audience.id = custom_audience_id  # type: ignore
+    mock_row.custom_audience.name = "Tech Enthusiasts"  # type: ignore
+    mock_row.custom_audience.description = "Technology interested users"  # type: ignore
+    mock_row.custom_audience.type = CustomAudienceTypeEnum.CustomAudienceType.AUTO  # type: ignore
+    mock_row.custom_audience.status = (  # type: ignore
         CustomAudienceStatusEnum.CustomAudienceStatus.ENABLED
     )
-    mock_row.custom_audience.resource_name = (
+    mock_row.custom_audience.resource_name = (  # type: ignore
         f"customers/{customer_id}/customAudiences/{custom_audience_id}"
     )
 
@@ -511,11 +511,11 @@ async def test_get_custom_audience_details(
     member2.member_type = CustomAudienceMemberTypeEnum.CustomAudienceMemberType.URL
     member2.url = "techcrunch.com"
 
-    mock_row.custom_audience.members = [member1, member2]
+    mock_row.custom_audience.members = [member1, member2]  # type: ignore
 
     mock_response = Mock()
     mock_response.__iter__ = Mock(return_value=iter([mock_row]))
-    mock_google_ads_service.search.return_value = mock_response
+    mock_google_ads_service.search.return_value = mock_response  # type: ignore
 
     # Mock serialize_proto_message
     expected_result = {
@@ -535,7 +535,7 @@ async def test_get_custom_audience_details(
             return mock_google_ads_service
         return custom_audience_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with (
         patch(
@@ -622,10 +622,10 @@ def test_register_custom_audience_tools() -> None:
     assert isinstance(service, CustomAudienceService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

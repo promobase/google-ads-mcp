@@ -30,7 +30,7 @@ def campaign_shared_set_service(mock_sdk_client: Any) -> CampaignSharedSetServic
     """Create a CampaignSharedSetService instance with mocked dependencies."""
     # Mock CampaignSharedSetService client
     mock_shared_set_client = Mock(spec=CampaignSharedSetServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_shared_set_client
+    mock_sdk_client.client.get_service.return_value = mock_shared_set_client  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.campaign_shared_set_service.get_sdk_client",
@@ -333,7 +333,7 @@ async def test_list_campaign_shared_sets(
 
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Mock serialize_proto_message
     def mock_serialize(obj):
@@ -345,7 +345,7 @@ async def test_list_campaign_shared_sets(
             return mock_google_ads_service
         return campaign_shared_set_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with (
         patch(
@@ -484,7 +484,7 @@ async def test_get_campaigns_using_shared_set(
 
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Mock serialize_proto_message
     def mock_serialize(obj):
@@ -499,7 +499,7 @@ async def test_get_campaigns_using_shared_set(
             return mock_google_ads_service
         return campaign_shared_set_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with (
         patch(
@@ -552,7 +552,7 @@ async def test_error_handling_attach_shared_set(
 
     # Get the mocked shared set service client and make it raise exception
     mock_shared_set_client = campaign_shared_set_service.client  # type: ignore
-    mock_shared_set_client.mutate_campaign_shared_sets.side_effect = (
+    mock_shared_set_client.mutate_campaign_shared_sets.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -588,10 +588,10 @@ def test_register_campaign_shared_set_tools() -> None:
     assert isinstance(service, CampaignSharedSetService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 6  # 6 tools registered
+    assert mock_mcp.tool.call_count == 6  # 6 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

@@ -32,7 +32,7 @@ def bidding_strategy_service(mock_sdk_client: Any) -> BiddingStrategyService:
     """Create a BiddingStrategyService instance with mocked dependencies."""
     # Mock BiddingStrategyService client
     mock_bidding_strategy_client = Mock(spec=BiddingStrategyServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_bidding_strategy_client
+    mock_sdk_client.client.get_service.return_value = mock_bidding_strategy_client  # type: ignore
 
     with patch(
         "src.sdk_services.bidding.bidding_strategy_service.get_sdk_client",
@@ -410,7 +410,7 @@ async def test_error_handling(
 
     # Get the mocked bidding strategy service client and make it raise exception
     mock_bidding_strategy_client = bidding_strategy_service.client  # type: ignore
-    mock_bidding_strategy_client.mutate_bidding_strategies.side_effect = (  # pyright: ignore
+    mock_bidding_strategy_client.mutate_bidding_strategies.side_effect = (  # pyright: ignore  # type: ignore
         google_ads_exception
     )
 
@@ -445,10 +445,10 @@ def test_register_bidding_strategy_tools() -> None:
     assert isinstance(service, BiddingStrategyService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

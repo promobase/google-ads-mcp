@@ -23,7 +23,7 @@ def keyword_plan_idea_service(mock_sdk_client: Any) -> KeywordPlanIdeaService:
     """Create a KeywordPlanIdeaService instance with mocked dependencies."""
     # Mock KeywordPlanIdeaService client
     mock_idea_client = Mock(spec=KeywordPlanIdeaServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_idea_client
+    mock_sdk_client.client.get_service.return_value = mock_idea_client  # type: ignore
 
     with patch(
         "src.sdk_services.planning.keyword_plan_idea_service.get_sdk_client",
@@ -384,10 +384,10 @@ def test_register_keyword_plan_idea_tools() -> None:
     assert isinstance(service, KeywordPlanIdeaService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

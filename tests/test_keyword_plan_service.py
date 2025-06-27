@@ -29,7 +29,7 @@ def keyword_plan_service(mock_sdk_client: Any) -> KeywordPlanService:
     """Create a KeywordPlanService instance with mocked dependencies."""
     # Mock KeywordPlanService client
     mock_keyword_plan_client = Mock(spec=KeywordPlanServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_keyword_plan_client
+    mock_sdk_client.client.get_service.return_value = mock_keyword_plan_client  # type: ignore
 
     with patch(
         "src.sdk_services.planning.keyword_plan_service.get_sdk_client",
@@ -134,14 +134,14 @@ async def test_get_keyword_ideas(
         idea.keyword_idea_metrics.high_top_of_page_bid_micros = 1000000 * (i + 1)
         mock_ideas.append(idea)
 
-    mock_idea_service.generate_keyword_ideas.return_value = mock_ideas
+    mock_idea_service.generate_keyword_ideas.return_value = mock_ideas  # type: ignore
 
     def get_service_side_effect(service_name: str):
         if service_name == "KeywordPlanIdeaService":
             return mock_idea_service
         return keyword_plan_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Mock serialize_proto_message to return the same structure
     def serialize_side_effect(obj: Any) -> Dict[str, Any]:
@@ -222,14 +222,14 @@ async def test_create_keyword_plan_campaign(
     mock_response.results[
         0
     ].resource_name = f"customers/{customer_id}/keywordPlanCampaigns/456"
-    mock_campaign_service.mutate_keyword_plan_campaigns.return_value = mock_response
+    mock_campaign_service.mutate_keyword_plan_campaigns.return_value = mock_response  # type: ignore
 
     def get_service_side_effect(service_name: str):
         if service_name == "KeywordPlanCampaignService":
             return mock_campaign_service
         return keyword_plan_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Mock serialize_proto_message
     expected_result = {
@@ -318,8 +318,8 @@ async def test_add_keywords_to_plan(
         result.resource_name = (
             f"customers/{customer_id}/keywordPlanAdGroupKeywords/{i + 1000}"
         )
-        mock_response.results.append(result)
-    mock_keyword_service.mutate_keyword_plan_ad_group_keywords.return_value = (
+        mock_response.results.append(result)  # type: ignore
+    mock_keyword_service.mutate_keyword_plan_ad_group_keywords.return_value = (  # type: ignore
         mock_response
     )
 
@@ -328,7 +328,7 @@ async def test_add_keywords_to_plan(
             return mock_keyword_service
         return keyword_plan_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.planning.keyword_plan_service.get_sdk_client",
@@ -430,10 +430,10 @@ def test_register_keyword_plan_tools() -> None:
     assert isinstance(service, KeywordPlanService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

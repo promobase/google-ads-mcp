@@ -245,7 +245,7 @@ def register_customer_asset_tools(mcp: FastMCP[Any]) -> None:
     """Register customer asset tools with the MCP server."""
 
     @mcp.tool
-    async def mutate_customer_assets(
+    async def mutate_customer_assets(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         operations: list[dict[str, Any]],
         partial_failure: bool = False,
@@ -321,7 +321,7 @@ def register_customer_asset_tools(mcp: FastMCP[Any]) -> None:
         # Format response
         results = []
         for result in response.results:
-            result_data = {
+            result_data: dict[str, Any] = {
                 "resource_name": result.resource_name,
             }
             if result.customer_asset:
@@ -351,7 +351,7 @@ def register_customer_asset_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def create_customer_asset(
+    async def create_customer_asset(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         asset: str,
         field_type: str,
@@ -394,7 +394,7 @@ def register_customer_asset_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def update_customer_asset_status(
+    async def update_customer_asset_status(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         resource_name: str,
         status: str,
@@ -431,7 +431,7 @@ def register_customer_asset_tools(mcp: FastMCP[Any]) -> None:
         }
 
     @mcp.tool
-    async def remove_customer_asset(
+    async def remove_customer_asset(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         resource_name: str,
         validate_only: bool = False,

@@ -35,7 +35,7 @@ def custom_interest_service(mock_sdk_client: Any) -> CustomInterestService:
     """Create a CustomInterestService instance with mocked dependencies."""
     # Mock CustomInterestService client
     mock_custom_client = Mock(spec=CustomInterestServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_custom_client
+    mock_sdk_client.client.get_service.return_value = mock_custom_client  # type: ignore
 
     with patch(
         "src.sdk_services.audiences.custom_interest_service.get_sdk_client",
@@ -418,7 +418,7 @@ async def test_list_custom_interests(
         )
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Mock serialize_proto_message
     def mock_serialize(obj):
@@ -430,7 +430,7 @@ async def test_list_custom_interests(
             return mock_google_ads_service
         return custom_interest_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with (
         patch(
@@ -486,16 +486,16 @@ async def test_get_custom_interest_details(
     # Create mock search result
     mock_row = Mock()
     mock_row.custom_interest = Mock()
-    mock_row.custom_interest.id = custom_interest_id
-    mock_row.custom_interest.name = "Tech Enthusiasts"
-    mock_row.custom_interest.description = "Technology interested users"
-    mock_row.custom_interest.type = (
+    mock_row.custom_interest.id = custom_interest_id  # type: ignore
+    mock_row.custom_interest.name = "Tech Enthusiasts"  # type: ignore
+    mock_row.custom_interest.description = "Technology interested users"  # type: ignore
+    mock_row.custom_interest.type = (  # type: ignore
         CustomInterestTypeEnum.CustomInterestType.CUSTOM_AFFINITY
     )
-    mock_row.custom_interest.status = (
+    mock_row.custom_interest.status = (  # type: ignore
         CustomInterestStatusEnum.CustomInterestStatus.ENABLED
     )
-    mock_row.custom_interest.resource_name = (
+    mock_row.custom_interest.resource_name = (  # type: ignore
         f"customers/{customer_id}/customInterests/{custom_interest_id}"
     )
 
@@ -510,11 +510,11 @@ async def test_get_custom_interest_details(
     member2.parameter = "techcrunch.com"
     member2.HasField = Mock(side_effect=lambda x: x == "parameter")
 
-    mock_row.custom_interest.members = [member1, member2]
+    mock_row.custom_interest.members = [member1, member2]  # type: ignore
 
     mock_response = Mock()
     mock_response.__iter__ = Mock(return_value=iter([mock_row]))
-    mock_google_ads_service.search.return_value = mock_response
+    mock_google_ads_service.search.return_value = mock_response  # type: ignore
 
     # Mock serialize_proto_message
     expected_result = {
@@ -534,7 +534,7 @@ async def test_get_custom_interest_details(
             return mock_google_ads_service
         return custom_interest_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with (
         patch(
@@ -621,10 +621,10 @@ def test_register_custom_interest_tools() -> None:
     assert isinstance(service, CustomInterestService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

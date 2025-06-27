@@ -23,7 +23,7 @@ def user_data_service(mock_sdk_client: Any) -> UserDataService:
     """Create a UserDataService instance with mocked dependencies."""
     # Mock UserDataService client
     mock_user_data_client = Mock(spec=UserDataServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_user_data_client
+    mock_sdk_client.client.get_service.return_value = mock_user_data_client  # type: ignore
 
     with patch(
         "src.sdk_services.data_import.user_data_service.get_sdk_client",
@@ -356,7 +356,7 @@ async def test_partial_failure_error(
     mock_response.received_operations_count = 1
     mock_response.upload_date_time = "2024-01-20 15:00:00"
     mock_response.partial_failure_error = Mock()
-    mock_response.partial_failure_error.__str__ = Mock(
+    mock_response.partial_failure_error.__str__ = Mock(  # type: ignore
         return_value="Partial failure: Invalid email format"
     )
 
@@ -421,10 +421,10 @@ def test_register_user_data_tools() -> None:
     assert isinstance(service, UserDataService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 3  # 3 tools registered
+    assert mock_mcp.tool.call_count == 3  # 3 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

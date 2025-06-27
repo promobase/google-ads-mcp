@@ -30,7 +30,7 @@ def audience_insights_service(mock_sdk_client: Any) -> AudienceInsightsService:
     """Create an AudienceInsightsService instance with mocked dependencies."""
     # Mock AudienceInsightsService client
     mock_insights_client = Mock(spec=AudienceInsightsServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_insights_client
+    mock_sdk_client.client.get_service.return_value = mock_insights_client  # type: ignore
 
     with patch(
         "src.sdk_services.audiences.audience_insights_service.get_sdk_client",
@@ -226,7 +226,7 @@ async def test_generate_audience_composition_insights(
 
     # Get the mocked insights service client
     mock_insights_client = audience_insights_service.client  # type: ignore
-    mock_insights_client.generate_audience_composition_insights.return_value = (
+    mock_insights_client.generate_audience_composition_insights.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -306,7 +306,7 @@ async def test_generate_audience_composition_insights_with_attribute_groups(
 
     # Get the mocked insights service client
     mock_insights_client = audience_insights_service.client  # type: ignore
-    mock_insights_client.generate_audience_composition_insights.return_value = (
+    mock_insights_client.generate_audience_composition_insights.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -357,21 +357,21 @@ async def test_generate_suggested_targeting_insights(
     # Mock suggestions
     mock_suggestion1 = Mock()
     mock_suggestion1.user_interest = Mock()
-    mock_suggestion1.user_interest.user_interest_category = (
+    mock_suggestion1.user_interest.user_interest_category = (  # type: ignore
         "customers/1234567890/userInterests/99999"
     )
-    mock_suggestion1.user_interest.user_interest_name = "Technology Enthusiasts"
+    mock_suggestion1.user_interest.user_interest_name = "Technology Enthusiasts"  # type: ignore
     mock_suggestion2 = Mock()
     mock_suggestion2.user_interest = Mock()
-    mock_suggestion2.user_interest.user_interest_category = (
+    mock_suggestion2.user_interest.user_interest_category = (  # type: ignore
         "customers/1234567890/userInterests/88888"
     )
-    mock_suggestion2.user_interest.user_interest_name = "Online Shoppers"
+    mock_suggestion2.user_interest.user_interest_name = "Online Shoppers"  # type: ignore
     mock_response.suggestions = [mock_suggestion1, mock_suggestion2]
 
     # Get the mocked insights service client
     mock_insights_client = audience_insights_service.client  # type: ignore
-    mock_insights_client.generate_suggested_targeting_insights.return_value = (
+    mock_insights_client.generate_suggested_targeting_insights.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -449,7 +449,7 @@ async def test_generate_suggested_targeting_insights_minimal(
 
     # Get the mocked insights service client
     mock_insights_client = audience_insights_service.client  # type: ignore
-    mock_insights_client.generate_suggested_targeting_insights.return_value = (
+    mock_insights_client.generate_suggested_targeting_insights.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -501,7 +501,7 @@ async def test_error_handling_generate_insights_finder_report(
 
     # Get the mocked insights service client and make it raise exception
     mock_insights_client = audience_insights_service.client  # type: ignore
-    mock_insights_client.generate_insights_finder_report.side_effect = (
+    mock_insights_client.generate_insights_finder_report.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -537,10 +537,10 @@ def test_register_audience_insights_tools() -> None:
     assert isinstance(service, AudienceInsightsService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 3  # 3 tools registered
+    assert mock_mcp.tool.call_count == 3  # 3 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

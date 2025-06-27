@@ -20,7 +20,6 @@ from google.ads.googleads.v20.services.types.google_ads_service import (
     MutateOperation,
     MutateOperationResponse,
     SearchGoogleAdsRequest,
-    SearchGoogleAdsResponse,
     SearchGoogleAdsStreamRequest,
     SearchGoogleAdsStreamResponse,
 )

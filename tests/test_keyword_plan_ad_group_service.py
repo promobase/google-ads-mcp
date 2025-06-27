@@ -1,6 +1,7 @@
 """Tests for Google Ads Keyword Plan Ad Group Service"""
 
 import pytest
+from typing import Any
 from unittest.mock import Mock, patch
 
 from google.ads.googleads.v20.resources.types.keyword_plan_ad_group import (
@@ -26,7 +27,7 @@ class TestKeywordPlanAdGroupService:
         """Create a mock Google Ads client"""
         client = Mock()
         service = Mock()
-        client.get_service.return_value = service
+        client.get_service.return_value = service  # type: ignore
         return client
 
     @pytest.fixture
@@ -35,7 +36,7 @@ class TestKeywordPlanAdGroupService:
         return KeywordPlanAdGroupService(mock_client)
 
     def test_mutate_keyword_plan_ad_groups(
-        self, keyword_plan_ad_group_service, mock_client
+        self, keyword_plan_ad_group_service: Any, mock_client: Any
     ):
         """Test mutating keyword plan ad groups"""
         # Setup
@@ -49,7 +50,7 @@ class TestKeywordPlanAdGroupService:
                 )
             ]
         )
-        mock_client.get_service.return_value.mutate_keyword_plan_ad_groups.return_value = mock_response
+        mock_client.get_service.return_value.mutate_keyword_plan_ad_groups.return_value = mock_response  # type: ignore
 
         # Execute
         response = keyword_plan_ad_group_service.mutate_keyword_plan_ad_groups(
@@ -61,11 +62,11 @@ class TestKeywordPlanAdGroupService:
 
         # Verify
         assert response == mock_response
-        mock_client.get_service.assert_called_with("KeywordPlanAdGroupService")
+        mock_client.get_service.assert_called_with("KeywordPlanAdGroupService")  # type: ignore
 
         # Verify request
         call_args = (
-            mock_client.get_service.return_value.mutate_keyword_plan_ad_groups.call_args
+            mock_client.get_service.return_value.mutate_keyword_plan_ad_groups.call_args  # type: ignore
         )
         request = call_args.kwargs["request"]
         assert request.customer_id == customer_id
@@ -74,7 +75,7 @@ class TestKeywordPlanAdGroupService:
         assert request.validate_only == False
 
     def test_create_keyword_plan_ad_group_operation(
-        self, keyword_plan_ad_group_service
+        self, keyword_plan_ad_group_service: Any
     ):
         """Test creating keyword plan ad group operation for creation"""
         # Setup
@@ -98,7 +99,7 @@ class TestKeywordPlanAdGroupService:
         assert operation.create.cpc_bid_micros == cpc_bid_micros
 
     def test_create_keyword_plan_ad_group_operation_without_bid(
-        self, keyword_plan_ad_group_service
+        self, keyword_plan_ad_group_service: Any
     ):
         """Test creating keyword plan ad group operation without CPC bid"""
         # Setup
@@ -119,7 +120,7 @@ class TestKeywordPlanAdGroupService:
         # cpc_bid_micros should not be set when not provided
 
     def test_update_keyword_plan_ad_group_operation(
-        self, keyword_plan_ad_group_service
+        self, keyword_plan_ad_group_service: Any
     ):
         """Test creating keyword plan ad group operation for update"""
         # Setup
@@ -142,7 +143,7 @@ class TestKeywordPlanAdGroupService:
         assert set(operation.update_mask.paths) == {"name", "cpc_bid_micros"}
 
     def test_update_keyword_plan_ad_group_operation_partial(
-        self, keyword_plan_ad_group_service
+        self, keyword_plan_ad_group_service: Any
     ):
         """Test creating keyword plan ad group operation for partial update"""
         # Setup
@@ -163,7 +164,7 @@ class TestKeywordPlanAdGroupService:
         assert operation.update_mask.paths == ["name"]
 
     def test_remove_keyword_plan_ad_group_operation(
-        self, keyword_plan_ad_group_service
+        self, keyword_plan_ad_group_service: Any
     ):
         """Test creating keyword plan ad group operation for removal"""
         # Setup

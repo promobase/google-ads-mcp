@@ -29,7 +29,7 @@ def keyword_service(mock_sdk_client: Any) -> KeywordService:
     """Create a KeywordService instance with mocked dependencies."""
     # Mock AdGroupCriterionService client
     mock_criterion_service_client = Mock(spec=AdGroupCriterionServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_criterion_service_client
+    mock_sdk_client.client.get_service.return_value = mock_criterion_service_client  # type: ignore
 
     with patch(
         "src.sdk_services.ad_group.keyword_service.get_sdk_client",
@@ -66,7 +66,7 @@ async def test_add_keywords(
         result.resource_name = (
             f"customers/{customer_id}/adGroupCriteria/{ad_group_id}~{i + 1000}"
         )
-        mock_response.results.append(result)
+        mock_response.results.append(result)  # type: ignore
 
     # Get the mocked criterion service client
     mock_criterion_service_client = keyword_service.client  # type: ignore
@@ -312,7 +312,7 @@ async def test_add_keywords_without_bids(
         result.resource_name = (
             f"customers/{customer_id}/adGroupCriteria/{ad_group_id}~{i + 1000}"
         )
-        mock_response.results.append(result)
+        mock_response.results.append(result)  # type: ignore
 
     # Get the mocked criterion service client
     mock_criterion_service_client = keyword_service.client  # type: ignore
@@ -436,7 +436,7 @@ async def test_error_handling(
 
     # Get the mocked criterion service client and make it raise exception
     mock_criterion_service_client = keyword_service.client  # type: ignore
-    mock_criterion_service_client.mutate_ad_group_criteria.side_effect = (  # pyright: ignore
+    mock_criterion_service_client.mutate_ad_group_criteria.side_effect = (  # pyright: ignore  # type: ignore
         google_ads_exception
     )
 
@@ -474,7 +474,7 @@ async def test_update_keyword_bid_error_handling(
 
     # Get the mocked criterion service client and make it raise exception
     mock_criterion_service_client = keyword_service.client  # type: ignore
-    mock_criterion_service_client.mutate_ad_group_criteria.side_effect = (  # pyright: ignore
+    mock_criterion_service_client.mutate_ad_group_criteria.side_effect = (  # pyright: ignore  # type: ignore
         google_ads_exception
     )
 
@@ -507,7 +507,7 @@ async def test_remove_keyword_error_handling(
 
     # Get the mocked criterion service client and make it raise exception
     mock_criterion_service_client = keyword_service.client  # type: ignore
-    mock_criterion_service_client.mutate_ad_group_criteria.side_effect = (  # pyright: ignore
+    mock_criterion_service_client.mutate_ad_group_criteria.side_effect = (  # pyright: ignore  # type: ignore
         google_ads_exception
     )
 
@@ -536,10 +536,10 @@ def test_register_keyword_tools() -> None:
     assert isinstance(service, KeywordService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 3  # 3 tools registered
+    assert mock_mcp.tool.call_count == 3  # 3 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

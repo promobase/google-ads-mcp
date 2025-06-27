@@ -30,7 +30,7 @@ def billing_setup_service(mock_sdk_client: Any) -> BillingSetupService:
     """Create a BillingSetupService instance with mocked dependencies."""
     # Mock BillingSetupService client
     mock_billing_setup_client = Mock(spec=BillingSetupServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_billing_setup_client
+    mock_sdk_client.client.get_service.return_value = mock_billing_setup_client  # type: ignore
 
     with patch(
         "src.sdk_services.account.billing_setup_service.get_sdk_client",
@@ -60,7 +60,7 @@ async def test_create_billing_setup(
     # Create mock response
     mock_response = Mock(spec=MutateBillingSetupResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = "customers/1234567890/billingSetups/111222333"
+    mock_response.result.resource_name = "customers/1234567890/billingSetups/111222333"  # type: ignore
 
     # Get the mocked billing setup service client
     mock_billing_setup_client = billing_setup_service.client  # type: ignore
@@ -128,7 +128,7 @@ async def test_create_billing_setup_with_specific_start_date(
     # Create mock response
     mock_response = Mock(spec=MutateBillingSetupResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = "customers/1234567890/billingSetups/111222333"
+    mock_response.result.resource_name = "customers/1234567890/billingSetups/111222333"  # type: ignore
 
     # Get the mocked billing setup service client
     mock_billing_setup_client = billing_setup_service.client  # type: ignore
@@ -181,7 +181,7 @@ async def test_create_billing_setup_with_end_date(
     # Create mock response
     mock_response = Mock(spec=MutateBillingSetupResponse)
     mock_response.result = Mock()
-    mock_response.result.resource_name = "customers/1234567890/billingSetups/111222333"
+    mock_response.result.resource_name = "customers/1234567890/billingSetups/111222333"  # type: ignore
 
     # Get the mocked billing setup service client
     mock_billing_setup_client = billing_setup_service.client  # type: ignore
@@ -252,7 +252,7 @@ async def test_list_billing_setups(
         row.billing_setup.end_time_type.name = "FOREVER"
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -260,7 +260,7 @@ async def test_list_billing_setups(
             return mock_google_ads_service
         return billing_setup_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Mock serialize_proto_message for each billing setup
     def serialize_side_effect(obj: Any):
@@ -330,7 +330,7 @@ async def test_list_billing_setups_with_status_filter(
 
     # Mock GoogleAdsService for search
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.return_value = []
+    mock_google_ads_service.search.return_value = []  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -338,7 +338,7 @@ async def test_list_billing_setups_with_status_filter(
             return mock_google_ads_service
         return billing_setup_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.account.billing_setup_service.get_sdk_client",
@@ -390,7 +390,7 @@ async def test_get_billing_setup(
     row.billing_setup.end_time_type = Mock()
     row.billing_setup.end_time_type.name = "FOREVER"
 
-    mock_google_ads_service.search.return_value = [row]
+    mock_google_ads_service.search.return_value = [row]  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -398,7 +398,7 @@ async def test_get_billing_setup(
             return mock_google_ads_service
         return billing_setup_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Mock serialize_proto_message
     expected_result = {
@@ -458,7 +458,7 @@ async def test_get_billing_setup_not_found(
 
     # Mock GoogleAdsService for search with empty results
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.return_value = []
+    mock_google_ads_service.search.return_value = []  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -466,7 +466,7 @@ async def test_get_billing_setup_not_found(
             return mock_google_ads_service
         return billing_setup_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.account.billing_setup_service.get_sdk_client",
@@ -516,7 +516,7 @@ async def test_list_payments_accounts(
         row.payments_account.payments_profile_id = f"PROF{i + 200}"
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -524,7 +524,7 @@ async def test_list_payments_accounts(
             return mock_google_ads_service
         return billing_setup_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     # Mock serialize_proto_message for each payments account
     def serialize_side_effect(obj: Any):
@@ -625,7 +625,7 @@ async def test_error_handling_list_billing_setups(
 
     # Mock GoogleAdsService for search and make it raise exception
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.side_effect = Exception("Search failed")
+    mock_google_ads_service.search.side_effect = Exception("Search failed")  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -633,7 +633,7 @@ async def test_error_handling_list_billing_setups(
             return mock_google_ads_service
         return billing_setup_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.account.billing_setup_service.get_sdk_client",
@@ -668,7 +668,7 @@ async def test_error_handling_list_payments_accounts(
 
     # Mock GoogleAdsService for search and make it raise exception
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.side_effect = Exception("Search failed")
+    mock_google_ads_service.search.side_effect = Exception("Search failed")  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -676,7 +676,7 @@ async def test_error_handling_list_payments_accounts(
             return mock_google_ads_service
         return billing_setup_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.account.billing_setup_service.get_sdk_client",
@@ -711,10 +711,10 @@ def test_register_billing_setup_tools() -> None:
     assert isinstance(service, BillingSetupService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

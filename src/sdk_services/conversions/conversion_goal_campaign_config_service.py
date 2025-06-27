@@ -115,7 +115,7 @@ def register_conversion_goal_campaign_config_tools(mcp: FastMCP[Any]) -> None:
     """Register conversion goal campaign config tools with the MCP server."""
 
     @mcp.tool
-    async def mutate_conversion_goal_campaign_configs(
+    async def mutate_conversion_goal_campaign_configs(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         operations: list[dict[str, Any]],
         validate_only: bool = False,
@@ -173,7 +173,7 @@ def register_conversion_goal_campaign_config_tools(mcp: FastMCP[Any]) -> None:
         return f"Successfully processed {len(response.results)} conversion goal campaign config operations"
 
     @mcp.tool
-    async def update_conversion_goal_campaign_config(
+    async def update_conversion_goal_campaign_config(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         resource_name: str,
         goal_config_level: Optional[str] = None,

@@ -1,6 +1,7 @@
 """Tests for Campaign Asset Set Service."""
 
 import pytest
+from typing import Any
 from unittest.mock import Mock, patch
 
 from google.ads.googleads.v20.services.services.campaign_asset_set_service import (
@@ -33,7 +34,7 @@ class TestCampaignAssetSetService:
         """Create a CampaignAssetSetService instance with mock client."""
         return CampaignAssetSetService(mock_client)
 
-    def test_mutate_campaign_asset_sets_success(self, service, mock_client):
+    def test_mutate_campaign_asset_sets_success(self, service: Any, mock_client: Any):
         """Test successful campaign asset sets mutation."""
         # Arrange
         customer_id = "1234567890"
@@ -45,7 +46,7 @@ class TestCampaignAssetSetService:
                 )
             ]
         )
-        mock_client.mutate_campaign_asset_sets.return_value = expected_response
+        mock_client.mutate_campaign_asset_sets.return_value = expected_response  # type: ignore
 
         # Act
         response = service.mutate_campaign_asset_sets(
@@ -55,9 +56,9 @@ class TestCampaignAssetSetService:
 
         # Assert
         assert response == expected_response
-        mock_client.mutate_campaign_asset_sets.assert_called_once()
+        mock_client.mutate_campaign_asset_sets.assert_called_once()  # type: ignore
 
-        call_args = mock_client.mutate_campaign_asset_sets.call_args[1]
+        call_args = mock_client.mutate_campaign_asset_sets.call_args[1]  # type: ignore
         request = call_args["request"]
         assert isinstance(request, MutateCampaignAssetSetsRequest)
         assert request.customer_id == customer_id
@@ -65,13 +66,15 @@ class TestCampaignAssetSetService:
         assert request.partial_failure is False
         assert request.validate_only is False
 
-    def test_mutate_campaign_asset_sets_with_options(self, service, mock_client):
+    def test_mutate_campaign_asset_sets_with_options(
+        self, service: Any, mock_client: Any
+    ):
         """Test campaign asset sets mutation with all options."""
         # Arrange
         customer_id = "1234567890"
         operations = [Mock(spec=CampaignAssetSetOperation)]
         expected_response = MutateCampaignAssetSetsResponse()
-        mock_client.mutate_campaign_asset_sets.return_value = expected_response
+        mock_client.mutate_campaign_asset_sets.return_value = expected_response  # type: ignore
 
         # Act
         response = service.mutate_campaign_asset_sets(
@@ -84,7 +87,7 @@ class TestCampaignAssetSetService:
 
         # Assert
         assert response == expected_response
-        call_args = mock_client.mutate_campaign_asset_sets.call_args[1]
+        call_args = mock_client.mutate_campaign_asset_sets.call_args[1]  # type: ignore
         request = call_args["request"]
         assert request.partial_failure is True
         assert request.validate_only is True
@@ -93,12 +96,12 @@ class TestCampaignAssetSetService:
             == ResponseContentTypeEnum.ResponseContentType.MUTABLE_RESOURCE
         )
 
-    def test_mutate_campaign_asset_sets_failure(self, service, mock_client):
+    def test_mutate_campaign_asset_sets_failure(self, service: Any, mock_client: Any):
         """Test campaign asset sets mutation failure."""
         # Arrange
         customer_id = "1234567890"
         operations = [Mock(spec=CampaignAssetSetOperation)]
-        mock_client.mutate_campaign_asset_sets.side_effect = Exception("API Error")
+        mock_client.mutate_campaign_asset_sets.side_effect = Exception("API Error")  # type: ignore
 
         # Act & Assert
         with pytest.raises(Exception, match="Failed to mutate campaign asset sets"):
@@ -107,7 +110,7 @@ class TestCampaignAssetSetService:
                 operations=operations,
             )
 
-    def test_create_campaign_asset_set_operation(self, service):
+    def test_create_campaign_asset_set_operation(self, service: Any):
         """Test creating campaign asset set operation."""
         # Arrange
         campaign = "customers/1234567890/campaigns/123"
@@ -124,7 +127,7 @@ class TestCampaignAssetSetService:
         assert operation.create.campaign == campaign
         assert operation.create.asset_set == asset_set
 
-    def test_create_remove_operation(self, service):
+    def test_create_remove_operation(self, service: Any):
         """Test creating remove operation."""
         # Arrange
         resource_name = "customers/1234567890/campaignAssetSets/123~456"
@@ -137,7 +140,7 @@ class TestCampaignAssetSetService:
         assert operation.remove == resource_name
         assert not operation.create
 
-    def test_link_asset_set_to_campaign(self, service, mock_client):
+    def test_link_asset_set_to_campaign(self, service: Any, mock_client: Any):
         """Test linking an asset set to a campaign."""
         # Arrange
         customer_id = "1234567890"
@@ -151,7 +154,7 @@ class TestCampaignAssetSetService:
                 )
             ]
         )
-        mock_client.mutate_campaign_asset_sets.return_value = expected_response
+        mock_client.mutate_campaign_asset_sets.return_value = expected_response  # type: ignore
 
         # Act
         response = service.link_asset_set_to_campaign(
@@ -162,9 +165,9 @@ class TestCampaignAssetSetService:
 
         # Assert
         assert response == expected_response
-        mock_client.mutate_campaign_asset_sets.assert_called_once()
+        mock_client.mutate_campaign_asset_sets.assert_called_once()  # type: ignore
 
-    def test_unlink_asset_set_from_campaign(self, service, mock_client):
+    def test_unlink_asset_set_from_campaign(self, service: Any, mock_client: Any):
         """Test unlinking an asset set from a campaign."""
         # Arrange
         customer_id = "1234567890"
@@ -173,7 +176,7 @@ class TestCampaignAssetSetService:
         expected_response = MutateCampaignAssetSetsResponse(
             results=[MutateCampaignAssetSetResult(resource_name=resource_name)]
         )
-        mock_client.mutate_campaign_asset_sets.return_value = expected_response
+        mock_client.mutate_campaign_asset_sets.return_value = expected_response  # type: ignore
 
         # Act
         response = service.unlink_asset_set_from_campaign(
@@ -183,9 +186,9 @@ class TestCampaignAssetSetService:
 
         # Assert
         assert response == expected_response
-        mock_client.mutate_campaign_asset_sets.assert_called_once()
+        mock_client.mutate_campaign_asset_sets.assert_called_once()  # type: ignore
 
-    def test_link_multiple_asset_sets_to_campaign(self, service, mock_client):
+    def test_link_multiple_asset_sets_to_campaign(self, service: Any, mock_client: Any):
         """Test linking multiple asset sets to a campaign."""
         # Arrange
         customer_id = "1234567890"
@@ -205,7 +208,7 @@ class TestCampaignAssetSetService:
                 ),
             ]
         )
-        mock_client.mutate_campaign_asset_sets.return_value = expected_response
+        mock_client.mutate_campaign_asset_sets.return_value = expected_response  # type: ignore
 
         # Act
         response = service.link_multiple_asset_sets_to_campaign(
@@ -216,14 +219,14 @@ class TestCampaignAssetSetService:
 
         # Assert
         assert response == expected_response
-        mock_client.mutate_campaign_asset_sets.assert_called_once()
+        mock_client.mutate_campaign_asset_sets.assert_called_once()  # type: ignore
 
         # Verify that two operations were created
-        call_args = mock_client.mutate_campaign_asset_sets.call_args[1]
+        call_args = mock_client.mutate_campaign_asset_sets.call_args[1]  # type: ignore
         request = call_args["request"]
         assert len(request.operations) == 2
 
-    def test_link_asset_set_to_multiple_campaigns(self, service, mock_client):
+    def test_link_asset_set_to_multiple_campaigns(self, service: Any, mock_client: Any):
         """Test linking an asset set to multiple campaigns."""
         # Arrange
         customer_id = "1234567890"
@@ -243,7 +246,7 @@ class TestCampaignAssetSetService:
                 ),
             ]
         )
-        mock_client.mutate_campaign_asset_sets.return_value = expected_response
+        mock_client.mutate_campaign_asset_sets.return_value = expected_response  # type: ignore
 
         # Act
         response = service.link_asset_set_to_multiple_campaigns(
@@ -254,10 +257,10 @@ class TestCampaignAssetSetService:
 
         # Assert
         assert response == expected_response
-        mock_client.mutate_campaign_asset_sets.assert_called_once()
+        mock_client.mutate_campaign_asset_sets.assert_called_once()  # type: ignore
 
         # Verify that two operations were created
-        call_args = mock_client.mutate_campaign_asset_sets.call_args[1]
+        call_args = mock_client.mutate_campaign_asset_sets.call_args[1]  # type: ignore
         request = call_args["request"]
         assert len(request.operations) == 2
 
@@ -267,7 +270,7 @@ class TestCampaignAssetSetMCPServer:
     """Test cases for Campaign Asset Set MCP server."""
 
     @patch("src.sdk_servers.campaign_asset_set_server.get_client")
-    async def test_link_asset_set_to_campaign_tool(self, mock_get_client):
+    async def test_link_asset_set_to_campaign_tool(self, mock_get_client: Any):
         """Test link asset set to campaign MCP tool."""
         # Arrange
         from src.sdk_servers.campaign_asset_set_server import (
@@ -275,7 +278,7 @@ class TestCampaignAssetSetMCPServer:
         )
 
         mock_client = Mock(spec=CampaignAssetSetServiceClient)
-        mock_get_client.return_value = mock_client
+        mock_get_client.return_value = mock_client  # type: ignore
 
         mock_response = MutateCampaignAssetSetsResponse(
             results=[
@@ -284,7 +287,7 @@ class TestCampaignAssetSetMCPServer:
                 )
             ]
         )
-        mock_client.mutate_campaign_asset_sets.return_value = mock_response
+        mock_client.mutate_campaign_asset_sets.return_value = mock_response  # type: ignore
 
         server = create_campaign_asset_set_server()
 
@@ -304,7 +307,9 @@ class TestCampaignAssetSetMCPServer:
         assert "link_asset_set" in response[0].text
 
     @patch("src.sdk_servers.campaign_asset_set_server.get_client")
-    async def test_link_multiple_asset_sets_to_campaign_tool(self, mock_get_client):
+    async def test_link_multiple_asset_sets_to_campaign_tool(
+        self, mock_get_client: Any
+    ):
         """Test link multiple asset sets to campaign MCP tool."""
         # Arrange
         from src.sdk_servers.campaign_asset_set_server import (
@@ -312,7 +317,7 @@ class TestCampaignAssetSetMCPServer:
         )
 
         mock_client = Mock(spec=CampaignAssetSetServiceClient)
-        mock_get_client.return_value = mock_client
+        mock_get_client.return_value = mock_client  # type: ignore
 
         mock_response = MutateCampaignAssetSetsResponse(
             results=[
@@ -324,7 +329,7 @@ class TestCampaignAssetSetMCPServer:
                 ),
             ]
         )
-        mock_client.mutate_campaign_asset_sets.return_value = mock_response
+        mock_client.mutate_campaign_asset_sets.return_value = mock_response  # type: ignore
 
         server = create_campaign_asset_set_server()
 

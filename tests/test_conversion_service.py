@@ -41,7 +41,7 @@ def conversion_service(mock_sdk_client: Any) -> ConversionService:
     """Create a ConversionService instance with mocked dependencies."""
     # Mock ConversionActionService client
     mock_conversion_action_client = Mock(spec=ConversionActionServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_conversion_action_client
+    mock_sdk_client.client.get_service.return_value = mock_conversion_action_client  # type: ignore
 
     with patch(
         "src.sdk_services.conversions.conversion_service.get_sdk_client",
@@ -446,7 +446,7 @@ async def test_error_handling(
 
     # Get the mocked conversion action service client and make it raise exception
     mock_conversion_action_client = conversion_service.client  # type: ignore
-    mock_conversion_action_client.mutate_conversion_actions.side_effect = (  # pyright: ignore
+    mock_conversion_action_client.mutate_conversion_actions.side_effect = (  # pyright: ignore  # type: ignore
         google_ads_exception
     )
 
@@ -480,10 +480,10 @@ def test_register_conversion_tools() -> None:
     assert isinstance(service, ConversionService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 2  # 2 tools registered
+    assert mock_mcp.tool.call_count == 2  # 2 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

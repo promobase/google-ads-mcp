@@ -24,7 +24,7 @@ def reach_plan_service(mock_sdk_client: Any) -> ReachPlanService:
     """Create a ReachPlanService instance with mocked dependencies."""
     # Mock ReachPlanService client
     mock_reach_plan_client = Mock(spec=ReachPlanServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_reach_plan_client
+    mock_sdk_client.client.get_service.return_value = mock_reach_plan_client  # type: ignore
 
     with patch(
         "src.sdk_services.planning.reach_plan_service.get_sdk_client",
@@ -64,7 +64,7 @@ async def test_list_plannable_locations(
     location3.name = "California"
     location3.parent_country_id = "2840"
 
-    mock_response.plannable_locations.extend([location1, location2, location3])
+    mock_response.plannable_locations.extend([location1, location2, location3])  # type: ignore
 
     # Get the mocked reach plan service client
     mock_reach_plan_client = reach_plan_service.client  # type: ignore
@@ -145,7 +145,7 @@ async def test_list_plannable_products(
     product2.plannable_targeting.devices = ["DEVICE_MOBILE"]
     product2.plannable_targeting.networks = ["DISPLAY_NETWORK"]
 
-    mock_response.product_metadata.extend([product1, product2])
+    mock_response.product_metadata.extend([product1, product2])  # type: ignore
 
     # Get the mocked reach plan service client
     mock_reach_plan_client = reach_plan_service.client  # type: ignore
@@ -284,10 +284,10 @@ def test_register_reach_plan_tools() -> None:
     assert isinstance(service, ReachPlanService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 3  # 3 tools registered
+    assert mock_mcp.tool.call_count == 3  # 3 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

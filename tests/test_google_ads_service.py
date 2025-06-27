@@ -1,6 +1,7 @@
 """Tests for Google Ads service."""
 
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
+from typing import Any
 
 import pytest
 from google.ads.googleads.errors import GoogleAdsException
@@ -50,23 +51,25 @@ def mock_client():
 class TestGoogleAdsService:
     """Test cases for GoogleAdsService."""
 
-    async def test_search_success(self, google_ads_service, mock_context, mock_client):
+    async def test_search_success(
+        self, google_ads_service: Any, mock_context: Any, mock_client: Any
+    ):
         """Test successful search operation."""
         # Mock the client
         google_ads_service._client = mock_client
 
         # Create mock response
         mock_row = GoogleAdsRow()
-        mock_row.campaign.id = 123
-        mock_row.campaign.name = "Test Campaign"
+        mock_row.campaign.id = 123  # type: ignore
+        mock_row.campaign.name = "Test Campaign"  # type: ignore
 
         mock_response = SearchGoogleAdsResponse()
-        mock_response.results.append(mock_row)
+        mock_response.results.append(mock_row)  # type: ignore
         mock_response.next_page_token = "next_token_123"
         mock_response.total_results_count = 1
-        mock_response.field_mask.paths.extend(["campaign.id", "campaign.name"])
+        mock_response.field_mask.paths.extend(["campaign.id", "campaign.name"])  # type: ignore
 
-        mock_client.search.return_value = mock_response
+        mock_client.search.return_value = mock_response  # type: ignore
 
         # Execute search
         result = await google_ads_service.search(
@@ -77,7 +80,7 @@ class TestGoogleAdsService:
         )
 
         # Verify the request
-        request = mock_client.search.call_args[1]["request"]
+        request = mock_client.search.call_args[1]["request"]  # type: ignore
         assert request.customer_id == "1234567890"
         assert request.query == "SELECT campaign.id, campaign.name FROM campaign"
         assert request.page_size == 100
@@ -95,14 +98,14 @@ class TestGoogleAdsService:
         assert result["summary_row"] is None
 
     async def test_search_with_pagination(
-        self, google_ads_service, mock_context, mock_client
+        self, google_ads_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test search with pagination token."""
         google_ads_service._client = mock_client
 
         mock_response = SearchGoogleAdsResponse()
         mock_response.next_page_token = "page2"
-        mock_client.search.return_value = mock_response
+        mock_client.search.return_value = mock_response  # type: ignore
 
         await google_ads_service.search(
             ctx=mock_context,
@@ -111,23 +114,23 @@ class TestGoogleAdsService:
             page_token="page1",
         )
 
-        request = mock_client.search.call_args[1]["request"]
+        request = mock_client.search.call_args[1]["request"]  # type: ignore
         assert request.page_token == "page1"
 
     async def test_search_with_summary_row(
-        self, google_ads_service, mock_context, mock_client
+        self, google_ads_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test search with summary row."""
         google_ads_service._client = mock_client
 
         # Create mock response with summary row
         mock_summary = GoogleAdsRow()
-        mock_summary.metrics.clicks = 100
-        mock_summary.metrics.impressions = 1000
+        mock_summary.metrics.clicks = 100  # type: ignore
+        mock_summary.metrics.impressions = 1000  # type: ignore
 
         mock_response = SearchGoogleAdsResponse()
-        mock_response.summary_row.CopyFrom(mock_summary)
-        mock_client.search.return_value = mock_response
+        mock_response.summary_row.CopyFrom(mock_summary)  # type: ignore
+        mock_client.search.return_value = mock_response  # type: ignore
 
         result = await google_ads_service.search(
             ctx=mock_context,
@@ -139,7 +142,7 @@ class TestGoogleAdsService:
         assert result["summary_row"] is not None
 
     async def test_search_stream_success(
-        self, google_ads_service, mock_context, mock_client
+        self, google_ads_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test successful search stream operation."""
         google_ads_service._client = mock_client
@@ -155,7 +158,7 @@ class TestGoogleAdsService:
         row2.campaign.id = 2
         batch2.results.append(row2)
 
-        mock_client.search_stream.return_value = iter([batch1, batch2])
+        mock_client.search_stream.return_value = iter([batch1, batch2])  # type: ignore
 
         # Execute search stream
         results = await google_ads_service.search_stream(
@@ -166,10 +169,10 @@ class TestGoogleAdsService:
 
         # Verify results
         assert len(results) == 2
-        assert mock_context.log.call_count >= 1
+        assert mock_context.log.call_count >= 1  # type: ignore
 
     async def test_search_stream_large_results(
-        self, google_ads_service, mock_context, mock_client
+        self, google_ads_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test search stream with large result set."""
         google_ads_service._client = mock_client
@@ -184,7 +187,7 @@ class TestGoogleAdsService:
                 batch.results.append(row)
             batches.append(batch)
 
-        mock_client.search_stream.return_value = iter(batches)
+        mock_client.search_stream.return_value = iter(batches)  # type: ignore
 
         results = await google_ads_service.search_stream(
             ctx=mock_context,
@@ -195,11 +198,15 @@ class TestGoogleAdsService:
         assert len(results) == 15000
         # Should log progress at 10000
         progress_logs = [
-            call for call in mock_context.log.call_args_list if "Processed" in str(call)
+            call
+            for call in mock_context.log.call_args_list
+            if "Processed" in str(call)  # type: ignore
         ]
         assert len(progress_logs) >= 1
 
-    async def test_mutate_success(self, google_ads_service, mock_context, mock_client):
+    async def test_mutate_success(
+        self, google_ads_service: Any, mock_context: Any, mock_client: Any
+    ):
         """Test successful mutate operation."""
         google_ads_service._client = mock_client
 
@@ -219,9 +226,9 @@ class TestGoogleAdsService:
         mock_response = MutateGoogleAdsResponse()
         result = MutateOperationResponse()
         result.campaign_result.resource_name = "customers/123/campaigns/789"
-        mock_response.mutate_operation_responses.append(result)
+        mock_response.mutate_operation_responses.append(result)  # type: ignore
 
-        mock_client.mutate.return_value = mock_response
+        mock_client.mutate.return_value = mock_response  # type: ignore
 
         # Execute mutate
         result = await google_ads_service.mutate(
@@ -232,7 +239,7 @@ class TestGoogleAdsService:
         )
 
         # Verify request
-        request = mock_client.mutate.call_args[1]["request"]
+        request = mock_client.mutate.call_args[1]["request"]  # type: ignore
         assert request.customer_id == "1234567890"
         assert len(request.mutate_operations) == 1
         assert request.partial_failure is True
@@ -247,7 +254,7 @@ class TestGoogleAdsService:
         assert result["partial_failure_error"] is None
 
     async def test_search_api_error(
-        self, google_ads_service, mock_context, mock_client
+        self, google_ads_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test search with API error."""
         google_ads_service._client = mock_client
@@ -256,7 +263,7 @@ class TestGoogleAdsService:
         error = GoogleAdsException(None, None, None, None)
         error.failure = Mock()
         error.failure.__str__ = Mock(return_value="Invalid query")
-        mock_client.search.side_effect = error
+        mock_client.search.side_effect = error  # type: ignore
 
         with pytest.raises(Exception) as exc_info:
             await google_ads_service.search(
@@ -266,16 +273,16 @@ class TestGoogleAdsService:
             )
 
         assert "Google Ads API error: Invalid query" in str(exc_info.value)
-        mock_context.log.assert_called_with(
+        mock_context.log.assert_called_with(  # type: ignore
             level="error", message="Google Ads API error: Invalid query"
         )
 
     async def test_search_general_error(
-        self, google_ads_service, mock_context, mock_client
+        self, google_ads_service: Any, mock_context: Any, mock_client: Any
     ):
         """Test search with general error."""
         google_ads_service._client = mock_client
-        mock_client.search.side_effect = Exception("Network error")
+        mock_client.search.side_effect = Exception("Network error")  # type: ignore
 
         with pytest.raises(Exception) as exc_info:
             await google_ads_service.search(
@@ -291,7 +298,7 @@ class TestGoogleAdsService:
 class TestGoogleAdsTools:
     """Test cases for Google Ads tool functions."""
 
-    async def test_search_google_ads_tool(self, mock_context):
+    async def test_search_google_ads_tool(self, mock_context: Any):
         """Test search_google_ads tool function."""
         service = GoogleAdsService()
         tools = create_google_ads_tools(service)
@@ -299,7 +306,7 @@ class TestGoogleAdsTools:
 
         # Mock the service method
         with patch.object(service, "search") as mock_search:
-            mock_search.return_value = {"results": [], "next_page_token": ""}
+            mock_search.return_value = {"results": [], "next_page_token": ""}  # type: ignore
 
             await search_tool(
                 ctx=mock_context,
@@ -308,15 +315,15 @@ class TestGoogleAdsTools:
                 include_summary_row=True,
             )
 
-            mock_search.assert_called_once()
-            call_args = mock_search.call_args[1]
+            mock_search.assert_called_once()  # type: ignore
+            call_args = mock_search.call_args[1]  # type: ignore
             assert call_args["customer_id"] == "1234567890"
             assert (
                 call_args["summary_row_setting"]
                 == SummaryRowSettingEnum.SummaryRowSetting.SUMMARY_ROW_WITH_RESULTS
             )
 
-    async def test_search_google_ads_stream_tool(self, mock_context):
+    async def test_search_google_ads_stream_tool(self, mock_context: Any):
         """Test search_google_ads_stream tool function."""
         service = GoogleAdsService()
         tools = create_google_ads_tools(service)
@@ -324,7 +331,7 @@ class TestGoogleAdsTools:
 
         # Mock the service method
         with patch.object(service, "search_stream") as mock_stream:
-            mock_stream.return_value = []
+            mock_stream.return_value = []  # type: ignore
 
             await stream_tool(
                 ctx=mock_context,
@@ -333,8 +340,8 @@ class TestGoogleAdsTools:
                 include_summary_row=False,
             )
 
-            mock_stream.assert_called_once()
-            call_args = mock_stream.call_args[1]
+            mock_stream.assert_called_once()  # type: ignore
+            call_args = mock_stream.call_args[1]  # type: ignore
             assert call_args["customer_id"] == "1234567890"
             assert (
                 call_args["summary_row_setting"]

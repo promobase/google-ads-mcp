@@ -26,7 +26,7 @@ def remarketing_action_service(mock_sdk_client: Any) -> RemarketingActionService
     """Create a RemarketingActionService instance with mocked dependencies."""
     # Mock RemarketingActionService client
     mock_remarketing_client = Mock(spec=RemarketingActionServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_remarketing_client
+    mock_sdk_client.client.get_service.return_value = mock_remarketing_client  # type: ignore
 
     with patch(
         "src.sdk_services.audiences.remarketing_action_service.get_sdk_client",
@@ -196,7 +196,7 @@ async def test_list_remarketing_actions(
         )
         mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Mock serialize_proto_message
     def mock_serialize(obj):
@@ -208,7 +208,7 @@ async def test_list_remarketing_actions(
             return mock_google_ads_service
         return remarketing_action_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with (
         patch(
@@ -261,9 +261,9 @@ async def test_get_remarketing_action_tags(
     # Create mock search result
     mock_row = Mock()
     mock_row.remarketing_action = Mock()
-    mock_row.remarketing_action.id = remarketing_action_id
-    mock_row.remarketing_action.name = "Website Visitors"
-    mock_row.remarketing_action.resource_name = (
+    mock_row.remarketing_action.id = remarketing_action_id  # type: ignore
+    mock_row.remarketing_action.name = "Website Visitors"  # type: ignore
+    mock_row.remarketing_action.resource_name = (  # type: ignore
         f"customers/{customer_id}/remarketingActions/{remarketing_action_id}"
     )
 
@@ -284,11 +284,11 @@ async def test_get_remarketing_action_tags(
     snippet2.global_site_tag = "<!-- AMP Global site tag -->"
     snippet2.event_snippet = "<!-- AMP Event snippet -->"
 
-    mock_row.remarketing_action.tag_snippets = [snippet1, snippet2]
+    mock_row.remarketing_action.tag_snippets = [snippet1, snippet2]  # type: ignore
 
     mock_response = Mock()
     mock_response.__iter__ = Mock(return_value=iter([mock_row]))
-    mock_google_ads_service.search.return_value = mock_response
+    mock_google_ads_service.search.return_value = mock_response  # type: ignore
 
     # Mock serialize_proto_message
     expected_result = {
@@ -318,7 +318,7 @@ async def test_get_remarketing_action_tags(
             return mock_google_ads_service
         return remarketing_action_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with (
         patch(
@@ -372,7 +372,7 @@ async def test_get_remarketing_action_tags_not_found(
     # Create empty mock response
     mock_response = Mock()
     mock_response.__iter__ = Mock(return_value=iter([]))
-    mock_google_ads_service.search.return_value = mock_response
+    mock_google_ads_service.search.return_value = mock_response  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -380,7 +380,7 @@ async def test_get_remarketing_action_tags_not_found(
             return mock_google_ads_service
         return remarketing_action_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.audiences.remarketing_action_service.get_sdk_client",
@@ -421,7 +421,7 @@ async def test_error_handling_create_remarketing_action(
 
     # Get the mocked remarketing service client and make it raise exception
     mock_remarketing_client = remarketing_action_service.client  # type: ignore
-    mock_remarketing_client.mutate_remarketing_actions.side_effect = (
+    mock_remarketing_client.mutate_remarketing_actions.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -455,10 +455,10 @@ def test_register_remarketing_action_tools() -> None:
     assert isinstance(service, RemarketingActionService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

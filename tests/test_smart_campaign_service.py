@@ -25,7 +25,7 @@ def smart_campaign_service(mock_sdk_client: Any) -> SmartCampaignService:
     """Create a SmartCampaignService instance with mocked dependencies."""
     # Mock SmartCampaignSuggestService client
     mock_smart_campaign_client = Mock(spec=SmartCampaignSuggestServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_smart_campaign_client
+    mock_sdk_client.client.get_service.return_value = mock_smart_campaign_client  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.smart_campaign_service.get_sdk_client",
@@ -53,17 +53,17 @@ async def test_suggest_budget_options_existing_campaign(
 
     # Mock budget options
     mock_response.low = Mock()
-    mock_response.low.daily_amount_micros = 10000000  # $10
+    mock_response.low.daily_amount_micros = 10000000  # $10  # type: ignore
 
     mock_response.recommended = Mock()
-    mock_response.recommended.daily_amount_micros = 25000000  # $25
+    mock_response.recommended.daily_amount_micros = 25000000  # $25  # type: ignore
 
     mock_response.high = Mock()
-    mock_response.high.daily_amount_micros = 50000000  # $50
+    mock_response.high.daily_amount_micros = 50000000  # $50  # type: ignore
 
     # Get the mocked smart campaign suggest service client
     mock_smart_campaign_client = smart_campaign_service.client  # type: ignore
-    mock_smart_campaign_client.suggest_smart_campaign_budget_options.return_value = (
+    mock_smart_campaign_client.suggest_smart_campaign_budget_options.return_value = (  # type: ignore
         mock_response  # type: ignore
     )
 
@@ -97,7 +97,7 @@ async def test_suggest_budget_options_existing_campaign(
     # Verify the API call
     mock_smart_campaign_client.suggest_smart_campaign_budget_options.assert_called_once()  # type: ignore
     call_args = (
-        mock_smart_campaign_client.suggest_smart_campaign_budget_options.call_args
+        mock_smart_campaign_client.suggest_smart_campaign_budget_options.call_args  # type: ignore
     )  # type: ignore
     request = call_args[1]["request"]
     assert request.customer_id == customer_id
@@ -130,14 +130,14 @@ async def test_suggest_keyword_themes(
     theme1 = Mock()
     theme1.display_name = "online shopping"
     theme1.keyword_theme_constant = "keywordThemeConstants/123"
-    theme1.HasField.return_value = False  # Not a free-form theme
+    theme1.HasField.return_value = False  # Not a free-form theme  # type: ignore
     mock_themes.append(theme1)
 
     theme2 = Mock()
     theme2.display_name = "Example Business products"
     theme2.keyword_theme_constant = ""
     theme2.free_form_keyword_theme = "Example Business products"
-    theme2.HasField.return_value = True  # Is a free-form theme
+    theme2.HasField.return_value = True  # Is a free-form theme  # type: ignore
     mock_themes.append(theme2)
 
     mock_response.keyword_themes = mock_themes
@@ -202,7 +202,7 @@ async def test_suggest_ad_content(
         headline = Mock()
         headline.text = text
         mock_headlines.append(headline)
-    mock_response.ad_info.headlines = mock_headlines
+    mock_response.ad_info.headlines = mock_headlines  # type: ignore
 
     # Descriptions
     mock_descriptions = []
@@ -211,7 +211,7 @@ async def test_suggest_ad_content(
         desc = Mock()
         desc.text = text
         mock_descriptions.append(desc)
-    mock_response.ad_info.descriptions = mock_descriptions
+    mock_response.ad_info.descriptions = mock_descriptions  # type: ignore
 
     # Get the mocked smart campaign suggest service client
     mock_smart_campaign_client = smart_campaign_service.client  # type: ignore
@@ -261,7 +261,7 @@ async def test_error_handling_suggest_budget_options(
 
     # Get the mocked smart campaign suggest service client and make it raise exception
     mock_smart_campaign_client = smart_campaign_service.client  # type: ignore
-    mock_smart_campaign_client.suggest_smart_campaign_budget_options.side_effect = (
+    mock_smart_campaign_client.suggest_smart_campaign_budget_options.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -298,7 +298,7 @@ async def test_error_handling_suggest_ad_content(
 
     # Get the mocked smart campaign suggest service client and make it raise exception
     mock_smart_campaign_client = smart_campaign_service.client  # type: ignore
-    mock_smart_campaign_client.suggest_smart_campaign_ad.side_effect = (
+    mock_smart_campaign_client.suggest_smart_campaign_ad.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -333,10 +333,10 @@ def test_register_smart_campaign_tools() -> None:
     assert isinstance(service, SmartCampaignService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 3  # 3 tools registered
+    assert mock_mcp.tool.call_count == 3  # 3 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [

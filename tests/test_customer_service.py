@@ -15,7 +15,7 @@ def mock_sdk_client() -> Any:
     """Create a mock SDK client."""
     with patch("src.sdk_services.account.customer_service.get_sdk_client") as mock:
         client = MagicMock()
-        mock.return_value = client
+        mock.return_value = client  # type: ignore
         yield client
 
 
@@ -40,12 +40,12 @@ async def test_create_customer_client(
     """Test creating a customer client."""
     # Mock the customer service client
     mock_customer_service = MagicMock()
-    mock_sdk_client.client.get_service.return_value = mock_customer_service
+    mock_sdk_client.client.get_service.return_value = mock_customer_service  # type: ignore
 
     # Mock the response
     mock_response = MagicMock()
     mock_response.resource_name = "customers/1234567890"
-    mock_customer_service.create_customer_client.return_value = mock_response
+    mock_customer_service.create_customer_client.return_value = mock_response  # type: ignore
 
     # Mock serialize_proto_message to return expected data
     expected_result = {
@@ -75,14 +75,14 @@ async def test_create_customer_client(
     assert result["descriptive_name"] == "Test Client"
 
     # Verify the API was called correctly
-    mock_customer_service.create_customer_client.assert_called_once()
-    call_args = mock_customer_service.create_customer_client.call_args
+    mock_customer_service.create_customer_client.assert_called_once()  # type: ignore
+    call_args = mock_customer_service.create_customer_client.call_args  # type: ignore
     request = call_args[1]["request"]
     assert request.customer_id == "1234567890"
     assert request.customer_client.descriptive_name == "Test Client"
 
     # Verify logging
-    mock_ctx.log.assert_called_with(
+    mock_ctx.log.assert_called_with(  # type: ignore
         level="info",
         message="Created customer client 1234567890 under manager 1234567890",
     )
@@ -95,7 +95,7 @@ async def test_list_accessible_customers(
     """Test listing accessible customers."""
     # Mock the customer service client
     mock_customer_service = MagicMock()
-    mock_sdk_client.client.get_service.return_value = mock_customer_service
+    mock_sdk_client.client.get_service.return_value = mock_customer_service  # type: ignore
 
     # Mock the response
     mock_response = MagicMock()
@@ -104,7 +104,7 @@ async def test_list_accessible_customers(
         "customers/2222222222",
         "customers/3333333333",
     ]
-    mock_customer_service.list_accessible_customers.return_value = mock_response
+    mock_customer_service.list_accessible_customers.return_value = mock_response  # type: ignore
 
     # Call the method
     result = await customer_service.list_accessible_customers(ctx=mock_ctx)
@@ -113,10 +113,10 @@ async def test_list_accessible_customers(
     assert result == ["1111111111", "2222222222", "3333333333"]
 
     # Verify the API was called correctly
-    mock_customer_service.list_accessible_customers.assert_called_once()
+    mock_customer_service.list_accessible_customers.assert_called_once()  # type: ignore
 
     # Verify logging
-    mock_ctx.log.assert_called_with(
+    mock_ctx.log.assert_called_with(  # type: ignore
         level="info", message="Found 3 accessible customers"
     )
 

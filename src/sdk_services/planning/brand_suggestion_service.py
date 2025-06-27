@@ -34,7 +34,7 @@ class BrandSuggestionService:
         assert self._client is not None
         return self._client
 
-    def suggest_brands(
+    def suggest_brands(  # pyright: ignore[reportUnusedFunction]
         self,
         customer_id: str,
         brand_prefix: str,
@@ -62,7 +62,7 @@ def register_brand_suggestion_tools(mcp: FastMCP[Any]) -> None:
     """Register brand suggestion tools with the MCP server."""
 
     @mcp.tool
-    async def suggest_brands(
+    async def suggest_brands(  # pyright: ignore[reportUnusedFunction]
         customer_id: str,
         brand_prefix: str,
         selected_brands: list[str] = [],

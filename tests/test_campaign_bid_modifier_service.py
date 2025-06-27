@@ -31,7 +31,7 @@ def campaign_bid_modifier_service(mock_sdk_client: Any) -> CampaignBidModifierSe
     """Create a CampaignBidModifierService instance with mocked dependencies."""
     # Mock CampaignBidModifierService client
     mock_bid_modifier_client = Mock(spec=CampaignBidModifierServiceClient)
-    mock_sdk_client.client.get_service.return_value = mock_bid_modifier_client
+    mock_sdk_client.client.get_service.return_value = mock_bid_modifier_client  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.campaign_bid_modifier_service.get_sdk_client",
@@ -211,7 +211,7 @@ async def test_list_campaign_bid_modifiers(
     interaction_row.campaign.name = "Test Campaign"
     mock_results.append(interaction_row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -219,7 +219,7 @@ async def test_list_campaign_bid_modifiers(
             return mock_google_ads_service
         return campaign_bid_modifier_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.campaign_bid_modifier_service.get_sdk_client",
@@ -285,7 +285,7 @@ async def test_list_campaign_bid_modifiers_no_interaction_type(
     row.campaign.name = "Test Campaign"
     mock_results.append(row)
 
-    mock_google_ads_service.search.return_value = mock_results
+    mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -293,7 +293,7 @@ async def test_list_campaign_bid_modifiers_no_interaction_type(
             return mock_google_ads_service
         return campaign_bid_modifier_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.campaign_bid_modifier_service.get_sdk_client",
@@ -383,7 +383,7 @@ async def test_error_handling_create_interaction_type_bid_modifier(
 
     # Get the mocked bid modifier service client and make it raise exception
     mock_bid_modifier_client = campaign_bid_modifier_service.client  # type: ignore
-    mock_bid_modifier_client.mutate_campaign_bid_modifiers.side_effect = (
+    mock_bid_modifier_client.mutate_campaign_bid_modifiers.side_effect = (  # type: ignore
         google_ads_exception  # type: ignore
     )
 
@@ -419,7 +419,7 @@ async def test_error_handling_list_bid_modifiers(
 
     # Mock GoogleAdsService for search and make it raise exception
     mock_google_ads_service = Mock(spec=GoogleAdsServiceClient)
-    mock_google_ads_service.search.side_effect = Exception("Search failed")
+    mock_google_ads_service.search.side_effect = Exception("Search failed")  # type: ignore
 
     # Update the mock to return GoogleAdsService when requested
     def get_service_side_effect(service_name: str):
@@ -427,7 +427,7 @@ async def test_error_handling_list_bid_modifiers(
             return mock_google_ads_service
         return campaign_bid_modifier_service.client
 
-    mock_sdk_client.client.get_service.side_effect = get_service_side_effect
+    mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
         "src.sdk_services.campaign.campaign_bid_modifier_service.get_sdk_client",
@@ -462,10 +462,10 @@ def test_register_campaign_bid_modifier_tools() -> None:
     assert isinstance(service, CampaignBidModifierService)
 
     # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered
+    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
 
     # Verify tool functions were passed
-    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]
+    registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
     expected_tools = [
