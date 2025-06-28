@@ -2,7 +2,7 @@
 
 import pytest
 from typing import Any
-from unittest.mock import Mock, AsyncMock, patch
+from unittest.mock import Mock, AsyncMock
 from fastmcp import Context
 
 from src.sdk_services.conversions.customer_conversion_goal_service import (
@@ -26,10 +26,10 @@ def mock_client():
 
 
 @pytest.fixture
-def service(mock_client):
+def service(mock_client: Any) -> Any:
     """Create a customer conversion goal service with mocked client."""
     service = CustomerConversionGoalService()
-    service._client = mock_client
+    service._client = mock_client  # type: ignore # Need to set private attribute for testing
     return service
 
 
@@ -162,7 +162,7 @@ class TestCustomerConversionGoalService:
         ]
 
         # Call the method
-        result = await service.mutate_customer_conversion_goals(
+        _ = await service.mutate_customer_conversion_goals(
             ctx=mock_context,
             customer_id="123",
             operations=operations,
@@ -261,7 +261,7 @@ class TestCustomerConversionGoalService:
         ]
 
         # Call the method
-        result = await service.mutate_customer_conversion_goals(
+        _ = await service.mutate_customer_conversion_goals(
             ctx=mock_context,
             customer_id="123",
             operations=operations,

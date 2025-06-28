@@ -5,12 +5,8 @@ from typing import Any
 from unittest.mock import Mock
 
 from google.ads.googleads.v20.enums.types.goal_config_level import GoalConfigLevelEnum
-from google.ads.googleads.v20.resources.types.conversion_goal_campaign_config import (
-    ConversionGoalCampaignConfig,
-)
 from google.ads.googleads.v20.services.types.conversion_goal_campaign_config_service import (
     ConversionGoalCampaignConfigOperation,
-    MutateConversionGoalCampaignConfigsRequest,
     MutateConversionGoalCampaignConfigsResponse,
     MutateConversionGoalCampaignConfigResult,
 )
@@ -24,7 +20,7 @@ class TestConversionGoalCampaignConfigService:
     """Test cases for ConversionGoalCampaignConfigService"""
 
     @pytest.fixture
-    def mock_client(self):
+    def mock_client(self) -> Any:
         """Create a mock Google Ads client"""
         client = Mock()
         service = Mock()
@@ -32,9 +28,11 @@ class TestConversionGoalCampaignConfigService:
         return client
 
     @pytest.fixture
-    def conversion_goal_campaign_config_service(self, mock_client):
+    def conversion_goal_campaign_config_service(self, mock_client: Any) -> Any:
         """Create ConversionGoalCampaignConfigService instance with mock client"""
-        return ConversionGoalCampaignConfigService(mock_client)
+        service = ConversionGoalCampaignConfigService()
+        service._client = mock_client  # type: ignore # Need to set private attribute for testing
+        return service
 
     def test_mutate_conversion_goal_campaign_configs(
         self, conversion_goal_campaign_config_service: Any, mock_client: Any

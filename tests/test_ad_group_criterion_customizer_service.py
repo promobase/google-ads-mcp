@@ -26,10 +26,10 @@ def mock_client():
 
 
 @pytest.fixture
-def service(mock_client):
+def service(mock_client: Any):
     """Create an ad group criterion customizer service with mocked client."""
     service = AdGroupCriterionCustomizerService()
-    service._client = mock_client
+    service._client = mock_client  # type: ignore[reportPrivateUsage]
     return service
 
 
@@ -37,8 +37,11 @@ class TestAdGroupCriterionCustomizerService:
     """Test cases for AdGroupCriterionCustomizerService."""
 
     @pytest.mark.asyncio
+    @patch(
+        "src.sdk_services.ad_group.ad_group_criterion_customizer_service.serialize_proto_message"
+    )
     async def test_mutate_ad_group_criterion_customizers_create(
-        self, service: Any, mock_context: Any, mock_client: Any
+        self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test creating ad group criterion customizers."""
         # Mock response
@@ -53,6 +56,16 @@ class TestAdGroupCriterionCustomizerService:
         mock_response.partial_failure_error = None
 
         mock_client.mutate_ad_group_criterion_customizers.return_value = mock_response  # type: ignore
+
+        # Mock the serialization to return a dict
+        mock_serialize.return_value = {
+            "results": [
+                {
+                    "resource_name": "customers/123/adGroupCriterionCustomizers/456~789~101112"
+                }
+            ],
+            "partial_failure_error": None,
+        }
 
         # Test data
         operations = [
@@ -97,8 +110,11 @@ class TestAdGroupCriterionCustomizerService:
         assert request.operations[0].create.value.string_value == "Custom Text Value"
 
     @pytest.mark.asyncio
+    @patch(
+        "src.sdk_services.ad_group.ad_group_criterion_customizer_service.serialize_proto_message"
+    )
     async def test_mutate_ad_group_criterion_customizers_remove(
-        self, service: Any, mock_context: Any, mock_client: Any
+        self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test removing ad group criterion customizers."""
         # Mock response
@@ -113,6 +129,15 @@ class TestAdGroupCriterionCustomizerService:
         mock_response.partial_failure_error = None
 
         mock_client.mutate_ad_group_criterion_customizers.return_value = mock_response  # type: ignore
+
+        # Mock the serialization to return a dict
+        mock_serialize.return_value = {
+            "results": [
+                {
+                    "resource_name": "customers/123/adGroupCriterionCustomizers/456~789~101112"
+                }
+            ]
+        }
 
         # Test data
         operations = [
@@ -145,8 +170,11 @@ class TestAdGroupCriterionCustomizerService:
         )
 
     @pytest.mark.asyncio
+    @patch(
+        "src.sdk_services.ad_group.ad_group_criterion_customizer_service.serialize_proto_message"
+    )
     async def test_mutate_ad_group_criterion_customizers_number_value(
-        self, service: Any, mock_context: Any, mock_client: Any
+        self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test creating ad group criterion customizers with number value."""
         # Mock response
@@ -162,6 +190,15 @@ class TestAdGroupCriterionCustomizerService:
 
         mock_client.mutate_ad_group_criterion_customizers.return_value = mock_response  # type: ignore
 
+        # Mock the serialization to return a dict
+        mock_serialize.return_value = {
+            "results": [
+                {
+                    "resource_name": "customers/123/adGroupCriterionCustomizers/456~789~101112"
+                }
+            ]
+        }
+
         # Test data
         operations = [
             {
@@ -174,7 +211,7 @@ class TestAdGroupCriterionCustomizerService:
         ]
 
         # Call the method
-        result = await service.mutate_ad_group_criterion_customizers(
+        _ = await service.mutate_ad_group_criterion_customizers(
             ctx=mock_context,
             customer_id="123",
             operations=operations,
@@ -188,8 +225,11 @@ class TestAdGroupCriterionCustomizerService:
         assert request.operations[0].create.value.string_value == "99.99"
 
     @pytest.mark.asyncio
+    @patch(
+        "src.sdk_services.ad_group.ad_group_criterion_customizer_service.serialize_proto_message"
+    )
     async def test_mutate_ad_group_criterion_customizers_with_partial_failure(
-        self, service: Any, mock_context: Any, mock_client: Any
+        self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test mutating ad group criterion customizers with partial failure."""
         # Mock response with partial failure
@@ -209,6 +249,20 @@ class TestAdGroupCriterionCustomizerService:
         mock_response.partial_failure_error = mock_error
 
         mock_client.mutate_ad_group_criterion_customizers.return_value = mock_response  # type: ignore
+
+        # Mock the serialization to return a dict
+        mock_serialize.return_value = {
+            "results": [
+                {
+                    "resource_name": "customers/123/adGroupCriterionCustomizers/456~789~101112"
+                }
+            ],
+            "partial_failure_error": {
+                "code": 3,
+                "message": "Invalid customizer attribute",
+                "details": [],
+            },
+        }
 
         # Test data
         operations = [

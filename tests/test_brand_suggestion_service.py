@@ -7,7 +7,6 @@ from unittest.mock import Mock
 from google.ads.googleads.v20.enums.types.brand_state import BrandStateEnum
 from google.ads.googleads.v20.services.types.brand_suggestion_service import (
     BrandSuggestion,
-    SuggestBrandsRequest,
     SuggestBrandsResponse,
 )
 
@@ -18,7 +17,7 @@ class TestBrandSuggestionService:
     """Test cases for BrandSuggestionService"""
 
     @pytest.fixture
-    def mock_client(self):
+    def mock_client(self) -> Any:
         """Create a mock Google Ads client"""
         client = Mock()
         service = Mock()
@@ -26,9 +25,11 @@ class TestBrandSuggestionService:
         return client
 
     @pytest.fixture
-    def brand_suggestion_service(self, mock_client):
+    def brand_suggestion_service(self, mock_client: Any) -> Any:
         """Create BrandSuggestionService instance with mock client"""
-        return BrandSuggestionService(mock_client)
+        service = BrandSuggestionService()
+        service._client = mock_client  # type: ignore # Need to set private attribute for testing
+        return service
 
     def test_suggest_brands(self, brand_suggestion_service: Any, mock_client: Any):
         """Test suggesting brands"""

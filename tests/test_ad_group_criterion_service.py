@@ -349,20 +349,37 @@ async def test_add_demographic_criteria(
     mock_ad_group_criterion_client = ad_group_criterion_service.client  # type: ignore
     mock_ad_group_criterion_client.mutate_ad_group_criteria.return_value = mock_response  # type: ignore
 
-    # Act
-    result = await ad_group_criterion_service.add_demographic_criteria(
-        ctx=mock_ctx,
-        customer_id=customer_id,
-        ad_group_id=ad_group_id,
-        demographics=demographics,
-    )
+    # Mock serialize_proto_message
+    expected_result = {
+        "results": [
+            {
+                "resource_name": f"customers/{customer_id}/adGroupCriteria/{ad_group_id}~{i + 400}",
+                "type": demo["type"],
+                "value": demo["value"],
+                "bid_modifier": demo.get("bid_modifier"),
+            }
+            for i, demo in enumerate(demographics)
+        ]
+    }
+
+    with patch(
+        "src.sdk_services.ad_group.ad_group_criterion_service.serialize_proto_message",
+        return_value=expected_result,
+    ):
+        # Act
+        result = await ad_group_criterion_service.add_demographic_criteria(
+            ctx=mock_ctx,
+            customer_id=customer_id,
+            ad_group_id=ad_group_id,
+            demographics=demographics,
+        )
 
     # Assert
-    assert len(result) == len(demographics)
+    assert len(result["results"]) == len(demographics)
 
     # Check results
     for i, demo in enumerate(demographics):
-        criterion_result = result[i]
+        criterion_result = result["results"][i]
         assert (
             criterion_result["resource_name"]
             == f"customers/{customer_id}/adGroupCriteria/{ad_group_id}~{i + 400}"

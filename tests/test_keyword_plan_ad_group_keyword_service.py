@@ -5,12 +5,8 @@ from typing import Any
 from unittest.mock import Mock
 
 from google.ads.googleads.v20.enums.types.keyword_match_type import KeywordMatchTypeEnum
-from google.ads.googleads.v20.resources.types.keyword_plan_ad_group_keyword import (
-    KeywordPlanAdGroupKeyword,
-)
 from google.ads.googleads.v20.services.types.keyword_plan_ad_group_keyword_service import (
     KeywordPlanAdGroupKeywordOperation,
-    MutateKeywordPlanAdGroupKeywordsRequest,
     MutateKeywordPlanAdGroupKeywordsResponse,
     MutateKeywordPlanAdGroupKeywordResult,
 )
@@ -32,9 +28,11 @@ class TestKeywordPlanAdGroupKeywordService:
         return client
 
     @pytest.fixture
-    def keyword_plan_ad_group_keyword_service(self, mock_client):
+    def keyword_plan_ad_group_keyword_service(self, mock_client: Any) -> Any:
         """Create KeywordPlanAdGroupKeywordService instance with mock client"""
-        return KeywordPlanAdGroupKeywordService(mock_client)
+        service = KeywordPlanAdGroupKeywordService()
+        service._client = mock_client  # type: ignore # Need to set private attribute for testing
+        return service
 
     def test_mutate_keyword_plan_ad_group_keywords(
         self, keyword_plan_ad_group_keyword_service: Any, mock_client: Any

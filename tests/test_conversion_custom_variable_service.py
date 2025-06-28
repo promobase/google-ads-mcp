@@ -15,7 +15,6 @@ from google.ads.googleads.v20.resources.types.conversion_custom_variable import 
     ConversionCustomVariable,
 )
 from google.ads.googleads.v20.services.types.conversion_custom_variable_service import (
-    ConversionCustomVariableOperation,
     MutateConversionCustomVariablesResponse,
     MutateConversionCustomVariableResult,
 )
@@ -80,7 +79,7 @@ class TestConversionCustomVariableService:
         mock_client.mutate_conversion_custom_variables.return_value = mock_response  # type: ignore
 
         # Execute
-        result = await conversion_custom_variable_service.create_conversion_custom_variable(
+        _ = await conversion_custom_variable_service.create_conversion_custom_variable(
             ctx=mock_context,
             customer_id="123-456-7890",
             name="Product Category",
@@ -159,7 +158,7 @@ class TestConversionCustomVariableService:
         mock_client.mutate_conversion_custom_variables.return_value = mock_response  # type: ignore
 
         # Execute
-        result = await conversion_custom_variable_service.update_conversion_custom_variable(
+        _ = await conversion_custom_variable_service.update_conversion_custom_variable(
             ctx=mock_context,
             customer_id="1234567890",
             custom_variable_id=123456,
@@ -244,14 +243,12 @@ class TestConversionCustomVariableService:
 
         mock_client.mutate_conversion_custom_variables.return_value = mock_response  # type: ignore
 
-        result = (
-            await conversion_custom_variable_service.create_conversion_custom_variable(
-                ctx=mock_context,
-                customer_id="1234567890",
-                name="Test Variable",
-                tag="test_var",
-                partial_failure=True,
-            )
+        _ = await conversion_custom_variable_service.create_conversion_custom_variable(
+            ctx=mock_context,
+            customer_id="1234567890",
+            name="Test Variable",
+            tag="test_var",
+            partial_failure=True,
         )
 
         request = mock_client.mutate_conversion_custom_variables.call_args[1]["request"]  # type: ignore
@@ -268,8 +265,8 @@ class TestConversionCustomVariableService:
 
         # Mock API error
         error = GoogleAdsException(None, None, None, None)
-        error.failure = Mock()
-        error.failure.__str__ = Mock(return_value="Tag already exists")
+        error.failure = Mock()  # type: ignore
+        error.failure.__str__ = Mock(return_value="Tag already exists")  # type: ignore
         mock_client.mutate_conversion_custom_variables.side_effect = error  # type: ignore
 
         with pytest.raises(Exception) as exc_info:

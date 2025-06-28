@@ -19,7 +19,6 @@ from google.ads.googleads.v20.services.types.google_ads_service import (
     SearchGoogleAdsResponse,
     SearchGoogleAdsStreamResponse,
 )
-from google.protobuf import field_mask_pb2
 
 from src.sdk_services.metadata.google_ads_service import (
     GoogleAdsService,
@@ -261,8 +260,8 @@ class TestGoogleAdsService:
 
         # Mock API error
         error = GoogleAdsException(None, None, None, None)
-        error.failure = Mock()
-        error.failure.__str__ = Mock(return_value="Invalid query")
+        error.failure = Mock()  # type: ignore
+        error.failure.__str__ = Mock(return_value="Invalid query")  # type: ignore
         mock_client.search.side_effect = error  # type: ignore
 
         with pytest.raises(Exception) as exc_info:

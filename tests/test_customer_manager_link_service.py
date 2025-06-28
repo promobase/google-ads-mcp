@@ -8,11 +8,7 @@ from google.ads.googleads.errors import GoogleAdsException
 from google.ads.googleads.v20.enums.types.manager_link_status import (
     ManagerLinkStatusEnum,
 )
-from google.ads.googleads.v20.resources.types.customer_manager_link import (
-    CustomerManagerLink,
-)
 from google.ads.googleads.v20.services.types.customer_manager_link_service import (
-    CustomerManagerLinkOperation,
     MoveManagerLinkResponse,
     MutateCustomerManagerLinkResponse,
     MutateCustomerManagerLinkResult,
@@ -67,7 +63,7 @@ class TestCustomerManagerLinkService:
         mock_client.mutate_customer_manager_link.return_value = mock_response  # type: ignore
 
         # Execute
-        result = await customer_manager_link_service.update_manager_link_status(
+        _ = await customer_manager_link_service.update_manager_link_status(
             ctx=mock_context,
             customer_id="123-456-7890",
             manager_customer_id="987-654-3210",
@@ -110,7 +106,7 @@ class TestCustomerManagerLinkService:
 
         mock_client.mutate_customer_manager_link.return_value = mock_response  # type: ignore
 
-        result = await customer_manager_link_service.update_manager_link_status(
+        _ = await customer_manager_link_service.update_manager_link_status(
             ctx=mock_context,
             customer_id="1234567890",
             manager_customer_id="9876543210",
@@ -141,7 +137,7 @@ class TestCustomerManagerLinkService:
 
         mock_client.mutate_customer_manager_link.return_value = mock_response  # type: ignore
 
-        result = await customer_manager_link_service.update_manager_link_status(
+        _ = await customer_manager_link_service.update_manager_link_status(
             ctx=mock_context,
             customer_id="1234567890",
             manager_customer_id="9876543210",
@@ -169,7 +165,7 @@ class TestCustomerManagerLinkService:
         mock_client.move_manager_link.return_value = mock_response  # type: ignore
 
         # Execute
-        result = await customer_manager_link_service.move_manager_link(
+        _ = await customer_manager_link_service.move_manager_link(
             ctx=mock_context,
             customer_id="123-456-7890",
             previous_manager_customer_id="987-654-3210",
@@ -200,8 +196,8 @@ class TestCustomerManagerLinkService:
 
         # Mock API error
         error = GoogleAdsException(None, None, None, None)
-        error.failure = Mock()
-        error.failure.__str__ = Mock(return_value="Permission denied")
+        error.failure = Mock()  # type: ignore
+        error.failure.__str__ = Mock(return_value="Permission denied")  # type: ignore
         mock_client.mutate_customer_manager_link.side_effect = error  # type: ignore
 
         with pytest.raises(Exception) as exc_info:

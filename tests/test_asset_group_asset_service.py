@@ -7,9 +7,7 @@ import pytest
 from google.ads.googleads.errors import GoogleAdsException
 from google.ads.googleads.v20.enums.types.asset_field_type import AssetFieldTypeEnum
 from google.ads.googleads.v20.enums.types.asset_link_status import AssetLinkStatusEnum
-from google.ads.googleads.v20.resources.types.asset_group_asset import AssetGroupAsset
 from google.ads.googleads.v20.services.types.asset_group_asset_service import (
-    AssetGroupAssetOperation,
     MutateAssetGroupAssetsResponse,
     MutateAssetGroupAssetResult,
 )
@@ -64,7 +62,7 @@ class TestAssetGroupAssetService:
         mock_client.mutate_asset_group_assets.return_value = mock_response  # type: ignore
 
         # Execute
-        result = await asset_group_asset_service.create_asset_group_asset(
+        _ = await asset_group_asset_service.create_asset_group_asset(
             ctx=mock_context,
             customer_id="123-456-7890",
             asset_group_id="9876543210",
@@ -130,7 +128,7 @@ class TestAssetGroupAssetService:
         mock_client.mutate_asset_group_assets.return_value = mock_response  # type: ignore
 
         # Execute
-        result = await asset_group_asset_service.update_asset_group_asset_status(
+        _ = await asset_group_asset_service.update_asset_group_asset_status(
             ctx=mock_context,
             customer_id="1234567890",
             asset_group_id="9876543210",
@@ -161,7 +159,7 @@ class TestAssetGroupAssetService:
         mock_client.mutate_asset_group_assets.return_value = mock_response  # type: ignore
 
         # Execute
-        result = await asset_group_asset_service.remove_asset_group_asset(
+        _ = await asset_group_asset_service.remove_asset_group_asset(
             ctx=mock_context,
             customer_id="1234567890",
             asset_group_id="9876543210",
@@ -201,7 +199,7 @@ class TestAssetGroupAssetService:
 
         mock_client.mutate_asset_group_assets.return_value = mock_response  # type: ignore
 
-        result = await asset_group_asset_service.create_asset_group_asset(
+        _ = await asset_group_asset_service.create_asset_group_asset(
             ctx=mock_context,
             customer_id="1234567890",
             asset_group_id="9876543210",
@@ -221,8 +219,8 @@ class TestAssetGroupAssetService:
 
         # Mock API error
         error = GoogleAdsException(None, None, None, None)
-        error.failure = Mock()
-        error.failure.__str__ = Mock(return_value="Asset not found")
+        error.failure = Mock()  # type: ignore
+        error.failure.__str__ = Mock(return_value="Asset not found")  # type: ignore
         mock_client.mutate_asset_group_assets.side_effect = error  # type: ignore
 
         with pytest.raises(Exception) as exc_info:

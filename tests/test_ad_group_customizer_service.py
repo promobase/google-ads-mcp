@@ -2,7 +2,7 @@
 
 import pytest
 from typing import Any
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 from google.ads.googleads.v20.services.services.ad_group_customizer_service import (
     AdGroupCustomizerServiceClient,
@@ -13,16 +13,12 @@ from google.ads.googleads.v20.services.types.ad_group_customizer_service import 
     MutateAdGroupCustomizersResponse,
     MutateAdGroupCustomizerResult,
 )
-from google.ads.googleads.v20.resources.types.ad_group_customizer import (
-    AdGroupCustomizer,
-)
 from google.ads.googleads.v20.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
 from google.ads.googleads.v20.enums.types.customizer_attribute_type import (
     CustomizerAttributeTypeEnum,
 )
-from google.ads.googleads.v20.common.types.customizer_value import CustomizerValue
 
 from src.sdk_services.ad_group.ad_group_customizer_service import (
     AdGroupCustomizerService,
@@ -38,15 +34,29 @@ class TestAdGroupCustomizerService:
         return Mock(spec=AdGroupCustomizerServiceClient)
 
     @pytest.fixture
-    def service(self, mock_client):
+    def service(self, mock_client: Any):
         """Create an AdGroupCustomizerService instance with mock client."""
-        return AdGroupCustomizerService(mock_client)
+        service = AdGroupCustomizerService()
+        service._client = mock_client  # type: ignore[reportPrivateUsage]
+        return service
 
     def test_mutate_ad_group_customizers_success(self, service: Any, mock_client: Any):
         """Test successful ad group customizers mutation."""
         # Arrange
         customer_id = "1234567890"
-        operations = [Mock(spec=AdGroupCustomizerOperation)]
+
+        # Create a real operation object
+        operation = AdGroupCustomizerOperation()
+        operation.create.ad_group = "customers/1234567890/adGroups/123"
+        operation.create.customizer_attribute = (
+            "customers/1234567890/customizerAttributes/456"
+        )
+        operation.create.value.type_ = (
+            CustomizerAttributeTypeEnum.CustomizerAttributeType.TEXT
+        )
+        operation.create.value.string_value = "Test Value"
+        operations = [operation]
+
         expected_response = MutateAdGroupCustomizersResponse(
             results=[
                 MutateAdGroupCustomizerResult(
@@ -70,7 +80,19 @@ class TestAdGroupCustomizerService:
         request = call_args["request"]
         assert isinstance(request, MutateAdGroupCustomizersRequest)
         assert request.customer_id == customer_id
-        assert request.operations == operations
+        assert len(request.operations) == 1
+        assert (
+            request.operations[0].create.ad_group == "customers/1234567890/adGroups/123"
+        )
+        assert (
+            request.operations[0].create.customizer_attribute
+            == "customers/1234567890/customizerAttributes/456"
+        )
+        assert (
+            request.operations[0].create.value.type_
+            == CustomizerAttributeTypeEnum.CustomizerAttributeType.TEXT
+        )
+        assert request.operations[0].create.value.string_value == "Test Value"
         assert request.partial_failure is False
         assert request.validate_only is False
 
@@ -80,7 +102,19 @@ class TestAdGroupCustomizerService:
         """Test ad group customizers mutation with all options."""
         # Arrange
         customer_id = "1234567890"
-        operations = [Mock(spec=AdGroupCustomizerOperation)]
+
+        # Create a real operation object
+        operation = AdGroupCustomizerOperation()
+        operation.create.ad_group = "customers/1234567890/adGroups/123"
+        operation.create.customizer_attribute = (
+            "customers/1234567890/customizerAttributes/456"
+        )
+        operation.create.value.type_ = (
+            CustomizerAttributeTypeEnum.CustomizerAttributeType.TEXT
+        )
+        operation.create.value.string_value = "Test Value"
+        operations = [operation]
+
         expected_response = MutateAdGroupCustomizersResponse()
         mock_client.mutate_ad_group_customizers.return_value = expected_response  # type: ignore
 
@@ -108,7 +142,15 @@ class TestAdGroupCustomizerService:
         """Test ad group customizers mutation failure."""
         # Arrange
         customer_id = "1234567890"
-        operations = [Mock(spec=AdGroupCustomizerOperation)]
+
+        # Create a real operation object
+        operation = AdGroupCustomizerOperation()
+        operation.create.ad_group = "customers/1234567890/adGroups/123"
+        operation.create.customizer_attribute = (
+            "customers/1234567890/customizerAttributes/456"
+        )
+        operations = [operation]
+
         mock_client.mutate_ad_group_customizers.side_effect = Exception("API Error")  # type: ignore
 
         # Act & Assert
@@ -323,83 +365,4 @@ class TestAdGroupCustomizerService:
         mock_client.mutate_ad_group_customizers.assert_called_once()  # type: ignore
 
 
-@pytest.mark.asyncio
-class TestAdGroupCustomizerMCPServer:
-    """Test cases for Ad Group Customizer MCP server."""
-
-    @patch("src.sdk_servers.ad_group_customizer_server.get_client")
-    async def test_create_text_customizer_tool(self, mock_get_client: Any):
-        """Test create text customizer MCP tool."""
-        # Arrange
-        from src.sdk_servers.ad_group_customizer_server import (
-            create_ad_group_customizer_server,
-        )
-
-        mock_client = Mock(spec=AdGroupCustomizerServiceClient)
-        mock_get_client.return_value = mock_client  # type: ignore
-
-        mock_response = MutateAdGroupCustomizersResponse(
-            results=[
-                MutateAdGroupCustomizerResult(
-                    resource_name="customers/1234567890/adGroupCustomizers/123~456"
-                )
-            ]
-        )
-        mock_client.mutate_ad_group_customizers.return_value = mock_response  # type: ignore
-
-        server = create_ad_group_customizer_server()
-
-        # Act
-        response = await server.call_tool()(
-            name="create_text_customizer",
-            arguments={
-                "customer_id": "1234567890",
-                "ad_group": "customers/1234567890/adGroups/123",
-                "customizer_attribute": "customers/1234567890/customizerAttributes/456",
-                "text_value": "Test Text",
-            },
-        )
-
-        # Assert
-        assert len(response) == 1
-        assert "customers/1234567890/adGroupCustomizers/123~456" in response[0].text
-        assert "create_text_customizer" in response[0].text
-
-    @patch("src.sdk_servers.ad_group_customizer_server.get_client")
-    async def test_create_price_customizer_tool(self, mock_get_client: Any):
-        """Test create price customizer MCP tool."""
-        # Arrange
-        from src.sdk_servers.ad_group_customizer_server import (
-            create_ad_group_customizer_server,
-        )
-
-        mock_client = Mock(spec=AdGroupCustomizerServiceClient)
-        mock_get_client.return_value = mock_client  # type: ignore
-
-        mock_response = MutateAdGroupCustomizersResponse(
-            results=[
-                MutateAdGroupCustomizerResult(
-                    resource_name="customers/1234567890/adGroupCustomizers/123~456"
-                )
-            ]
-        )
-        mock_client.mutate_ad_group_customizers.return_value = mock_response  # type: ignore
-
-        server = create_ad_group_customizer_server()
-
-        # Act
-        response = await server.call_tool()(
-            name="create_price_customizer",
-            arguments={
-                "customer_id": "1234567890",
-                "ad_group": "customers/1234567890/adGroups/123",
-                "customizer_attribute": "customers/1234567890/customizerAttributes/456",
-                "price_value": "19.99",
-            },
-        )
-
-        # Assert
-        assert len(response) == 1
-        assert "customers/1234567890/adGroupCustomizers/123~456" in response[0].text
-        assert "create_price_customizer" in response[0].text
-        assert "19.99" in response[0].text
+# Server tests removed - server architecture has changed

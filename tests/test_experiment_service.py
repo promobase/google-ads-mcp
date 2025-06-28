@@ -447,7 +447,7 @@ async def test_list_experiments(
     mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Mock serialize_proto_message
-    def mock_serialize(obj):
+    def mock_serialize(obj: Any) -> Any:
         return {"experiment": {"name": "Test Experiment", "status": "ENABLED"}}
 
     # Update the mock to return GoogleAdsService when requested

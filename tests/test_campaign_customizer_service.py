@@ -5,18 +5,13 @@ from typing import Any
 
 import pytest
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.common.types.customizer_value import CustomizerValue
 from google.ads.googleads.v20.enums.types.customizer_attribute_type import (
     CustomizerAttributeTypeEnum,
 )
 from google.ads.googleads.v20.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
-from google.ads.googleads.v20.resources.types.campaign_customizer import (
-    CampaignCustomizer,
-)
 from google.ads.googleads.v20.services.types.campaign_customizer_service import (
-    CampaignCustomizerOperation,
     MutateCampaignCustomizersResponse,
     MutateCampaignCustomizerResult,
 )
@@ -74,7 +69,7 @@ class TestCampaignCustomizerService:
         mock_client.mutate_campaign_customizers.return_value = mock_response  # type: ignore
 
         # Execute
-        result = await campaign_customizer_service.create_campaign_customizer(
+        _ = await campaign_customizer_service.create_campaign_customizer(
             ctx=mock_context,
             customer_id="123-456-7890",
             campaign_id="9876543210",
@@ -187,7 +182,7 @@ class TestCampaignCustomizerService:
         mock_client.mutate_campaign_customizers.return_value = mock_response  # type: ignore
 
         # Execute
-        result = await campaign_customizer_service.remove_campaign_customizer(
+        _ = await campaign_customizer_service.remove_campaign_customizer(
             ctx=mock_context,
             customer_id="1234567890",
             campaign_id="9876543210",
@@ -226,7 +221,7 @@ class TestCampaignCustomizerService:
 
         mock_client.mutate_campaign_customizers.return_value = mock_response  # type: ignore
 
-        result = await campaign_customizer_service.create_campaign_customizer(
+        _ = await campaign_customizer_service.create_campaign_customizer(
             ctx=mock_context,
             customer_id="1234567890",
             campaign_id="9876543210",
@@ -247,8 +242,8 @@ class TestCampaignCustomizerService:
 
         # Mock API error
         error = GoogleAdsException(None, None, None, None)
-        error.failure = Mock()
-        error.failure.__str__ = Mock(return_value="Invalid customizer attribute")
+        error.failure = Mock()  # type: ignore
+        error.failure.__str__ = Mock(return_value="Invalid customizer attribute")  # type: ignore
         mock_client.mutate_campaign_customizers.side_effect = error  # type: ignore
 
         with pytest.raises(Exception) as exc_info:

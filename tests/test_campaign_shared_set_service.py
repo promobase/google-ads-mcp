@@ -336,7 +336,7 @@ async def test_list_campaign_shared_sets(
     mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Mock serialize_proto_message
-    def mock_serialize(obj):
+    def mock_serialize(obj: Any) -> Any:
         return {"campaign_shared_set": "test_data", "campaign": "test_campaign"}
 
     # Update the mock to return GoogleAdsService when requested
@@ -487,7 +487,7 @@ async def test_get_campaigns_using_shared_set(
     mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Mock serialize_proto_message
-    def mock_serialize(obj):
+    def mock_serialize(obj: Any) -> Any:
         return {
             "campaign_shared_set": {"status": "ENABLED"},
             "campaign": {"name": "Test Campaign"},

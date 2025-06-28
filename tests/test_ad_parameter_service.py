@@ -26,10 +26,10 @@ def mock_client():
 
 
 @pytest.fixture
-def service(mock_client):
+def service(mock_client: Any):
     """Create an ad parameter service with mocked client."""
     service = AdParameterService()
-    service._client = mock_client
+    service._client = mock_client  # type: ignore[reportPrivateUsage]
     return service
 
 
@@ -37,8 +37,9 @@ class TestAdParameterService:
     """Test cases for AdParameterService."""
 
     @pytest.mark.asyncio
+    @patch("src.sdk_services.ad_group.ad_parameter_service.serialize_proto_message")
     async def test_mutate_ad_parameters_create(
-        self, service: Any, mock_context: Any, mock_client: Any
+        self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test creating ad parameters."""
         # Mock response
@@ -51,6 +52,12 @@ class TestAdParameterService:
         mock_response.partial_failure_error = None
 
         mock_client.mutate_ad_parameters.return_value = mock_response  # type: ignore
+
+        # Mock the serialization to return a dict
+        mock_serialize.return_value = {
+            "results": [{"resource_name": "customers/123/adParameters/456~789~1"}],
+            "partial_failure_error": None,
+        }
 
         # Test data
         operations = [
@@ -92,8 +99,9 @@ class TestAdParameterService:
         assert request.operations[0].create.insertion_text == "$99.99"
 
     @pytest.mark.asyncio
+    @patch("src.sdk_services.ad_group.ad_parameter_service.serialize_proto_message")
     async def test_mutate_ad_parameters_update(
-        self, service: Any, mock_context: Any, mock_client: Any
+        self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test updating ad parameters."""
         # Mock response
@@ -106,6 +114,11 @@ class TestAdParameterService:
         mock_response.partial_failure_error = None
 
         mock_client.mutate_ad_parameters.return_value = mock_response  # type: ignore
+
+        # Mock the serialization to return a dict
+        mock_serialize.return_value = {
+            "results": [{"resource_name": "customers/123/adParameters/456~789~1"}]
+        }
 
         # Test data
         operations = [
@@ -145,8 +158,9 @@ class TestAdParameterService:
         assert "insertion_text" in request.operations[0].update_mask.paths
 
     @pytest.mark.asyncio
+    @patch("src.sdk_services.ad_group.ad_parameter_service.serialize_proto_message")
     async def test_mutate_ad_parameters_remove(
-        self, service: Any, mock_context: Any, mock_client: Any
+        self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test removing ad parameters."""
         # Mock response
@@ -159,6 +173,11 @@ class TestAdParameterService:
         mock_response.partial_failure_error = None
 
         mock_client.mutate_ad_parameters.return_value = mock_response  # type: ignore
+
+        # Mock the serialization to return a dict
+        mock_serialize.return_value = {
+            "results": [{"resource_name": "customers/123/adParameters/456~789~1"}]
+        }
 
         # Test data
         operations = [{"remove": "customers/123/adParameters/456~789~1"}]
@@ -186,8 +205,9 @@ class TestAdParameterService:
         assert request.operations[0].remove == "customers/123/adParameters/456~789~1"
 
     @pytest.mark.asyncio
+    @patch("src.sdk_services.ad_group.ad_parameter_service.serialize_proto_message")
     async def test_mutate_ad_parameters_parameter_index_2(
-        self, service: Any, mock_context: Any, mock_client: Any
+        self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test creating ad parameters with parameter index 2."""
         # Mock response
@@ -201,6 +221,11 @@ class TestAdParameterService:
 
         mock_client.mutate_ad_parameters.return_value = mock_response  # type: ignore
 
+        # Mock the serialization to return a dict
+        mock_serialize.return_value = {
+            "results": [{"resource_name": "customers/123/adParameters/456~789~2"}]
+        }
+
         # Test data
         operations = [
             {
@@ -213,7 +238,7 @@ class TestAdParameterService:
         ]
 
         # Call the method
-        result = await service.mutate_ad_parameters(
+        _ = await service.mutate_ad_parameters(
             ctx=mock_context,
             customer_id="123",
             operations=operations,
@@ -228,8 +253,9 @@ class TestAdParameterService:
         assert request.operations[0].create.insertion_text == "50% off"
 
     @pytest.mark.asyncio
+    @patch("src.sdk_services.ad_group.ad_parameter_service.serialize_proto_message")
     async def test_mutate_ad_parameters_with_partial_failure(
-        self, service: Any, mock_context: Any, mock_client: Any
+        self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
     ):
         """Test mutating ad parameters with partial failure."""
         # Mock response with partial failure
@@ -247,6 +273,16 @@ class TestAdParameterService:
         mock_response.partial_failure_error = mock_error
 
         mock_client.mutate_ad_parameters.return_value = mock_response  # type: ignore
+
+        # Mock the serialization to return a dict
+        mock_serialize.return_value = {
+            "results": [{"resource_name": "customers/123/adParameters/456~789~1"}],
+            "partial_failure_error": {
+                "code": 3,
+                "message": "Invalid parameter index",
+                "details": [],
+            },
+        }
 
         # Test data
         operations = [

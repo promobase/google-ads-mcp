@@ -131,17 +131,6 @@ async def test_apply_labels_to_campaigns(
     mock_campaign_label_client = campaign_label_service.client  # type: ignore
     mock_campaign_label_client.mutate_campaign_labels.return_value = mock_response  # type: ignore
 
-    # Mock serialize_proto_message
-    # The service returns individual results for each pair
-    expected_result = [
-        {
-            "resource_name": f"customers/{customer_id}/campaignLabels/{pair['campaign_id']}~{pair['label_id']}",
-            "campaign_id": pair["campaign_id"],
-            "label_id": pair["label_id"],
-        }
-        for pair in campaign_label_pairs
-    ]
-
     # Act
     result = await campaign_label_service.apply_labels_to_campaigns(
         ctx=mock_ctx,

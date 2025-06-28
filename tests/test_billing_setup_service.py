@@ -5,9 +5,6 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.billing_setup_status import (
-    BillingSetupStatusEnum,
-)
 from google.ads.googleads.v20.enums.types.time_type import TimeTypeEnum
 from google.ads.googleads.v20.services.services.billing_setup_service import (
     BillingSetupServiceClient,

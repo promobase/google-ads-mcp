@@ -11,11 +11,7 @@ from google.ads.googleads.v20.enums.types.conversion_action_category import (
 from google.ads.googleads.v20.enums.types.conversion_origin import (
     ConversionOriginEnum,
 )
-from google.ads.googleads.v20.resources.types.campaign_conversion_goal import (
-    CampaignConversionGoal,
-)
 from google.ads.googleads.v20.services.types.campaign_conversion_goal_service import (
-    CampaignConversionGoalOperation,
     MutateCampaignConversionGoalsResponse,
     MutateCampaignConversionGoalResult,
 )
@@ -69,7 +65,7 @@ class TestCampaignConversionGoalService:
         mock_client.mutate_campaign_conversion_goals.return_value = mock_response  # type: ignore
 
         # Execute
-        result = await campaign_conversion_goal_service.update_campaign_conversion_goal(
+        _ = await campaign_conversion_goal_service.update_campaign_conversion_goal(
             ctx=mock_context,
             customer_id="123-456-7890",
             campaign_id="9876543210",
@@ -118,7 +114,7 @@ class TestCampaignConversionGoalService:
             ctx=mock_context,
             customer_id="1234567890",
             campaign_id="1111111111",
-            category=ConversionActionCategoryEnum.ConversionActionCategory.LEAD,
+            category=ConversionActionCategoryEnum.ConversionActionCategory.IMPORTED_LEAD,
             origin=ConversionOriginEnum.ConversionOrigin.APP,
             biddable=False,
         )
@@ -130,7 +126,7 @@ class TestCampaignConversionGoalService:
         )
         assert (
             operation.update.category
-            == ConversionActionCategoryEnum.ConversionActionCategory.LEAD
+            == ConversionActionCategoryEnum.ConversionActionCategory.IMPORTED_LEAD
         )
         assert operation.update.origin == ConversionOriginEnum.ConversionOrigin.APP
         assert operation.update.biddable is False
@@ -149,7 +145,7 @@ class TestCampaignConversionGoalService:
             customer_id="1234567890",
             campaign_id="2222222222",
             category=ConversionActionCategoryEnum.ConversionActionCategory.SIGNUP,
-            origin=ConversionOriginEnum.ConversionOrigin.UPLOAD,
+            origin=ConversionOriginEnum.ConversionOrigin.WEBSITE,
             biddable=True,
             validate_only=True,
         )
@@ -165,8 +161,8 @@ class TestCampaignConversionGoalService:
 
         # Mock API error
         error = GoogleAdsException(None, None, None, None)
-        error.failure = Mock()
-        error.failure.__str__ = Mock(return_value="Invalid campaign ID")
+        error.failure = Mock()  # type: ignore
+        error.failure.__str__ = Mock(return_value="Invalid campaign ID")  # type: ignore
         mock_client.mutate_campaign_conversion_goals.side_effect = error  # type: ignore
 
         with pytest.raises(Exception) as exc_info:
@@ -268,7 +264,7 @@ class TestCampaignConversionGoalTools:
                 ctx=mock_context,
                 customer_id="1234567890",
                 campaign_id="1111111111",
-                category=ConversionActionCategoryEnum.ConversionActionCategory.LEAD,
+                category=ConversionActionCategoryEnum.ConversionActionCategory.IMPORTED_LEAD,
                 origin=ConversionOriginEnum.ConversionOrigin.APP,
                 biddable=False,
                 validate_only=True,

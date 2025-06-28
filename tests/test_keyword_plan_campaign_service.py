@@ -2,18 +2,13 @@
 
 import pytest
 from typing import Any
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 from google.ads.googleads.v20.enums.types.keyword_plan_network import (
     KeywordPlanNetworkEnum,
 )
-from google.ads.googleads.v20.resources.types.keyword_plan_campaign import (
-    KeywordPlanCampaign,
-    KeywordPlanGeoTarget,
-)
 from google.ads.googleads.v20.services.types.keyword_plan_campaign_service import (
     KeywordPlanCampaignOperation,
-    MutateKeywordPlanCampaignsRequest,
     MutateKeywordPlanCampaignsResponse,
     MutateKeywordPlanCampaignResult,
 )
@@ -27,7 +22,7 @@ class TestKeywordPlanCampaignService:
     """Test cases for KeywordPlanCampaignService"""
 
     @pytest.fixture
-    def mock_client(self):
+    def mock_client(self) -> Any:
         """Create a mock Google Ads client"""
         client = Mock()
         service = Mock()
@@ -35,9 +30,11 @@ class TestKeywordPlanCampaignService:
         return client
 
     @pytest.fixture
-    def keyword_plan_campaign_service(self, mock_client):
+    def keyword_plan_campaign_service(self, mock_client: Any) -> Any:
         """Create KeywordPlanCampaignService instance with mock client"""
-        return KeywordPlanCampaignService(mock_client)
+        service = KeywordPlanCampaignService()
+        service._client = mock_client  # type: ignore # Need to set private attribute for testing
+        return service
 
     def test_mutate_keyword_plan_campaigns(
         self, keyword_plan_campaign_service: Any, mock_client: Any

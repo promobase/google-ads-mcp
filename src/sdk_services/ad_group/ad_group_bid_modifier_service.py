@@ -397,13 +397,13 @@ class AdGroupBidModifierService:
                     modifier_dict["criterion_details"] = {
                         "type": bid_modifier.hotel_date_selection_type.type.name
                     }
-                elif bid_modifier.hotel_advance_booking_window.min_days is not None:
+                elif bid_modifier.hotel_advance_booking_window:
                     modifier_dict["criterion_type"] = "HOTEL_ADVANCE_BOOKING_WINDOW"
                     modifier_dict["criterion_details"] = {
                         "min_days": bid_modifier.hotel_advance_booking_window.min_days,
                         "max_days": bid_modifier.hotel_advance_booking_window.max_days,
                     }
-                elif bid_modifier.hotel_length_of_stay.min_nights is not None:
+                elif bid_modifier.hotel_length_of_stay:
                     modifier_dict["criterion_type"] = "HOTEL_LENGTH_OF_STAY"
                     modifier_dict["criterion_details"] = {
                         "min_nights": bid_modifier.hotel_length_of_stay.min_nights,

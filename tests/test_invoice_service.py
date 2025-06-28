@@ -461,7 +461,7 @@ async def test_tool_wrapper_list_invoices_case_insensitive(
         return_value=expected_result,
     ):
         # Act
-        result = await list_invoices_tool(
+        _ = await list_invoices_tool(
             ctx=mock_ctx,
             customer_id=customer_id,
             billing_setup=billing_setup,

@@ -6,14 +6,9 @@ from unittest.mock import Mock
 
 from google.ads.googleads.v20.resources.types.product_link import (
     ProductLink,
-    DataPartnerIdentifier,
-    GoogleAdsIdentifier,
-    MerchantCenterIdentifier,
 )
 from google.ads.googleads.v20.services.types.product_link_service import (
-    CreateProductLinkRequest,
     CreateProductLinkResponse,
-    RemoveProductLinkRequest,
     RemoveProductLinkResponse,
 )
 
@@ -24,7 +19,7 @@ class TestProductLinkService:
     """Test cases for ProductLinkService"""
 
     @pytest.fixture
-    def mock_client(self):
+    def mock_client(self) -> Any:
         """Create a mock Google Ads client"""
         client = Mock()
         service = Mock()
@@ -32,9 +27,11 @@ class TestProductLinkService:
         return client
 
     @pytest.fixture
-    def product_link_service(self, mock_client):
+    def product_link_service(self, mock_client: Any) -> Any:
         """Create ProductLinkService instance with mock client"""
-        return ProductLinkService(mock_client)
+        service = ProductLinkService()
+        service._client = mock_client  # type: ignore # Need to set private attribute for testing
+        return service
 
     def test_create_product_link(self, product_link_service: Any, mock_client: Any):
         """Test creating a product link"""

@@ -421,7 +421,7 @@ async def test_list_custom_interests(
     mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     # Mock serialize_proto_message
-    def mock_serialize(obj):
+    def mock_serialize(obj: Any) -> Any:
         return {"custom_interest": {"name": "Test Interest"}}
 
     # Update the mock to return GoogleAdsService when requested

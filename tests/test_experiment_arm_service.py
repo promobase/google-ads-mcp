@@ -2,12 +2,10 @@
 
 import pytest
 from typing import Any
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
-from google.ads.googleads.v20.resources.types.experiment_arm import ExperimentArm
 from google.ads.googleads.v20.services.types.experiment_arm_service import (
     ExperimentArmOperation,
-    MutateExperimentArmsRequest,
     MutateExperimentArmsResponse,
     MutateExperimentArmResult,
 )
@@ -19,7 +17,7 @@ class TestExperimentArmService:
     """Test cases for ExperimentArmService"""
 
     @pytest.fixture
-    def mock_client(self):
+    def mock_client(self) -> Any:
         """Create a mock Google Ads client"""
         client = Mock()
         service = Mock()
@@ -27,9 +25,11 @@ class TestExperimentArmService:
         return client
 
     @pytest.fixture
-    def experiment_arm_service(self, mock_client):
+    def experiment_arm_service(self, mock_client: Any) -> Any:
         """Create ExperimentArmService instance with mock client"""
-        return ExperimentArmService(mock_client)
+        service = ExperimentArmService()
+        service._client = mock_client  # type: ignore # Need to set private attribute for testing
+        return service
 
     def test_mutate_experiment_arms(
         self, experiment_arm_service: Any, mock_client: Any

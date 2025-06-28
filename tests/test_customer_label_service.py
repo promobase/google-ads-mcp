@@ -5,9 +5,7 @@ from typing import Any
 
 import pytest
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.resources.types.customer_label import CustomerLabel
 from google.ads.googleads.v20.services.types.customer_label_service import (
-    CustomerLabelOperation,
     MutateCustomerLabelsResponse,
     MutateCustomerLabelResult,
 )
@@ -60,7 +58,7 @@ class TestCustomerLabelService:
         mock_client.mutate_customer_labels.return_value = mock_response  # type: ignore
 
         # Execute
-        result = await customer_label_service.create_customer_label(
+        _ = await customer_label_service.create_customer_label(
             ctx=mock_context,
             customer_id="123-456-7890",
             label_id="9876543210",
@@ -94,7 +92,7 @@ class TestCustomerLabelService:
         mock_client.mutate_customer_labels.return_value = mock_response  # type: ignore
 
         # Execute
-        result = await customer_label_service.remove_customer_label(
+        _ = await customer_label_service.remove_customer_label(
             ctx=mock_context,
             customer_id="1234567890",
             label_id="9876543210",
@@ -130,7 +128,7 @@ class TestCustomerLabelService:
 
         mock_client.mutate_customer_labels.return_value = mock_response  # type: ignore
 
-        result = await customer_label_service.create_customer_label(
+        _ = await customer_label_service.create_customer_label(
             ctx=mock_context,
             customer_id="1234567890",
             label_id="9876543210",
@@ -148,8 +146,8 @@ class TestCustomerLabelService:
 
         # Mock API error
         error = GoogleAdsException(None, None, None, None)
-        error.failure = Mock()
-        error.failure.__str__ = Mock(return_value="Label not found")
+        error.failure = Mock()  # type: ignore
+        error.failure.__str__ = Mock(return_value="Label not found")  # type: ignore
         mock_client.mutate_customer_labels.side_effect = error  # type: ignore
 
         with pytest.raises(Exception) as exc_info:
