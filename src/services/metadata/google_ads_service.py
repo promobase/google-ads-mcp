@@ -22,6 +22,7 @@ from google.ads.googleads.v20.services.types.google_ads_service import (
     SearchGoogleAdsRequest,
     SearchGoogleAdsStreamRequest,
     SearchGoogleAdsStreamResponse,
+    SearchSettings,
 )
 
 from src.sdk_client import get_sdk_client
@@ -81,7 +82,15 @@ class GoogleAdsService:
             if page_token:
                 request.page_token = page_token
             request.validate_only = validate_only
-            request.summary_row_setting = summary_row_setting
+
+            # Set search settings for summary row
+            if (
+                summary_row_setting
+                != SummaryRowSettingEnum.SummaryRowSetting.NO_SUMMARY_ROW
+            ):
+                search_settings = SearchSettings()
+                search_settings.return_summary_row = True
+                request.search_settings = search_settings
 
             # Execute search
             response = self.client.search(request=request)
@@ -224,13 +233,19 @@ class GoogleAdsService:
             for result in response.mutate_operation_responses:
                 results.append(serialize_proto_message(result))
 
+            # Handle partial_failure_error - only include if it has actual content
+            partial_failure_error = None
+            if (
+                response.partial_failure_error
+                and response.partial_failure_error.message
+            ):
+                partial_failure_error = serialize_proto_message(
+                    response.partial_failure_error
+                )
+
             return {
                 "results": results,
-                "partial_failure_error": (
-                    serialize_proto_message(response.partial_failure_error)
-                    if response.partial_failure_error
-                    else None
-                ),
+                "partial_failure_error": partial_failure_error,
             }
 
         except GoogleAdsException as e:

@@ -1,11 +1,12 @@
 """Main entry point for Google Ads MCP server."""
 
+import argparse
 import asyncio
 import signal
 import sys
 from contextlib import asynccontextmanager
 from types import FrameType
-from typing import Any, AsyncGenerator, Optional
+from typing import Any, AsyncGenerator, Optional, Set
 
 from fastmcp import Context, FastMCP
 
@@ -170,6 +171,44 @@ logger = get_logger(__name__)
 load_dotenv()
 
 
+def parse_arguments():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Google Ads MCP Server",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Available server groups:
+  core        - Essential services (customer, campaign, budget, ad groups, keywords, ads)
+  assets      - Asset management services
+  targeting   - Targeting and audience services
+  bidding     - Bidding strategies and modifiers
+  planning    - Keyword planning and reach planning
+  experiments - Campaign experiments and drafts
+  reporting   - Reporting and field metadata
+  conversion  - Conversion tracking and uploads
+  organization - Labels and shared sets
+  customizers - Customizer attributes and parameters
+  account     - Account management and linking
+  other       - Smart campaigns, batch jobs, user data
+
+Examples:
+  uv run main.py                    # Mount all servers
+  uv run main.py --groups all       # Mount all servers
+  uv run main.py --groups core      # Mount only core services
+  uv run main.py --groups core,assets,targeting  # Mount specific groups
+""",
+    )
+
+    parser.add_argument(
+        "--groups",
+        type=str,
+        default="core",
+        help="Comma-separated list of server groups to mount (default: core)",
+    )
+
+    return parser.parse_args()
+
+
 @asynccontextmanager
 async def lifespan(app: Any) -> AsyncGenerator[None, None]:  # noqa: ARG001
     """Manage Google Ads SDK client lifecycle."""
@@ -233,101 +272,157 @@ mcp = FastMCP(
 )
 
 
-# Mount the servers
-mcp.mount(customer_service_server, prefix="customer")
-mcp.mount(campaign_server, prefix="campaign")
-mcp.mount(budget_server, prefix="budget")
-mcp.mount(ad_group_server, prefix="ad_group")
-mcp.mount(keyword_server, prefix="keyword")
-mcp.mount(ad_server, prefix="ad")
-mcp.mount(ad_group_ad_server, prefix="ad_group_ad")
-mcp.mount(ad_group_asset_server, prefix="ad_group_asset")
-mcp.mount(conversion_server, prefix="conversion")
-mcp.mount(search_server, prefix="search")
-mcp.mount(asset_server, prefix="asset")
-mcp.mount(asset_group_server, prefix="asset_group")
-mcp.mount(asset_group_asset_server, prefix="asset_group_asset")
-mcp.mount(asset_group_signal_server, prefix="asset_group_signal")
-mcp.mount(asset_set_server, prefix="asset_set")
-mcp.mount(bidding_strategy_server, prefix="bidding_strategy")
-# mcp.mount(extension_feed_item_sdk_server, prefix="extension")  # Not available in v20
-mcp.mount(user_list_server, prefix="user_list")
-mcp.mount(audience_server, prefix="audience")
-mcp.mount(geo_target_constant_server, prefix="geo_target")
-mcp.mount(recommendation_server, prefix="recommendation")
-mcp.mount(campaign_criterion_server, prefix="campaign_criterion")
-mcp.mount(ad_group_criterion_server, prefix="ad_group_criterion")
-mcp.mount(customer_negative_criterion_server, prefix="customer_negative_criterion")
-mcp.mount(shared_set_server, prefix="shared_set")
-mcp.mount(shared_criterion_server, prefix="shared_criterion")
-mcp.mount(label_server, prefix="label")
-mcp.mount(campaign_label_server, prefix="campaign_label")
-mcp.mount(campaign_asset_server, prefix="campaign_asset")
-mcp.mount(campaign_asset_set_server, prefix="campaign_asset_set")
-mcp.mount(ad_group_label_server, prefix="ad_group_label")
-mcp.mount(google_ads_field_server, prefix="google_ads_field")
-mcp.mount(custom_interest_server, prefix="custom_interest")
-mcp.mount(custom_audience_server, prefix="custom_audience")
-mcp.mount(keyword_plan_server, prefix="keyword_plan")
-mcp.mount(keyword_plan_idea_server, prefix="keyword_plan_idea")
-mcp.mount(keyword_plan_ad_group_server, prefix="keyword_plan_ad_group")
-mcp.mount(keyword_plan_campaign_server, prefix="keyword_plan_campaign")
-mcp.mount(keyword_plan_ad_group_keyword_server, prefix="keyword_plan_ad_group_keyword")
-mcp.mount(keyword_plan_campaign_keyword_server, prefix="keyword_plan_campaign_keyword")
-mcp.mount(brand_suggestion_server, prefix="brand_suggestion")
-mcp.mount(product_link_server, prefix="product_link")
-mcp.mount(
-    conversion_goal_campaign_config_server, prefix="conversion_goal_campaign_config"
-)
-mcp.mount(custom_conversion_goal_server, prefix="custom_conversion_goal")
-mcp.mount(customer_conversion_goal_server, prefix="customer_conversion_goal")
-mcp.mount(experiment_server, prefix="experiment")
-mcp.mount(experiment_arm_server, prefix="experiment_arm")
-mcp.mount(conversion_upload_server, prefix="conversion_upload")
-mcp.mount(smart_campaign_server, prefix="smart_campaign")
-mcp.mount(remarketing_action_server, prefix="remarketing_action")
-mcp.mount(conversion_adjustment_upload_server, prefix="conversion_adjustment_upload")
-mcp.mount(campaign_bid_modifier_server, prefix="campaign_bid_modifier")
-mcp.mount(ad_group_bid_modifier_server, prefix="ad_group_bid_modifier")
-mcp.mount(campaign_shared_set_server, prefix="campaign_shared_set")
-mcp.mount(billing_setup_server, prefix="billing_setup")
-mcp.mount(offline_user_data_job_server, prefix="offline_user_data_job")
-mcp.mount(conversion_value_rule_server, prefix="conversion_value_rule")
-mcp.mount(user_data_server, prefix="user_data")
-mcp.mount(customizer_sdk_server, prefix="customizer_attribute")
-mcp.mount(customer_user_access_server, prefix="customer_user_access")
-mcp.mount(
-    customer_user_access_invitation_server, prefix="customer_user_access_invitation"
-)
-mcp.mount(payments_account_server, prefix="payments_account")
-mcp.mount(batch_job_server, prefix="batch_job")
-mcp.mount(identity_verification_server, prefix="identity_verification")
-mcp.mount(ad_group_ad_label_server, prefix="ad_group_ad_label")
-mcp.mount(ad_group_criterion_label_server, prefix="ad_group_criterion_label")
-mcp.mount(ad_group_criterion_customizer_server, prefix="ad_group_criterion_customizer")
-mcp.mount(ad_parameter_server, prefix="ad_parameter")
-mcp.mount(ad_group_customizer_server, prefix="ad_group_customizer")
-mcp.mount(ad_group_asset_set_server, prefix="ad_group_asset_set")
-mcp.mount(account_link_server, prefix="account_link")
-mcp.mount(reach_plan_server, prefix="reach_plan")
-mcp.mount(data_link_server, prefix="data_link")
-mcp.mount(account_budget_proposal_server, prefix="account_budget_proposal")
-mcp.mount(invoice_server, prefix="invoice")
-mcp.mount(campaign_draft_server, prefix="campaign_draft")
-mcp.mount(bidding_data_exclusion_server, prefix="bidding_data_exclusion")
-mcp.mount(
-    bidding_seasonality_adjustment_server, prefix="bidding_seasonality_adjustment"
-)
-mcp.mount(customer_client_link_server, prefix="customer_client_link")
-mcp.mount(audience_insights_server, prefix="audience_insights")
-mcp.mount(google_ads_server, prefix="google_ads")
-mcp.mount(customer_manager_link_server, prefix="customer_manager_link")
-mcp.mount(customer_asset_server, prefix="customer_asset")
-mcp.mount(customer_customizer_server, prefix="customer_customizer")
-mcp.mount(customer_label_server, prefix="customer_label")
-mcp.mount(conversion_custom_variable_server, prefix="conversion_custom_variable")
-mcp.mount(campaign_conversion_goal_server, prefix="campaign_conversion_goal")
-mcp.mount(campaign_customizer_server, prefix="campaign_customizer")
+# Define server groups
+SERVER_GROUPS = {
+    "core": [
+        ("customer", customer_service_server),
+        ("campaign", campaign_server),
+        ("budget", budget_server),
+        ("ad_group", ad_group_server),
+        ("keyword", keyword_server),
+        ("ad", ad_server),
+        ("ad_group_ad", ad_group_ad_server),
+        ("conversion", conversion_server),
+        ("google_ads", google_ads_server),
+    ],
+    "assets": [
+        ("asset", asset_server),
+        ("asset_group", asset_group_server),
+        ("asset_group_asset", asset_group_asset_server),
+        ("asset_group_signal", asset_group_signal_server),
+        ("asset_set", asset_set_server),
+        ("ad_group_asset", ad_group_asset_server),
+        ("ad_group_asset_set", ad_group_asset_set_server),
+        ("campaign_asset", campaign_asset_server),
+        ("campaign_asset_set", campaign_asset_set_server),
+        ("customer_asset", customer_asset_server),
+    ],
+    "targeting": [
+        ("campaign_criterion", campaign_criterion_server),
+        ("ad_group_criterion", ad_group_criterion_server),
+        ("customer_negative_criterion", customer_negative_criterion_server),
+        ("geo_target", geo_target_constant_server),
+        ("audience", audience_server),
+        ("custom_interest", custom_interest_server),
+        ("custom_audience", custom_audience_server),
+        ("user_list", user_list_server),
+    ],
+    "bidding": [
+        ("bidding_strategy", bidding_strategy_server),
+        ("campaign_bid_modifier", campaign_bid_modifier_server),
+        ("ad_group_bid_modifier", ad_group_bid_modifier_server),
+        ("bidding_data_exclusion", bidding_data_exclusion_server),
+        ("bidding_seasonality_adjustment", bidding_seasonality_adjustment_server),
+    ],
+    "planning": [
+        ("keyword_plan", keyword_plan_server),
+        ("keyword_plan_idea", keyword_plan_idea_server),
+        ("keyword_plan_ad_group", keyword_plan_ad_group_server),
+        ("keyword_plan_campaign", keyword_plan_campaign_server),
+        ("keyword_plan_ad_group_keyword", keyword_plan_ad_group_keyword_server),
+        ("keyword_plan_campaign_keyword", keyword_plan_campaign_keyword_server),
+        ("reach_plan", reach_plan_server),
+        ("brand_suggestion", brand_suggestion_server),
+    ],
+    "experiments": [
+        ("experiment", experiment_server),
+        ("experiment_arm", experiment_arm_server),
+        ("campaign_draft", campaign_draft_server),
+    ],
+    "reporting": [
+        ("search", search_server),
+        ("google_ads_field", google_ads_field_server),
+        ("recommendation", recommendation_server),
+        ("invoice", invoice_server),
+        ("audience_insights", audience_insights_server),
+    ],
+    "conversion": [
+        ("conversion_upload", conversion_upload_server),
+        ("conversion_adjustment_upload", conversion_adjustment_upload_server),
+        ("conversion_value_rule", conversion_value_rule_server),
+        ("conversion_custom_variable", conversion_custom_variable_server),
+        ("conversion_goal_campaign_config", conversion_goal_campaign_config_server),
+        ("custom_conversion_goal", custom_conversion_goal_server),
+        ("customer_conversion_goal", customer_conversion_goal_server),
+        ("campaign_conversion_goal", campaign_conversion_goal_server),
+        ("offline_user_data_job", offline_user_data_job_server),
+        ("remarketing_action", remarketing_action_server),
+    ],
+    "organization": [
+        ("label", label_server),
+        ("campaign_label", campaign_label_server),
+        ("ad_group_label", ad_group_label_server),
+        ("ad_group_ad_label", ad_group_ad_label_server),
+        ("ad_group_criterion_label", ad_group_criterion_label_server),
+        ("customer_label", customer_label_server),
+        ("shared_set", shared_set_server),
+        ("shared_criterion", shared_criterion_server),
+        ("campaign_shared_set", campaign_shared_set_server),
+    ],
+    "customizers": [
+        ("customizer_attribute", customizer_sdk_server),
+        ("customer_customizer", customer_customizer_server),
+        ("campaign_customizer", campaign_customizer_server),
+        ("ad_group_customizer", ad_group_customizer_server),
+        ("ad_group_criterion_customizer", ad_group_criterion_customizer_server),
+        ("ad_parameter", ad_parameter_server),
+    ],
+    "account": [
+        ("customer_user_access", customer_user_access_server),
+        ("customer_user_access_invitation", customer_user_access_invitation_server),
+        ("customer_client_link", customer_client_link_server),
+        ("customer_manager_link", customer_manager_link_server),
+        ("account_link", account_link_server),
+        ("account_budget_proposal", account_budget_proposal_server),
+        ("billing_setup", billing_setup_server),
+        ("payments_account", payments_account_server),
+        ("identity_verification", identity_verification_server),
+        ("product_link", product_link_server),
+        ("data_link", data_link_server),
+    ],
+    "other": [
+        ("smart_campaign", smart_campaign_server),
+        ("batch_job", batch_job_server),
+        ("user_data", user_data_server),
+    ],
+}
+
+
+def get_servers_to_mount(groups_arg: str) -> Set[tuple[str, Any]]:
+    """Get the set of servers to mount based on the groups argument."""
+    if groups_arg == "all":
+        # Return all servers from all groups
+        all_servers = set()
+        for servers in SERVER_GROUPS.values():
+            all_servers.update(servers)
+        return all_servers
+
+    # Parse requested groups
+    requested_groups = [g.strip() for g in groups_arg.split(",")]
+    servers_to_mount = set()
+
+    for group in requested_groups:
+        if group in SERVER_GROUPS:
+            servers_to_mount.update(SERVER_GROUPS[group])
+        else:
+            logger.warning(f"Unknown server group: {group}")
+
+    return servers_to_mount
+
+
+# Parse command line arguments
+args = parse_arguments()
+servers_to_mount = get_servers_to_mount(args.groups)
+
+# Log which groups are being mounted
+if args.groups == "all":
+    logger.info("Mounting all server groups")
+else:
+    logger.info(f"Mounting server groups: {args.groups}")
+
+# Mount the selected servers
+for prefix, server in servers_to_mount:
+    mcp.mount(server, prefix=prefix)
 
 
 @mcp.tool
@@ -364,7 +459,9 @@ def signal_handler(signum: int, frame: Optional[FrameType]) -> None:
 async def run_with_shutdown():
     """Run the MCP server with graceful shutdown support."""
     tools = await mcp.get_tools()
-    logger.info(f"Registered tools: {len(tools)} tools")
+    logger.info(
+        f"Registered tools: {len(tools)} tools from {len(servers_to_mount)} servers"
+    )
     # Create a task for the server
     server_task = asyncio.create_task(mcp.run_async(transport="stdio"))
 

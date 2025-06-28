@@ -4,6 +4,7 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
+from google.ads.googleads.v20.common.types import ManualCpc
 from google.ads.googleads.v20.enums.types.advertising_channel_type import (
     AdvertisingChannelTypeEnum,
 )
@@ -77,6 +78,11 @@ class CampaignService:
             campaign = Campaign()
             campaign.name = name
             campaign.campaign_budget = budget_resource_name
+            # Set network settings
+            campaign.network_settings.target_google_search = True
+            campaign.network_settings.target_search_network = True
+            campaign.network_settings.target_content_network = True
+            campaign.network_settings.target_partner_search_network = False
 
             # Set advertising channel type
             campaign.advertising_channel_type = advertising_channel_type
@@ -88,6 +94,9 @@ class CampaignService:
             campaign.experiment_type = (
                 CampaignExperimentTypeEnum.CampaignExperimentType.BASE
             )
+            # Set manual CPC bidding strategy
+            manual_cpc: ManualCpc = ManualCpc()
+            campaign.manual_cpc = manual_cpc
 
             # Set dates if provided
             if start_date:

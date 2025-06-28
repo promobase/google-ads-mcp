@@ -97,7 +97,9 @@ class CustomerService:
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
 
-    async def list_accessible_customers(self, ctx: Context) -> List[str]:
+    async def list_accessible_customers(
+        self, ctx: Context
+    ) -> ListAccessibleCustomersResponse:
         """List all accessible customers for the authenticated user.
 
         Args:
@@ -114,6 +116,11 @@ class CustomerService:
             response: ListAccessibleCustomersResponse = (
                 self.client.list_accessible_customers(request=request)
             )
+            await ctx.log(
+                level="info",
+                message=f"ListAccessibleCustomersResponse: {response.resource_names}",
+            )
+            return response
 
             customer_ids = response.resource_names
 
@@ -175,13 +182,14 @@ def create_customer_tools(
             time_zone=time_zone,
         )
 
-    async def list_accessible_customers(ctx: Context) -> List[str]:
+    async def list_accessible_customers(ctx: Context) -> Dict[str, Any]:
         """List all accessible customers for the authenticated user.
 
         Returns:
             List of accessible customer IDs
         """
-        return await service.list_accessible_customers(ctx=ctx)
+        response = await service.list_accessible_customers(ctx=ctx)
+        return serialize_proto_message(response)
 
     tools.extend([create_customer_client, list_accessible_customers])
     return tools

@@ -84,10 +84,9 @@ class TestGoogleAdsService:
         assert request.query == "SELECT campaign.id, campaign.name FROM campaign"
         assert request.page_size == 100
         assert request.validate_only is False
-        assert (
-            request.summary_row_setting
-            == SummaryRowSettingEnum.SummaryRowSetting.NO_SUMMARY_ROW
-        )
+        # When no summary row requested, search_settings should not be set
+        # In protobuf, the field always exists but we check if it's been modified
+        assert request.search_settings.return_summary_row is False
 
         # Verify the result
         assert len(result["results"]) == 1
@@ -123,12 +122,9 @@ class TestGoogleAdsService:
         google_ads_service._client = mock_client
 
         # Create mock response with summary row
-        mock_summary = GoogleAdsRow()
-        mock_summary.metrics.clicks = 100  # type: ignore
-        mock_summary.metrics.impressions = 1000  # type: ignore
-
         mock_response = SearchGoogleAdsResponse()
-        mock_response.summary_row.CopyFrom(mock_summary)  # type: ignore
+        mock_response.summary_row.metrics.clicks = 100  # type: ignore
+        mock_response.summary_row.metrics.impressions = 1000  # type: ignore
         mock_client.search.return_value = mock_response  # type: ignore
 
         result = await google_ads_service.search(
@@ -137,6 +133,12 @@ class TestGoogleAdsService:
             query="SELECT metrics.clicks FROM campaign",
             summary_row_setting=SummaryRowSettingEnum.SummaryRowSetting.SUMMARY_ROW_WITH_RESULTS,
         )
+
+        # Verify the request has search_settings with return_summary_row = True
+        request = mock_client.search.call_args[1]["request"]  # type: ignore
+        assert hasattr(request, "search_settings")
+        assert request.search_settings is not None
+        assert request.search_settings.return_summary_row is True
 
         assert result["summary_row"] is not None
 
