@@ -15,7 +15,7 @@ from google.ads.googleads.v20.services.types.campaign_label_service import (
     MutateCampaignLabelsResponse,
 )
 
-from src.sdk_services.campaign.campaign_label_service import (
+from src.services.campaign.campaign_label_service import (
     CampaignLabelService,
     register_campaign_label_tools,
 )

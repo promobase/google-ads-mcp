@@ -25,7 +25,7 @@ from google.ads.googleads.v20.services.types.bidding_data_exclusion_service impo
     MutateBiddingDataExclusionsResponse,
 )
 
-from src.sdk_services.bidding.bidding_data_exclusion_service import (
+from src.services.bidding.bidding_data_exclusion_service import (
     BiddingDataExclusionService,
     register_bidding_data_exclusion_tools,
 )

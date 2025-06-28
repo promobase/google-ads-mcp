@@ -14,7 +14,7 @@ from google.ads.googleads.v20.services.types.conversion_upload_service import (
     UploadClickConversionsResponse,
 )
 
-from src.sdk_services.conversions.conversion_upload_service import (
+from src.services.conversions.conversion_upload_service import (
     ConversionUploadService,
     register_conversion_upload_tools,
 )

@@ -14,7 +14,7 @@ from google.ads.googleads.v20.services.types.smart_campaign_suggest_service impo
     SuggestSmartCampaignBudgetOptionsResponse,
 )
 
-from src.sdk_services.campaign.smart_campaign_service import (
+from src.services.campaign.smart_campaign_service import (
     SmartCampaignService,
     register_smart_campaign_tools,
 )

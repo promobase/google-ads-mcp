@@ -20,7 +20,7 @@ from google.ads.googleads.v20.services.types.ad_group_bid_modifier_service impor
     MutateAdGroupBidModifiersResponse,
 )
 
-from src.sdk_services.ad_group.ad_group_bid_modifier_service import (
+from src.services.ad_group.ad_group_bid_modifier_service import (
     AdGroupBidModifierService,
     register_ad_group_bid_modifier_tools,
 )

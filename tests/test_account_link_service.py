@@ -25,7 +25,7 @@ from google.ads.googleads.v20.services.types.account_link_service import (
     MutateAccountLinkResponse,
 )
 
-from src.sdk_services.account.account_link_service import (
+from src.services.account.account_link_service import (
     AccountLinkService,
     register_account_link_tools,
 )

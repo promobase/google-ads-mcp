@@ -18,7 +18,7 @@ from google.ads.googleads.v20.enums.types.response_content_type import (
 )
 from google.ads.googleads.v20.common.types.criteria import AudienceInfo, SearchThemeInfo
 
-from src.sdk_services.assets.asset_group_signal_service import AssetGroupSignalService
+from src.services.assets.asset_group_signal_service import AssetGroupSignalService
 
 
 class TestAssetGroupSignalService:

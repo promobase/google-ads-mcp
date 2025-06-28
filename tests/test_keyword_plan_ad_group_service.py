@@ -10,7 +10,7 @@ from google.ads.googleads.v20.services.types.keyword_plan_ad_group_service impor
     MutateKeywordPlanAdGroupResult,
 )
 
-from src.sdk_services.planning.keyword_plan_ad_group_service import (
+from src.services.planning.keyword_plan_ad_group_service import (
     KeywordPlanAdGroupService,
 )
 

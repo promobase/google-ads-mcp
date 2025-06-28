@@ -17,7 +17,7 @@ from google.ads.googleads.v20.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
 
-from src.sdk_services.campaign.campaign_asset_set_service import CampaignAssetSetService
+from src.services.campaign.campaign_asset_set_service import CampaignAssetSetService
 
 
 class TestCampaignAssetSetService:

@@ -16,7 +16,7 @@ from google.ads.googleads.v20.services.types.billing_setup_service import (
     MutateBillingSetupResponse,
 )
 
-from src.sdk_services.account.billing_setup_service import (
+from src.services.account.billing_setup_service import (
     BillingSetupService,
     register_billing_setup_tools,
 )

@@ -24,7 +24,7 @@ from google.ads.googleads.v20.services.types.custom_interest_service import (
     MutateCustomInterestsResponse,
 )
 
-from src.sdk_services.audiences.custom_interest_service import (
+from src.services.audiences.custom_interest_service import (
     CustomInterestService,
     register_custom_interest_tools,
 )

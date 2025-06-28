@@ -16,7 +16,7 @@ from google.ads.googleads.v20.services.types.customer_user_access_service import
     MutateCustomerUserAccessResponse,
 )
 
-from src.sdk_services.account.customer_user_access_service import (
+from src.services.account.customer_user_access_service import (
     CustomerUserAccessService,
     register_customer_user_access_tools,
 )

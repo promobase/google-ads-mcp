@@ -17,7 +17,7 @@ from google.ads.googleads.v20.services.types.campaign_customizer_service import 
 )
 from google.rpc import status_pb2
 
-from src.sdk_services.campaign.campaign_customizer_service import (
+from src.services.campaign.campaign_customizer_service import (
     CampaignCustomizerService,
     create_campaign_customizer_tools,
 )

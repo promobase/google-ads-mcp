@@ -18,7 +18,7 @@ from google.ads.googleads.v20.services.types.ad_group_criterion_service import (
     MutateAdGroupCriteriaResponse,
 )
 
-from src.sdk_services.ad_group.keyword_service import (
+from src.services.ad_group.keyword_service import (
     KeywordService,
     register_keyword_tools,
 )

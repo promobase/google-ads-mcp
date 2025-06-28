@@ -5,7 +5,7 @@ from typing import Any
 from unittest.mock import Mock, AsyncMock
 from fastmcp import Context
 
-from src.sdk_services.conversions.customer_conversion_goal_service import (
+from src.services.conversions.customer_conversion_goal_service import (
     CustomerConversionGoalService,
     create_customer_conversion_goal_tools,
 )

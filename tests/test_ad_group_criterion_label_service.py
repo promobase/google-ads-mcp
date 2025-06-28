@@ -14,7 +14,7 @@ from google.ads.googleads.v20.services.types.ad_group_criterion_label_service im
     MutateAdGroupCriterionLabelResult,
 )
 
-from src.sdk_services.ad_group.ad_group_criterion_label_service import (
+from src.services.ad_group.ad_group_criterion_label_service import (
     AdGroupCriterionLabelService,
 )
 

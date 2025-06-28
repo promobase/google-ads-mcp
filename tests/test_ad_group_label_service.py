@@ -16,7 +16,7 @@ from google.ads.googleads.v20.services.types.ad_group_label_service import (
     MutateAdGroupLabelsResponse,
 )
 
-from src.sdk_services.ad_group.ad_group_label_service import (
+from src.services.ad_group.ad_group_label_service import (
     AdGroupLabelService,
     register_ad_group_label_tools,
 )

@@ -18,7 +18,7 @@ from google.ads.googleads.v20.services.types.keyword_plan_service import (
     MutateKeywordPlansResponse,
 )
 
-from src.sdk_services.planning.keyword_plan_service import (
+from src.services.planning.keyword_plan_service import (
     KeywordPlanService,
     register_keyword_plan_tools,
 )

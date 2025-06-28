@@ -16,7 +16,7 @@ from google.ads.googleads.v20.services.types.audience_service import (
     MutateAudiencesResponse,
 )
 
-from src.sdk_services.audiences.audience_service import (
+from src.services.audiences.audience_service import (
     AudienceService,
     register_audience_tools,
 )

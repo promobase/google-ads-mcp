@@ -21,7 +21,7 @@ from google.ads.googleads.v20.services.types.bidding_strategy_service import (
     MutateBiddingStrategiesResponse,
 )
 
-from src.sdk_services.bidding.bidding_strategy_service import (
+from src.services.bidding.bidding_strategy_service import (
     BiddingStrategyService,
     register_bidding_strategy_tools,
 )

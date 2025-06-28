@@ -19,7 +19,7 @@ from google.ads.googleads.v20.services.types.campaign_shared_set_service import 
     MutateCampaignSharedSetsResponse,
 )
 
-from src.sdk_services.campaign.campaign_shared_set_service import (
+from src.services.campaign.campaign_shared_set_service import (
     CampaignSharedSetService,
     register_campaign_shared_set_tools,
 )

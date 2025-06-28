@@ -12,7 +12,7 @@ from google.ads.googleads.v20.services.types.geo_target_constant_service import 
     SuggestGeoTargetConstantsResponse,
 )
 
-from src.sdk_services.targeting.geo_target_constant_service import (
+from src.services.targeting.geo_target_constant_service import (
     GeoTargetConstantService,
     register_geo_target_constant_tools,
 )

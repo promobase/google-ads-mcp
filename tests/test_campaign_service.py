@@ -19,7 +19,7 @@ from google.ads.googleads.v20.services.types.campaign_service import (
     MutateCampaignsResponse,
 )
 
-from src.sdk_services.campaign.campaign_service import (
+from src.services.campaign.campaign_service import (
     CampaignService,
     register_campaign_tools,
 )
@@ -491,7 +491,7 @@ async def test_tool_wrapper_create_campaign(
     }
 
     # Import the tool function
-    from src.sdk_services.campaign.campaign_service import create_campaign_tools
+    from src.services.campaign.campaign_service import create_campaign_tools
 
     tools = create_campaign_tools(campaign_service)
     create_campaign_tool = tools[0]  # First tool
@@ -552,7 +552,7 @@ async def test_tool_wrapper_update_campaign(
     }
 
     # Import the tool function
-    from src.sdk_services.campaign.campaign_service import create_campaign_tools
+    from src.services.campaign.campaign_service import create_campaign_tools
 
     tools = create_campaign_tools(campaign_service)
     update_campaign_tool = tools[1]  # Second tool

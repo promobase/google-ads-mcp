@@ -14,7 +14,7 @@ from google.ads.googleads.v20.services.types.google_ads_field_service import (
     SearchGoogleAdsFieldsRequest,
 )
 
-from src.sdk_services.metadata.google_ads_field_service import (
+from src.services.metadata.google_ads_field_service import (
     GoogleAdsFieldService,
     register_google_ads_field_tools,
 )

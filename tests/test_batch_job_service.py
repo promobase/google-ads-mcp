@@ -15,7 +15,7 @@ from google.ads.googleads.v20.services.types.batch_job_service import (
     MutateBatchJobResponse,
 )
 
-from src.sdk_services.data_import.batch_job_service import (
+from src.services.data_import.batch_job_service import (
     BatchJobService,
     register_batch_job_tools,
 )

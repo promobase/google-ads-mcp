@@ -21,7 +21,7 @@ from google.ads.googleads.v20.services.types.user_list_service import (
     MutateUserListsResponse,
 )
 
-from src.sdk_services.audiences.user_list_service import (
+from src.services.audiences.user_list_service import (
     UserListService,
     register_user_list_tools,
 )

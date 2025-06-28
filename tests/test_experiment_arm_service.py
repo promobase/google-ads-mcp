@@ -10,7 +10,7 @@ from google.ads.googleads.v20.services.types.experiment_arm_service import (
     MutateExperimentArmResult,
 )
 
-from src.sdk_services.campaign.experiment_arm_service import ExperimentArmService
+from src.services.campaign.experiment_arm_service import ExperimentArmService
 
 
 class TestExperimentArmService:

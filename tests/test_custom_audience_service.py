@@ -24,7 +24,7 @@ from google.ads.googleads.v20.services.types.custom_audience_service import (
     MutateCustomAudiencesResponse,
 )
 
-from src.sdk_services.audiences.custom_audience_service import (
+from src.services.audiences.custom_audience_service import (
     CustomAudienceService,
     register_custom_audience_tools,
 )

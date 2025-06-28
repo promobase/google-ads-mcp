@@ -13,7 +13,7 @@ from google.ads.googleads.v20.services.types.reach_plan_service import (
     ListPlannableProductsResponse,
 )
 
-from src.sdk_services.planning.reach_plan_service import (
+from src.services.planning.reach_plan_service import (
     ReachPlanService,
     register_reach_plan_tools,
 )

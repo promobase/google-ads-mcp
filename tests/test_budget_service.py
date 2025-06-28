@@ -15,7 +15,7 @@ from google.ads.googleads.v20.services.types.campaign_budget_service import (
     MutateCampaignBudgetsResponse,
 )
 
-from src.sdk_services.bidding.budget_service import (
+from src.services.bidding.budget_service import (
     BudgetService,
     register_budget_tools,
 )

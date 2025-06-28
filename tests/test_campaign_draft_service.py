@@ -18,7 +18,7 @@ from google.ads.googleads.v20.enums.types.campaign_draft_status import (
     CampaignDraftStatusEnum,
 )
 
-from src.sdk_services.campaign.campaign_draft_service import (
+from src.services.campaign.campaign_draft_service import (
     CampaignDraftService,
     register_campaign_draft_tools,
 )

@@ -22,7 +22,7 @@ from google.ads.googleads.v20.services.types.ad_group_criterion_service import (
     MutateAdGroupCriteriaResponse,
 )
 
-from src.sdk_services.ad_group.ad_group_criterion_service import (
+from src.services.ad_group.ad_group_criterion_service import (
     AdGroupCriterionService,
     register_ad_group_criterion_tools,
 )

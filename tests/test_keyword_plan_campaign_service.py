@@ -13,7 +13,7 @@ from google.ads.googleads.v20.services.types.keyword_plan_campaign_service impor
     MutateKeywordPlanCampaignResult,
 )
 
-from src.sdk_services.planning.keyword_plan_campaign_service import (
+from src.services.planning.keyword_plan_campaign_service import (
     KeywordPlanCampaignService,
 )
 

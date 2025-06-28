@@ -5,7 +5,7 @@ from typing import Any
 from unittest.mock import Mock, AsyncMock, patch
 from fastmcp import Context
 
-from src.sdk_services.ad_group.ad_group_criterion_customizer_service import (
+from src.services.ad_group.ad_group_criterion_customizer_service import (
     AdGroupCriterionCustomizerService,
     create_ad_group_criterion_customizer_tools,
 )

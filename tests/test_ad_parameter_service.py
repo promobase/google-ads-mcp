@@ -5,7 +5,7 @@ from typing import Any
 from unittest.mock import Mock, AsyncMock, patch
 from fastmcp import Context
 
-from src.sdk_services.ad_group.ad_parameter_service import (
+from src.services.ad_group.ad_parameter_service import (
     AdParameterService,
     create_ad_parameter_tools,
 )

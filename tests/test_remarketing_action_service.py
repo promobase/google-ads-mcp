@@ -15,7 +15,7 @@ from google.ads.googleads.v20.services.types.remarketing_action_service import (
     MutateRemarketingActionsResponse,
 )
 
-from src.sdk_services.audiences.remarketing_action_service import (
+from src.services.audiences.remarketing_action_service import (
     RemarketingActionService,
     register_remarketing_action_tools,
 )

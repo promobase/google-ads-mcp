@@ -17,7 +17,7 @@ from google.ads.googleads.v20.services.types.experiment_service import (
     MutateExperimentsResponse,
 )
 
-from src.sdk_services.campaign.experiment_service import (
+from src.services.campaign.experiment_service import (
     ExperimentService,
     register_experiment_tools,
 )

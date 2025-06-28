@@ -22,7 +22,7 @@ from google.ads.googleads.v20.services.types.account_budget_proposal_service imp
     MutateAccountBudgetProposalResponse,
 )
 
-from src.sdk_services.account.account_budget_proposal_service import (
+from src.services.account.account_budget_proposal_service import (
     AccountBudgetProposalService,
     register_account_budget_proposal_tools,
 )

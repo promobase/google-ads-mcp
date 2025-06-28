@@ -17,7 +17,7 @@ from google.ads.googleads.v20.services.types.shared_set_service import (
     MutateSharedSetsResponse,
 )
 
-from src.sdk_services.shared.shared_set_service import (
+from src.services.shared.shared_set_service import (
     SharedSetService,
     register_shared_set_tools,
 )

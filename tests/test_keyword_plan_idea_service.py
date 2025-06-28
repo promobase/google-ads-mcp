@@ -12,7 +12,7 @@ from google.ads.googleads.v20.services.services.keyword_plan_idea_service import
     KeywordPlanIdeaServiceClient,
 )
 
-from src.sdk_services.planning.keyword_plan_idea_service import (
+from src.services.planning.keyword_plan_idea_service import (
     KeywordPlanIdeaService,
     register_keyword_plan_idea_tools,
 )

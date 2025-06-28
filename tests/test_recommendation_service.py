@@ -13,7 +13,7 @@ from google.ads.googleads.v20.services.types.recommendation_service import (
     DismissRecommendationResponse,
 )
 
-from src.sdk_services.planning.recommendation_service import (
+from src.services.planning.recommendation_service import (
     RecommendationService,
     register_recommendation_tools,
 )

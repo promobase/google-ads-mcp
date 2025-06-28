@@ -17,7 +17,7 @@ from google.ads.googleads.v20.services.types.asset_set_service import (
     MutateAssetSetsResponse,
 )
 
-from src.sdk_services.assets.asset_set_service import (
+from src.services.assets.asset_set_service import (
     AssetSetService,
     register_asset_set_tools,
 )

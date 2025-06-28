@@ -20,7 +20,7 @@ from google.ads.googleads.v20.services.types.conversion_custom_variable_service 
 )
 from google.rpc import status_pb2
 
-from src.sdk_services.conversions.conversion_custom_variable_service import (
+from src.services.conversions.conversion_custom_variable_service import (
     ConversionCustomVariableService,
     create_conversion_custom_variable_tools,
 )

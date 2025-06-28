@@ -12,7 +12,7 @@ from google.ads.googleads.v20.services.types.product_link_service import (
     RemoveProductLinkResponse,
 )
 
-from src.sdk_services.product_integration.product_link_service import ProductLinkService
+from src.services.product_integration.product_link_service import ProductLinkService
 
 
 class TestProductLinkService:

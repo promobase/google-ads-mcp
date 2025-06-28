@@ -12,7 +12,7 @@ from google.ads.googleads.v20.services.types.user_data_service import (
     UploadUserDataResponse,
 )
 
-from src.sdk_services.data_import.user_data_service import (
+from src.services.data_import.user_data_service import (
     UserDataService,
     register_user_data_tools,
 )

@@ -9,7 +9,7 @@ from google.ads.googleads.v20.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
 
-from src.sdk_services.metadata.search_service import (
+from src.services.metadata.search_service import (
     SearchService,
     register_search_tools,
 )

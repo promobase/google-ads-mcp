@@ -4,7 +4,7 @@ from typing import Any
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from src.sdk_services.account.customer_service import (
+from src.services.account.customer_service import (
     CustomerService,
     create_customer_tools,
 )

@@ -16,7 +16,7 @@ from google.ads.googleads.v20.services.types.asset_group_service import (
     MutateAssetGroupsResponse,
 )
 
-from src.sdk_services.assets.asset_group_service import (
+from src.services.assets.asset_group_service import (
     AssetGroupService,
     register_asset_group_tools,
 )

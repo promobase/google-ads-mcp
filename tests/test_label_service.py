@@ -13,7 +13,7 @@ from google.ads.googleads.v20.services.types.label_service import (
     MutateLabelsResponse,
 )
 
-from src.sdk_services.shared.label_service import (
+from src.services.shared.label_service import (
     LabelService,
     register_label_tools,
 )

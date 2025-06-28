@@ -20,7 +20,7 @@ from google.ads.googleads.v20.services.types.google_ads_service import (
     SearchGoogleAdsStreamResponse,
 )
 
-from src.sdk_services.metadata.google_ads_service import (
+from src.services.metadata.google_ads_service import (
     GoogleAdsService,
     create_google_ads_tools,
 )

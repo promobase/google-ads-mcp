@@ -18,7 +18,7 @@ from google.ads.googleads.v20.services.types.customer_client_link_service import
     MutateCustomerClientLinkResponse,
 )
 
-from src.sdk_services.account.customer_client_link_service import (
+from src.services.account.customer_client_link_service import (
     CustomerClientLinkService,
     register_customer_client_link_tools,
 )

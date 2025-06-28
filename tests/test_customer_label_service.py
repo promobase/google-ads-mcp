@@ -11,7 +11,7 @@ from google.ads.googleads.v20.services.types.customer_label_service import (
 )
 from google.rpc import status_pb2
 
-from src.sdk_services.account.customer_label_service import (
+from src.services.account.customer_label_service import (
     CustomerLabelService,
     create_customer_label_tools,
 )

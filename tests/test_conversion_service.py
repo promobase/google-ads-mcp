@@ -30,7 +30,7 @@ from google.ads.googleads.v20.services.types.conversion_action_service import (
     MutateConversionActionsResponse,
 )
 
-from src.sdk_services.conversions.conversion_service import (
+from src.services.conversions.conversion_service import (
     ConversionService,
     register_conversion_tools,
 )

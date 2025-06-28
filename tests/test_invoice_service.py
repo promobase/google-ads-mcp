@@ -13,7 +13,7 @@ from google.ads.googleads.v20.services.types.invoice_service import (
     ListInvoicesResponse,
 )
 
-from src.sdk_services.account.invoice_service import (
+from src.services.account.invoice_service import (
     InvoiceService,
     register_invoice_tools,
 )
@@ -399,7 +399,7 @@ async def test_tool_wrapper_list_invoices(
     expected_result = {"invoices": []}
 
     # Import the tool function
-    from src.sdk_services.account.invoice_service import create_invoice_tools
+    from src.services.account.invoice_service import create_invoice_tools
 
     tools = create_invoice_tools(invoice_service)
     list_invoices_tool = tools[0]  # First (and only) tool
@@ -451,7 +451,7 @@ async def test_tool_wrapper_list_invoices_case_insensitive(
     expected_result = {"invoices": []}
 
     # Import the tool function
-    from src.sdk_services.account.invoice_service import create_invoice_tools
+    from src.services.account.invoice_service import create_invoice_tools
 
     tools = create_invoice_tools(invoice_service)
     list_invoices_tool = tools[0]

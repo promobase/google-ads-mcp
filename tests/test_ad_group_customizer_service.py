@@ -20,7 +20,7 @@ from google.ads.googleads.v20.enums.types.customizer_attribute_type import (
     CustomizerAttributeTypeEnum,
 )
 
-from src.sdk_services.ad_group.ad_group_customizer_service import (
+from src.services.ad_group.ad_group_customizer_service import (
     AdGroupCustomizerService,
 )
 

@@ -14,7 +14,7 @@ from google.ads.googleads.v20.services.types.ad_group_service import (
     MutateAdGroupsResponse,
 )
 
-from src.sdk_services.ad_group.ad_group_service import (
+from src.services.ad_group.ad_group_service import (
     AdGroupService,
     register_ad_group_tools,
 )

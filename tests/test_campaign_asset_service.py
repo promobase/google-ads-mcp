@@ -16,7 +16,7 @@ from google.ads.googleads.v20.services.types.campaign_asset_service import (
     MutateCampaignAssetsResponse,
 )
 
-from src.sdk_services.campaign.campaign_asset_service import (
+from src.services.campaign.campaign_asset_service import (
     CampaignAssetService,
     register_campaign_asset_tools,
 )

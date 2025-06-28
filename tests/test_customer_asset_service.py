@@ -24,7 +24,7 @@ from google.ads.googleads.v20.enums.types.asset_link_status import (
 )
 from google.protobuf import field_mask_pb2
 
-from src.sdk_services.assets.customer_asset_service import CustomerAssetService
+from src.services.assets.customer_asset_service import CustomerAssetService
 from google.ads.googleads.errors import GoogleAdsException
 
 

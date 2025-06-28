@@ -14,7 +14,7 @@ from google.ads.googleads.v20.services.types.campaign_criterion_service import (
     MutateCampaignCriteriaResponse,
 )
 
-from src.sdk_services.campaign.campaign_criterion_service import (
+from src.services.campaign.campaign_criterion_service import (
     CampaignCriterionService,
     register_campaign_criterion_tools,
 )

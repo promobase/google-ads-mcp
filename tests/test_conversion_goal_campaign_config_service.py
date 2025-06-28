@@ -11,7 +11,7 @@ from google.ads.googleads.v20.services.types.conversion_goal_campaign_config_ser
     MutateConversionGoalCampaignConfigResult,
 )
 
-from src.sdk_services.conversions.conversion_goal_campaign_config_service import (
+from src.services.conversions.conversion_goal_campaign_config_service import (
     ConversionGoalCampaignConfigService,
 )
 

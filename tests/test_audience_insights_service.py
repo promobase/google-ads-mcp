@@ -19,7 +19,7 @@ from google.ads.googleads.v20.services.types.audience_insights_service import (
     GenerateSuggestedTargetingInsightsResponse,
 )
 
-from src.sdk_services.audiences.audience_insights_service import (
+from src.services.audiences.audience_insights_service import (
     AudienceInsightsService,
     register_audience_insights_tools,
 )

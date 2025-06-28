@@ -10,7 +10,7 @@ from google.ads.googleads.v20.services.types.brand_suggestion_service import (
     SuggestBrandsResponse,
 )
 
-from src.sdk_services.planning.brand_suggestion_service import BrandSuggestionService
+from src.services.planning.brand_suggestion_service import BrandSuggestionService
 
 
 class TestBrandSuggestionService:

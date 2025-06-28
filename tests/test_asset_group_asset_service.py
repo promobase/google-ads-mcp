@@ -13,7 +13,7 @@ from google.ads.googleads.v20.services.types.asset_group_asset_service import (
 )
 from google.rpc import status_pb2
 
-from src.sdk_services.assets.asset_group_asset_service import (
+from src.services.assets.asset_group_asset_service import (
     AssetGroupAssetService,
     create_asset_group_asset_tools,
 )
