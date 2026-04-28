@@ -48,9 +48,10 @@ Current tracker status:
 | Implemented services | `90 / 103` |
 | Coverage model | 1:1 service mapping where implemented |
 | Type policy | Generated Google Ads protobuf types |
+| Feature parity | [`docs/FEATURE_PARITY.md`](./docs/FEATURE_PARITY.md) |
 | Detailed audit | [`TRACKER.md`](./TRACKER.md) |
 
-Core campaign, ad group, ad, budget, keyword, conversion, asset, audience, recommendation, account, billing, and reporting workflows are implemented. Remaining gaps are tracked in [`TRACKER.md`](./TRACKER.md) so contributors can pick up the next service without re-auditing the API surface.
+Core campaign, ad group, ad, budget, keyword, conversion, asset, audience, recommendation, account, billing, and reporting workflows are implemented. The scannable parity table lives in [`docs/FEATURE_PARITY.md`](./docs/FEATURE_PARITY.md); detailed implementation notes live in [`TRACKER.md`](./TRACKER.md).
 
 ## Install
 
