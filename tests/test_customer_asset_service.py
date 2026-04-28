@@ -1,8 +1,9 @@
 """Tests for Customer Asset Service."""
 
-import pytest
 from typing import Any
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
+
+import pytest
 
 from google.ads.googleads.v20.services.services.customer_asset_service import (
     CustomerAssetServiceClient,
@@ -267,74 +268,10 @@ class TestCustomerAssetService:
 class TestCustomerAssetMCPServer:
     """Test cases for Customer Asset MCP server."""
 
-    @patch("src.sdk_servers.customer_asset_server.get_client")
-    async def test_create_customer_asset_tool(self, mock_get_client: Any):
+    async def test_create_customer_asset_tool(self):
         """Test create customer asset MCP tool."""
-        # Arrange
         pytest.skip("Server pattern has changed")
 
-        mock_client = Mock(spec=CustomerAssetServiceClient)
-        mock_get_client.return_value = mock_client  # type: ignore
-
-        mock_response = MutateCustomerAssetsResponse(
-            results=[
-                MutateCustomerAssetResult(
-                    resource_name="customers/1234567890/customerAssets/123~LOGO"
-                )
-            ]
-        )
-        mock_client.mutate_customer_assets.return_value = mock_response  # type: ignore
-
-        server = create_customer_asset_server()
-
-        # Act
-        response = await server.call_tool()(
-            name="create_customer_asset",
-            arguments={
-                "customer_id": "1234567890",
-                "asset": "customers/1234567890/assets/123",
-                "field_type": "LOGO",
-                "status": "ENABLED",
-            },
-        )
-
-        # Assert
-        assert len(response) == 1
-        assert "customers/1234567890/customerAssets/123~LOGO" in response[0].text
-        assert "create" in response[0].text
-
-    @patch("src.sdk_servers.customer_asset_server.get_client")
-    async def test_update_customer_asset_status_tool(self, mock_get_client: Any):
+    async def test_update_customer_asset_status_tool(self):
         """Test update customer asset status MCP tool."""
-        # Arrange
         pytest.skip("Server pattern has changed")
-
-        mock_client = Mock(spec=CustomerAssetServiceClient)
-        mock_get_client.return_value = mock_client  # type: ignore
-
-        mock_response = MutateCustomerAssetsResponse(
-            results=[
-                MutateCustomerAssetResult(
-                    resource_name="customers/1234567890/customerAssets/123~LOGO"
-                )
-            ]
-        )
-        mock_client.mutate_customer_assets.return_value = mock_response  # type: ignore
-
-        server = create_customer_asset_server()
-
-        # Act
-        response = await server.call_tool()(
-            name="update_customer_asset_status",
-            arguments={
-                "customer_id": "1234567890",
-                "resource_name": "customers/1234567890/customerAssets/123~LOGO",
-                "status": "PAUSED",
-            },
-        )
-
-        # Assert
-        assert len(response) == 1
-        assert "customers/1234567890/customerAssets/123~LOGO" in response[0].text
-        assert "update_status" in response[0].text
-        assert "PAUSED" in response[0].text

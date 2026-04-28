@@ -69,8 +69,8 @@ class TestExperimentArmService:
         request = call_args.kwargs["request"]
         assert request.customer_id == customer_id
         assert request.operations == operations
-        assert request.partial_failure == True
-        assert request.validate_only == False
+        assert request.partial_failure
+        assert not request.validate_only
 
     def test_create_experiment_arm_operation(self, experiment_arm_service: Any):
         """Test creating experiment arm operation for creation"""

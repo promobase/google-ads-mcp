@@ -239,7 +239,7 @@ async def test_add_language_criteria(
     operation = request.operations[0]
     criterion = operation.create
     assert criterion.campaign == f"customers/{customer_id}/campaigns/{campaign_id}"
-    assert criterion.negative == False
+    assert not criterion.negative
     assert (
         criterion.language.language_constant == f"languageConstants/{language_ids[0]}"
     )
@@ -317,7 +317,7 @@ async def test_add_device_criteria(
     assert (
         mobile_criterion.campaign == f"customers/{customer_id}/campaigns/{campaign_id}"
     )
-    assert mobile_criterion.negative == False
+    assert not mobile_criterion.negative
     assert mobile_criterion.device.type_ == DeviceEnum.Device.MOBILE
     assert abs(mobile_criterion.bid_modifier - 1.3) < 0.001
 
@@ -457,7 +457,7 @@ async def test_add_negative_keyword_criteria(
         operation = request.operations[i]
         criterion = operation.create
         assert criterion.campaign == f"customers/{customer_id}/campaigns/{campaign_id}"
-        assert criterion.negative == True
+        assert criterion.negative
         assert criterion.keyword.text == keyword["text"]
         assert criterion.keyword.match_type == getattr(
             KeywordMatchTypeEnum.KeywordMatchType, keyword["match_type"]

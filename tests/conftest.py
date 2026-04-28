@@ -1,7 +1,11 @@
 """Shared test fixtures and utilities for Google Ads MCP tests."""
 
+from importlib import import_module
+from pathlib import Path
+from types import ModuleType
 from typing import Any, AsyncIterator, Dict, List
 from unittest.mock import AsyncMock, Mock
+import sys
 
 import pytest
 import pytest_asyncio
@@ -14,6 +18,39 @@ from google.ads.googleads.v20.errors.types.errors import (
 from google.ads.googleads.v20.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
+
+
+def _install_sdk_services_aliases() -> None:
+    """Map legacy test patch paths to the current service module objects."""
+    import src
+
+    sdk_package_name = "src.sdk_services"
+    sdk_package = ModuleType(sdk_package_name)
+    setattr(sdk_package, "__path__", [])
+    sys.modules.setdefault(sdk_package_name, sdk_package)
+    setattr(src, "sdk_services", sdk_package)
+
+    services_root = Path(src.__file__).with_name("services")
+    for service_file in services_root.glob("*/*_service.py"):
+        category = service_file.parent.name
+        module_name = service_file.stem
+        actual_name = f"src.services.{category}.{module_name}"
+        category_alias_name = f"{sdk_package_name}.{category}"
+        module_alias_name = f"{category_alias_name}.{module_name}"
+
+        category_package = sys.modules.get(category_alias_name)
+        if category_package is None:
+            category_package = ModuleType(category_alias_name)
+            setattr(category_package, "__path__", [])
+            sys.modules[category_alias_name] = category_package
+            setattr(sdk_package, category, category_package)
+
+        module = import_module(actual_name)
+        sys.modules[module_alias_name] = module
+        setattr(category_package, module_name, module)
+
+
+_install_sdk_services_aliases()
 
 
 @pytest.fixture

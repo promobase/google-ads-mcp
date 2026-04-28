@@ -70,8 +70,8 @@ class TestKeywordPlanCampaignKeywordService:
         request = call_args.kwargs["request"]
         assert request.customer_id == customer_id
         assert request.operations == operations
-        assert request.partial_failure == True
-        assert request.validate_only == False
+        assert request.partial_failure
+        assert not request.validate_only
 
     def test_create_keyword_plan_campaign_keyword_operation(
         self, keyword_plan_campaign_keyword_service: Any
@@ -94,7 +94,7 @@ class TestKeywordPlanCampaignKeywordService:
         assert operation.create.keyword_plan_campaign == keyword_plan_campaign
         assert operation.create.text == text
         assert operation.create.match_type == match_type
-        assert operation.create.negative == True  # Always true for campaign keywords
+        assert operation.create.negative  # Always true for campaign keywords
 
     def test_update_keyword_plan_campaign_keyword_operation(
         self, keyword_plan_campaign_keyword_service: Any

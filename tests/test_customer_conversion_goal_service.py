@@ -86,7 +86,7 @@ class TestCustomerConversionGoalService:
             request.operations[0].update.resource_name
             == "customers/123/customerConversionGoals/PURCHASE~WEBSITE"
         )
-        assert request.operations[0].update.biddable == True
+        assert request.operations[0].update.biddable
         assert "biddable" in request.operations[0].update_mask.paths
 
     @pytest.mark.asyncio
@@ -131,7 +131,7 @@ class TestCustomerConversionGoalService:
         call_args = mock_client.mutate_customer_conversion_goals.call_args[1]  # type: ignore
         request = call_args["request"]
 
-        assert request.operations[0].update.biddable == False
+        assert not request.operations[0].update.biddable
 
     @pytest.mark.asyncio
     async def test_mutate_customer_conversion_goals_with_category_and_origin(
@@ -174,7 +174,7 @@ class TestCustomerConversionGoalService:
         request = call_args["request"]
 
         # Note: category and origin are typically immutable, but we include them for completeness
-        assert request.operations[0].update.biddable == True
+        assert request.operations[0].update.biddable
 
     @pytest.mark.asyncio
     async def test_mutate_customer_conversion_goals_multiple_operations(
@@ -236,8 +236,8 @@ class TestCustomerConversionGoalService:
         request = call_args["request"]
 
         assert len(request.operations) == 2
-        assert request.operations[0].update.biddable == True
-        assert request.operations[1].update.biddable == False
+        assert request.operations[0].update.biddable
+        assert not request.operations[1].update.biddable
 
     @pytest.mark.asyncio
     async def test_mutate_customer_conversion_goals_validate_only(
@@ -273,7 +273,7 @@ class TestCustomerConversionGoalService:
         call_args = mock_client.mutate_customer_conversion_goals.call_args[1]  # type: ignore
         request = call_args["request"]
 
-        assert request.validate_only == True
+        assert request.validate_only
 
 
 class TestCustomerConversionGoalTools:

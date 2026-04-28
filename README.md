@@ -1,215 +1,171 @@
-# Google Ads MCP Server
+<div align="center">
 
-An unofficial Model Context Protocol (MCP) server implementation for Google Ads APIs using the official Python SDK.
+<a href="https://openpromo.app">
+  <img src="https://openpromo.app/logo.svg" width="80" alt="OpenPromo" />
+</a>
 
-## Overview
+# google-ads-mcp
 
-This project provides an MCP server that wraps the Google Ads API v20, enabling Large Language Models (LLMs) to interact with Google Ads accounts through a standardized interface. The server uses the official Google Ads Python SDK with full type annotations for robust and reliable API interactions.
+**A typed MCP server for letting AI agents operate Google Ads.**
 
-## Features
+Built by [**Promobase**](https://openpromo.app) for [**OpenPromo**](https://openpromo.app), the AI-native workspace for creating, publishing, and managing ads.
 
-- **Full Type Safety**: Implemented with strict type annotations using pyright
-- **SDK-Based**: Built on top of the official Google Ads Python SDK for reliability
-- **Comprehensive Coverage**: Implements 89 Google Ads services for campaign management
-- **MCP Compliant**: Follows the Model Context Protocol specification for LLM integration
-- **Async Support**: Leverages FastMCP for asynchronous operations
-- **Extensive Test Coverage**: 72 services have test coverage
+[![Python](https://img.shields.io/badge/python-3.12%2B-3776AB.svg)](https://www.python.org/)
+[![Google Ads API](https://img.shields.io/badge/Google%20Ads%20API-v20-4285F4.svg)](https://developers.google.com/google-ads/api/docs/start)
+[![FastMCP](https://img.shields.io/badge/MCP-FastMCP-111827.svg)](https://github.com/jlowin/fastmcp)
+[![CI](https://github.com/promobase/google-ads-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/promobase/google-ads-mcp/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
-## Installation
+</div>
+
+---
+
+## What
+
+`google-ads-mcp` wraps the official Google Ads Python SDK in a Model Context Protocol server. It exposes Google Ads API v20 services as typed MCP tools, so LLMs and agent runtimes can safely inspect accounts, create campaigns, manage budgets, upload conversions, work with assets, and run GAQL search.
+
+This repo is the Google Ads execution layer behind OpenPromo's agent workflows. For application-facing, multi-platform ad publishing and inbox automation, use the companion SDK:
+
+**[`@promobase/ad-platforms`](https://www.npmjs.com/package/@promobase/ad-platforms)** - one TypeScript SDK for Meta, TikTok, and soon Google Ads, with AI SDK tools and production clients for ad platform automation.
+
+## Why
+
+Google Ads has a large, typed API surface, but it is hard for agents to use directly. This server keeps the reliability of the official Python SDK while giving agents a structured tool interface:
+
+- **Official SDK foundation** - built on `google-ads`, including its auth, retries, paging, and protobuf types.
+- **Typed service wrappers** - implementations use Google Ads API v20 generated service, resource, enum, and operation types.
+- **Agent-ready MCP tools** - FastMCP servers grouped by workflow: core, assets, targeting, bidding, planning, reporting, conversions, account management, and more.
+- **GAQL access** - search and metadata tools for reporting, discovery, and account inspection.
+- **Production-oriented scope** - designed for OpenPromo's ads loop: generate creative, build campaigns, publish, measure, and iterate.
+
+## Coverage
+
+Current tracker status:
+
+| Area | Status |
+|------|--------|
+| Google Ads API version | `v20` |
+| Implemented services | `90 / 103` |
+| Coverage model | 1:1 service mapping where implemented |
+| Type policy | Generated Google Ads protobuf types |
+| Detailed audit | [`TRACKER.md`](./TRACKER.md) |
+
+Core campaign, ad group, ad, budget, keyword, conversion, asset, audience, recommendation, account, billing, and reporting workflows are implemented. Remaining gaps are tracked in [`TRACKER.md`](./TRACKER.md) so contributors can pick up the next service without re-auditing the API surface.
+
+## Install
 
 ```bash
 git clone https://github.com/promobase/google-ads-mcp.git
 cd google-ads-mcp
-
-# Install dependencies using uv
 uv sync
-
-# Set up Google Ads credentials
-export GOOGLE_ADS_DEVELOPER_TOKEN="your_developer_token"
-export GOOGLE_ADS_CLIENT_ID="your_client_id"
-export GOOGLE_ADS_CLIENT_SECRET="your_client_secret"
-export GOOGLE_ADS_REFRESH_TOKEN="your_refresh_token"
 ```
 
-## Usage
+Create a `.env` file or export the required Google Ads credentials:
+
+```bash
+GOOGLE_ADS_DEVELOPER_TOKEN="your_developer_token"
+GOOGLE_ADS_CLIENT_ID="your_client_id"
+GOOGLE_ADS_CLIENT_SECRET="your_client_secret"
+GOOGLE_ADS_REFRESH_TOKEN="your_refresh_token"
+GOOGLE_ADS_LOGIN_CUSTOMER_ID="optional_manager_customer_id"
+```
+
+See [`.env.example`](./.env.example) for the full credential template.
+
+## Run
+
+Run the default core tool group:
 
 ```bash
 uv run main.py
 ```
 
-## Feature Parity Table
-
-Below is a comprehensive table showing the implementation status of Google Ads API v20 services in this MCP server:
-
-| Service Name                      | Category      | Implemented | Test Coverage | Notes                         |
-| --------------------------------- | ------------- | ----------- | ------------- | ----------------------------- |
-| **Core Campaign Management**      |
-| CampaignService                   | Campaign      | ✅ Yes      | ✅ Yes        | Core campaign CRUD operations |
-| BudgetService                     | Campaign      | ✅ Yes      | ✅ Yes        | Budget management             |
-| AdGroupService                    | Campaign      | ✅ Yes      | ✅ Yes        | Ad group management           |
-| AdGroupAdService                  | Campaign      | ✅ Yes      | ✅ Yes        | Ad-to-ad group associations   |
-| AdService                         | Campaign      | ✅ Yes      | ✅ Yes        | Ad creation and management    |
-| KeywordService                    | Campaign      | ✅ Yes      | ✅ Yes        | Keyword management            |
-| **Bidding & Budget**              |
-| BiddingStrategyService            | Bidding       | ✅ Yes      | ✅ Yes        | Automated bidding strategies  |
-| BiddingDataExclusionService       | Bidding       | ✅ Yes      | ✅ Yes        | Data exclusions for bidding   |
-| BiddingSeasonalityAdjustmentService| Bidding      | ✅ Yes      | ❌ No         | Seasonal bid adjustments      |
-| CampaignBidModifierService        | Bidding       | ✅ Yes      | ✅ Yes        | Campaign bid adjustments      |
-| AdGroupBidModifierService         | Bidding       | ✅ Yes      | ✅ Yes        | Ad group bid adjustments      |
-| AccountBudgetProposalService      | Budget        | ✅ Yes      | ✅ Yes        | Account budget proposals      |
-| **Targeting & Criteria**          |
-| CampaignCriterionService          | Targeting     | ✅ Yes      | ✅ Yes        | Campaign-level targeting      |
-| AdGroupCriterionService           | Targeting     | ✅ Yes      | ✅ Yes        | Ad group-level targeting      |
-| CustomerNegativeCriterionService  | Targeting     | ✅ Yes      | ❌ No         | Account-level exclusions      |
-| GeoTargetConstantService          | Targeting     | ✅ Yes      | ✅ Yes        | Geographic targeting          |
-| **Assets & Extensions**           |
-| AssetService                      | Assets        | ✅ Yes      | ✅ Yes        | Image, text, video assets     |
-| AssetGroupService                 | Assets        | ✅ Yes      | ✅ Yes        | Performance Max asset groups  |
-| AssetGroupAssetService            | Assets        | ✅ Yes      | ✅ Yes        | Asset group asset linking     |
-| AssetGroupSignalService           | Assets        | ✅ Yes      | ✅ Yes        | Asset group signals           |
-| CampaignAssetService              | Assets        | ✅ Yes      | ✅ Yes        | Campaign-level asset linking  |
-| CampaignAssetSetService           | Assets        | ✅ Yes      | ✅ Yes        | Campaign asset set linking    |
-| AssetSetService                   | Assets        | ✅ Yes      | ✅ Yes        | Asset set management          |
-| AdGroupAssetService               | Assets        | ✅ Yes      | ✅ Yes        | Ad group-level asset linking  |
-| AdGroupAssetSetService            | Assets        | ✅ Yes      | ❌ No         | Ad group asset set linking    |
-| CustomerAssetService              | Assets        | ✅ Yes      | ✅ Yes        | Customer-level asset linking  |
-| **Audiences & Remarketing**       |
-| UserListService                   | Audiences     | ✅ Yes      | ✅ Yes        | Remarketing lists             |
-| CustomInterestService             | Audiences     | ✅ Yes      | ✅ Yes        | Custom interest audiences     |
-| CustomAudienceService             | Audiences     | ✅ Yes      | ✅ Yes        | Custom audience segments      |
-| RemarketingActionService          | Audiences     | ✅ Yes      | ✅ Yes        | Remarketing tags              |
-| AudienceService                   | Audiences     | ✅ Yes      | ✅ Yes        | Combined audiences            |
-| AudienceInsightsService           | Audiences     | ✅ Yes      | ✅ Yes        | Audience analysis & insights  |
-| **Conversions & Measurement**     |
-| ConversionService                 | Conversions   | ✅ Yes      | ✅ Yes        | Conversion tracking           |
-| ConversionUploadService           | Conversions   | ✅ Yes      | ✅ Yes        | Offline conversion upload     |
-| ConversionAdjustmentUploadService | Conversions   | ✅ Yes      | ❌ No         | Conversion adjustments        |
-| ConversionValueRuleService        | Conversions   | ✅ Yes      | ❌ No         | Value rules                   |
-| ConversionCustomVariableService   | Conversions   | ✅ Yes      | ✅ Yes        | Custom conversion variables   |
-| ConversionGoalCampaignConfigService| Conversions  | ✅ Yes      | ✅ Yes        | Campaign conversion goals     |
-| CustomerConversionGoalService     | Conversions   | ✅ Yes      | ✅ Yes        | Customer conversion goals     |
-| CustomConversionGoalService       | Conversions   | ✅ Yes      | ❌ No         | Custom conversion goals       |
-| **Account Management**            |
-| CustomerService                   | Account       | ✅ Yes      | ✅ Yes        | Account information           |
-| CustomerUserAccessService         | Account       | ✅ Yes      | ✅ Yes        | User access management        |
-| CustomerUserAccessInvitationService| Account      | ✅ Yes      | ❌ No         | Access invitations            |
-| CustomerClientLinkService         | Account       | ✅ Yes      | ✅ Yes        | Manager account linking       |
-| CustomerManagerLinkService        | Account       | ✅ Yes      | ✅ Yes        | Manager link management       |
-| AccountLinkService                | Account       | ✅ Yes      | ✅ Yes        | Third-party account linking   |
-| BillingSetupService               | Account       | ✅ Yes      | ✅ Yes        | Billing configuration         |
-| InvoiceService                    | Account       | ✅ Yes      | ✅ Yes        | Billing invoices              |
-| PaymentsAccountService            | Account       | ✅ Yes      | ❌ No         | Payments account info         |
-| IdentityVerificationService       | Account       | ✅ Yes      | ❌ No         | Identity verification         |
-| **Labels & Organization**         |
-| LabelService                      | Organization  | ✅ Yes      | ✅ Yes        | Label management              |
-| CampaignLabelService              | Organization  | ✅ Yes      | ✅ Yes        | Campaign label associations   |
-| AdGroupLabelService               | Organization  | ✅ Yes      | ✅ Yes        | Ad group label associations   |
-| AdGroupAdLabelService             | Organization  | ✅ Yes      | ❌ No         | Ad label associations         |
-| AdGroupCriterionLabelService      | Organization  | ✅ Yes      | ✅ Yes        | Criterion label associations  |
-| CustomerLabelService              | Organization  | ✅ Yes      | ✅ Yes        | Customer label associations   |
-| SharedSetService                  | Organization  | ✅ Yes      | ✅ Yes        | Shared negative lists         |
-| SharedCriterionService            | Organization  | ✅ Yes      | ❌ No         | Shared criteria               |
-| CampaignSharedSetService          | Organization  | ✅ Yes      | ✅ Yes        | Campaign-shared set linking   |
-| **Smart Campaigns**               |
-| SmartCampaignService              | Smart         | ✅ Yes      | ✅ Yes        | Smart campaign management     |
-| SmartCampaignSettingService       | Smart         | ❌ No       | ❌ No         | Smart campaign settings       |
-| SmartCampaignSuggestService       | Smart         | ❌ No       | ❌ No         | Smart campaign suggestions    |
-| **Experiments & Testing**         |
-| ExperimentService                 | Testing       | ✅ Yes      | ✅ Yes        | Campaign experiments          |
-| ExperimentArmService              | Testing       | ✅ Yes      | ✅ Yes        | Experiment variations         |
-| CampaignDraftService              | Testing       | ✅ Yes      | ✅ Yes        | Campaign drafts               |
-| **Planning Tools**                |
-| KeywordPlanService                | Planning      | ✅ Yes      | ✅ Yes        | Keyword planning              |
-| KeywordPlanCampaignService        | Planning      | ✅ Yes      | ✅ Yes        | Keyword plan campaigns        |
-| KeywordPlanCampaignKeywordService | Planning      | ✅ Yes      | ✅ Yes        | Campaign keywords in plan     |
-| KeywordPlanAdGroupService         | Planning      | ✅ Yes      | ✅ Yes        | Keyword plan ad groups        |
-| KeywordPlanAdGroupKeywordService  | Planning      | ✅ Yes      | ✅ Yes        | Ad group keywords in plan     |
-| KeywordPlanIdeaService            | Planning      | ✅ Yes      | ✅ Yes        | Keyword ideas                 |
-| ReachPlanService                  | Planning      | ✅ Yes      | ✅ Yes        | Reach planning                |
-| **Recommendations**               |
-| RecommendationService             | Optimization  | ✅ Yes      | ✅ Yes        | Account recommendations       |
-| RecommendationSubscriptionService | Optimization  | ❌ No       | ❌ No         | Recommendation subscriptions  |
-| **Metadata & Discovery**          |
-| GoogleAdsFieldService             | Metadata      | ✅ Yes      | ✅ Yes        | Field metadata                |
-| GoogleAdsService                  | Core          | ✅ Yes      | ✅ Yes        | Search operations (GAQL)      |
-| SearchService                     | Core          | ✅ Yes      | ✅ Yes        | Alternative search interface  |
-| **Advanced Features**             |
-| BatchJobService                   | Bulk Ops      | ✅ Yes      | ✅ Yes        | Bulk operations               |
-| OfflineUserDataJobService         | Data Import   | ✅ Yes      | ❌ No         | Customer match                |
-| UserDataService                   | Data Import   | ✅ Yes      | ✅ Yes        | Enhanced conversions          |
-| CustomizerAttributeService        | Customization | ✅ Yes      | ❌ No         | Ad customizers                |
-| CampaignCustomizerService         | Customization | ✅ Yes      | ✅ Yes        | Campaign customizers          |
-| AdGroupCustomizerService          | Customization | ✅ Yes      | ✅ Yes        | Ad group customizers          |
-| AdGroupCriterionCustomizerService | Customization | ✅ Yes      | ✅ Yes        | Criterion customizers         |
-| CustomerCustomizerService         | Customization | ✅ Yes      | ❌ No         | Customer customizers          |
-| AdParameterService                | Customization | ✅ Yes      | ✅ Yes        | Ad parameters                 |
-| DataLinkService                   | Integration   | ✅ Yes      | ❌ No         | Third-party data links        |
-| ProductLinkService                | Integration   | ✅ Yes      | ✅ Yes        | Product integrations          |
-| BrandSuggestionService            | Discovery     | ✅ Yes      | ✅ Yes        | Brand suggestions             |
-
-### Summary Statistics
-
-- **Total Services Implemented**: 89 out of ~120 Google Ads API v20 services
-- **Services with Tests**: 72 (81% test coverage)
-- **Core Services Coverage**: 100% (all essential services implemented)
-- **Advanced Features Coverage**: High (most advanced features implemented)
-
-### Implementation Highlights
-
-This MCP server provides comprehensive coverage of the Google Ads API v20:
-
-1. ✅ **Complete Core Services**: All essential campaign management services
-2. ✅ **Advanced Features**: Bulk operations, offline conversions, and data imports
-3. ✅ **Account Management**: Full billing, user access, and account linking support
-4. ✅ **Analytics & Insights**: Audience insights, recommendations, and search capabilities
-5. ✅ **Type Safety**: All services use proto-plus message serialization for reliable responses
-
-### Key Features
-
-- **Proto-Plus Serialization**: All mutation responses use `serialize_proto_message` for consistent, type-safe responses
-- **Lazy Client Initialization**: Services initialize clients only when needed for better performance
-- **Comprehensive Error Handling**: Detailed error messages from Google Ads API exceptions
-- **Async Support**: All operations are async-first using FastMCP
-- **Type Annotations**: Full type coverage verified with pyright (0 errors)
-
-### Notable Services Not Yet Implemented
-
-While this MCP server has excellent coverage, some Google Ads API v20 services are not yet implemented:
-
-- **SmartCampaignSettingService** & **SmartCampaignSuggestService**: Advanced Smart Campaign features
-- **RecommendationSubscriptionService**: Automated recommendation subscriptions
-- **FeedService** & **FeedItemService**: Shopping feed management
-- **ExtensionFeedItemService**: Ad extensions management
-- **CampaignSimulationService**: Campaign performance simulations
-- **LocalServicesLeadService**: Local services lead management
-- **TravelAssetSuggestionService**: Travel-specific asset suggestions
-
-## Testing
+Run every registered service group:
 
 ```bash
-# Run tests
-uv run pytest
-
-# Run type checking
-uv run pyright
-
-# Run code formatting
-uv run ruff format .
+uv run main.py --groups all
 ```
 
-## Contributing
+Run a focused subset:
 
-Contributions are welcome! Please ensure:
+```bash
+uv run main.py --groups core,assets,targeting,conversion
+```
 
-1. All code has proper type annotations
-2. Tests are added for new functionality
-3. Code passes `uv run pyright` with no errors
-4. Code is formatted with `uv run ruff format`
+Available groups:
+
+| Group | Includes |
+|-------|----------|
+| `core` | Customers, campaigns, budgets, ad groups, keywords, ads, conversions, GAQL |
+| `assets` | Assets, asset groups, asset sets, campaign/ad group/customer assets |
+| `targeting` | Criteria, geo targets, audiences, custom interests, user lists |
+| `bidding` | Strategies, bid modifiers, data exclusions, seasonality adjustments |
+| `planning` | Keyword plans, reach planning, brand suggestions |
+| `reporting` | Search, fields, recommendations, invoices, audience insights |
+| `conversion` | Uploads, adjustments, value rules, goals, user data, remarketing |
+| `organization` | Labels, shared sets, shared criteria |
+| `customizers` | Customizer attributes, campaign/ad group/customer customizers, ad parameters |
+| `account` | Access, manager links, billing, payments, identity, product/data links |
+| `other` | Smart campaigns, batch jobs, user data |
+
+## MCP Client
+
+Example stdio configuration:
+
+```json
+{
+  "mcpServers": {
+    "google-ads": {
+      "command": "uv",
+      "args": ["run", "main.py", "--groups", "all"],
+      "cwd": "/path/to/google-ads-mcp",
+      "env": {
+        "GOOGLE_ADS_DEVELOPER_TOKEN": "...",
+        "GOOGLE_ADS_CLIENT_ID": "...",
+        "GOOGLE_ADS_CLIENT_SECRET": "...",
+        "GOOGLE_ADS_REFRESH_TOKEN": "..."
+      }
+    }
+  }
+}
+```
+
+Use narrower groups for production agents when you want to reduce tool count and keep routing focused.
+
+## Development
+
+```bash
+# Format
+uv run ruff format .
+
+# Type check
+uv run pyright
+
+# Test
+uv run pytest
+```
+
+When adding a service:
+
+1. Check the Google Ads API v20 generated service types.
+2. Implement the service wrapper with generated protobuf request, operation, resource, and enum types.
+3. Register lightweight MCP tools for the service.
+4. Add focused tests.
+5. Update [`TRACKER.md`](./TRACKER.md).
+6. Run `uv run ruff format .` and `uv run pyright`.
+
+## Related
+
+| Project | Description |
+|---------|-------------|
+| [OpenPromo](https://openpromo.app) | AI-native workspace for creating, publishing, and managing ads |
+| [`@promobase/ad-platforms`](https://www.npmjs.com/package/@promobase/ad-platforms) | TypeScript ad platform SDK with AI SDK tools for Meta, TikTok, and Google Ads work |
+| [`promobase/ad-platform-sdks`](https://github.com/promobase/ad-platform-sdks) | Source repo for Promobase's multi-platform ad SDKs |
 
 ## License
 
-MIT
+MIT © [Promobase](https://openpromo.app)
 
 ## Disclaimer
 
-This is an unofficial implementation and is not affiliated with, endorsed by, or supported by Google.
+This is an unofficial Google Ads API integration. It is not affiliated with, endorsed by, or supported by Google.

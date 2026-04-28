@@ -1,8 +1,9 @@
 """Tests for Campaign Asset Set Service."""
 
-import pytest
 from typing import Any
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
+
+import pytest
 
 from google.ads.googleads.v20.services.services.campaign_asset_set_service import (
     CampaignAssetSetServiceClient,
@@ -270,81 +271,10 @@ class TestCampaignAssetSetService:
 class TestCampaignAssetSetMCPServer:
     """Test cases for Campaign Asset Set MCP server."""
 
-    @patch("src.sdk_servers.campaign_asset_set_server.get_client")
-    async def test_link_asset_set_to_campaign_tool(self, mock_get_client: Any):
+    async def test_link_asset_set_to_campaign_tool(self):
         """Test link asset set to campaign MCP tool."""
-        # Arrange
-        # Skip this test as server pattern has changed
-
-        mock_client = Mock(spec=CampaignAssetSetServiceClient)
-        mock_get_client.return_value = mock_client  # type: ignore
-
-        mock_response = MutateCampaignAssetSetsResponse(
-            results=[
-                MutateCampaignAssetSetResult(
-                    resource_name="customers/1234567890/campaignAssetSets/123~456"
-                )
-            ]
-        )
-        mock_client.mutate_campaign_asset_sets.return_value = mock_response  # type: ignore
-
         pytest.skip("Server pattern has changed")
 
-        # Act
-        response = await server.call_tool()(
-            name="link_asset_set_to_campaign",
-            arguments={
-                "customer_id": "1234567890",
-                "campaign": "customers/1234567890/campaigns/123",
-                "asset_set": "customers/1234567890/assetSets/456",
-            },
-        )
-
-        # Assert
-        assert len(response) == 1
-        assert "customers/1234567890/campaignAssetSets/123~456" in response[0].text
-        assert "link_asset_set" in response[0].text
-
-    @patch("src.sdk_servers.campaign_asset_set_server.get_client")
-    async def test_link_multiple_asset_sets_to_campaign_tool(
-        self, mock_get_client: Any
-    ):
+    async def test_link_multiple_asset_sets_to_campaign_tool(self):
         """Test link multiple asset sets to campaign MCP tool."""
-        # Arrange
-        # Skip this test as server pattern has changed
-
-        mock_client = Mock(spec=CampaignAssetSetServiceClient)
-        mock_get_client.return_value = mock_client  # type: ignore
-
-        mock_response = MutateCampaignAssetSetsResponse(
-            results=[
-                MutateCampaignAssetSetResult(
-                    resource_name="customers/1234567890/campaignAssetSets/123~456"
-                ),
-                MutateCampaignAssetSetResult(
-                    resource_name="customers/1234567890/campaignAssetSets/123~789"
-                ),
-            ]
-        )
-        mock_client.mutate_campaign_asset_sets.return_value = mock_response  # type: ignore
-
         pytest.skip("Server pattern has changed")
-
-        # Act
-        response = await server.call_tool()(
-            name="link_multiple_asset_sets_to_campaign",
-            arguments={
-                "customer_id": "1234567890",
-                "campaign": "customers/1234567890/campaigns/123",
-                "asset_sets": [
-                    "customers/1234567890/assetSets/456",
-                    "customers/1234567890/assetSets/789",
-                ],
-            },
-        )
-
-        # Assert
-        assert len(response) == 1
-        assert "link_multiple_asset_sets" in response[0].text
-        assert "customers/1234567890/campaignAssetSets/123~456" in response[0].text
-        assert "customers/1234567890/campaignAssetSets/123~789" in response[0].text

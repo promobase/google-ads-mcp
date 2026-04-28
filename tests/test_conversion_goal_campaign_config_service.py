@@ -67,7 +67,7 @@ class TestConversionGoalCampaignConfigService:
         request = call_args.kwargs["request"]
         assert request.customer_id == customer_id
         assert request.operations == operations
-        assert request.validate_only == False
+        assert not request.validate_only
 
     def test_update_conversion_goal_campaign_config_operation(
         self, conversion_goal_campaign_config_service: Any

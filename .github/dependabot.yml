@@ -1,0 +1,28 @@
+version: 2
+updates:
+  # uv project dependencies from pyproject.toml and uv.lock
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      google-ads:
+        patterns: ["google-ads", "google-auth"]
+      mcp-runtime:
+        patterns: ["fastmcp", "aiohttp"]
+      python-tooling:
+        patterns: ["ruff", "pyright", "pytest", "pytest-asyncio", "types-*"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  # GitHub Actions versions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      actions:
+        patterns: ["*"]

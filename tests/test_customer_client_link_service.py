@@ -156,7 +156,7 @@ async def test_create_customer_client_link_with_hidden(
     call_args = mock_customer_client_link_client.mutate_customer_client_link.call_args  # type: ignore
     request = call_args[1]["request"]
     link = request.operation.create
-    assert link.hidden == True
+    assert link.hidden
 
 
 @pytest.mark.asyncio
@@ -384,14 +384,14 @@ async def test_list_customer_client_links(
     first_result = result[0]
     assert first_result["manager_link_id"] == 100
     assert first_result["status"] == "ACTIVE"
-    assert first_result["hidden"] == False
+    assert not first_result["hidden"]
     assert "client_details" in first_result
     assert first_result["client_details"]["descriptive_name"] == "Client 1"
     assert first_result["client_details"]["currency_code"] == "USD"
 
     # Check last result (hidden)
     last_result = result[2]
-    assert last_result["hidden"] == True
+    assert last_result["hidden"]
 
     # Verify the search call
     mock_google_ads_service.search.assert_called_once()  # type: ignore

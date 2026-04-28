@@ -72,8 +72,8 @@ class TestKeywordPlanCampaignService:
         request = call_args.kwargs["request"]
         assert request.customer_id == customer_id
         assert request.operations == operations
-        assert request.partial_failure == True
-        assert request.validate_only == False
+        assert request.partial_failure
+        assert not request.validate_only
 
     def test_create_keyword_plan_campaign_operation(
         self, keyword_plan_campaign_service: Any
