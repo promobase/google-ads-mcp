@@ -40,7 +40,12 @@ class TestCampaignAssetSetService:
         """Test successful campaign asset sets mutation."""
         # Arrange
         customer_id = "1234567890"
-        operations = [Mock(spec=CampaignAssetSetOperation)]
+        operations = [
+            service.create_campaign_asset_set_operation(
+                campaign="customers/1234567890/campaigns/1",
+                asset_set="customers/1234567890/assetSets/1",
+            )
+        ]
         expected_response = MutateCampaignAssetSetsResponse(
             results=[
                 MutateCampaignAssetSetResult(
@@ -74,7 +79,12 @@ class TestCampaignAssetSetService:
         """Test campaign asset sets mutation with all options."""
         # Arrange
         customer_id = "1234567890"
-        operations = [Mock(spec=CampaignAssetSetOperation)]
+        operations = [
+            service.create_campaign_asset_set_operation(
+                campaign="customers/1234567890/campaigns/1",
+                asset_set="customers/1234567890/assetSets/1",
+            )
+        ]
         expected_response = MutateCampaignAssetSetsResponse()
         mock_client.mutate_campaign_asset_sets.return_value = expected_response  # type: ignore
 
@@ -267,14 +277,15 @@ class TestCampaignAssetSetService:
         assert len(request.operations) == 2
 
 
+@pytest.mark.skip(
+    reason="FastMCP tool-call tests need a harness; old get_client patches removed."
+)
 @pytest.mark.asyncio
 class TestCampaignAssetSetMCPServer:
-    """Test cases for Campaign Asset Set MCP server."""
+    """Placeholder: MCP tool integration tests pending."""
 
-    async def test_link_asset_set_to_campaign_tool(self):
-        """Test link asset set to campaign MCP tool."""
-        pytest.skip("Server pattern has changed")
+    async def test_link_asset_set_to_campaign_tool(self) -> None:
+        pytest.skip("MCP tool integration not implemented in CI")
 
-    async def test_link_multiple_asset_sets_to_campaign_tool(self):
-        """Test link multiple asset sets to campaign MCP tool."""
-        pytest.skip("Server pattern has changed")
+    async def test_link_multiple_asset_sets_to_campaign_tool(self) -> None:
+        pytest.skip("MCP tool integration not implemented in CI")

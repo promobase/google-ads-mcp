@@ -26,7 +26,7 @@ def keyword_plan_idea_service(mock_sdk_client: Any) -> KeywordPlanIdeaService:
     mock_sdk_client.client.get_service.return_value = mock_idea_client  # type: ignore
 
     with patch(
-        "src.sdk_services.planning.keyword_plan_idea_service.get_sdk_client",
+        "src.services.planning.keyword_plan_idea_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = KeywordPlanIdeaService()
@@ -84,6 +84,17 @@ def create_mock_keyword_idea(
     return idea
 
 
+def create_mock_pager(ideas: list[Mock], next_page_token: str = "") -> Mock:
+    """Create a mock pager that mimics GenerateKeywordIdeasPager."""
+    first_page = Mock()
+    first_page.results = ideas
+    first_page.next_page_token = next_page_token
+
+    pager = Mock()
+    pager.pages = iter([first_page])
+    return pager
+
+
 @pytest.mark.asyncio
 async def test_generate_keyword_ideas_from_keywords(
     keyword_plan_idea_service: KeywordPlanIdeaService,
@@ -112,7 +123,7 @@ async def test_generate_keyword_ideas_from_keywords(
 
     # Get the mocked idea service client
     mock_idea_client = keyword_plan_idea_service.client  # type: ignore
-    mock_idea_client.generate_keyword_ideas.return_value = mock_ideas  # type: ignore
+    mock_idea_client.generate_keyword_ideas.return_value = create_mock_pager(mock_ideas)  # type: ignore
 
     # Act
     result = await keyword_plan_idea_service.generate_keyword_ideas_from_keywords(
@@ -127,15 +138,16 @@ async def test_generate_keyword_ideas_from_keywords(
     )
 
     # Assert
-    assert len(result) == 3
-    assert result[0]["text"] == "running shoes sale"
-    assert result[0]["keyword_idea_metrics"]["avg_monthly_searches"] == 5000
-    assert result[0]["keyword_idea_metrics"]["competition"] == "HIGH"
-    assert result[0]["keyword_idea_metrics"]["competition_index"] == 80
-    assert result[0]["keyword_idea_metrics"]["low_top_of_page_bid_micros"] == 750000
-    assert result[0]["keyword_idea_metrics"]["high_top_of_page_bid_micros"] == 1500000
-    assert len(result[0]["keyword_idea_metrics"]["monthly_search_volumes"]) == 2
-    assert result[0]["keyword_annotations"]["concepts"][0]["name"] == "Running"
+    ideas = result["results"]
+    assert len(ideas) == 3
+    assert ideas[0]["text"] == "running shoes sale"
+    assert ideas[0]["keyword_idea_metrics"]["avg_monthly_searches"] == 5000
+    assert ideas[0]["keyword_idea_metrics"]["competition"] == "HIGH"
+    assert ideas[0]["keyword_idea_metrics"]["competition_index"] == 80
+    assert ideas[0]["keyword_idea_metrics"]["low_top_of_page_bid_micros"] == 750000
+    assert ideas[0]["keyword_idea_metrics"]["high_top_of_page_bid_micros"] == 1500000
+    assert len(ideas[0]["keyword_idea_metrics"]["monthly_search_volumes"]) == 2
+    assert ideas[0]["keyword_annotations"]["concepts"][0]["name"] == "Running"
 
     # Verify the API call
     mock_idea_client.generate_keyword_ideas.assert_called_once()  # type: ignore
@@ -184,7 +196,7 @@ async def test_generate_keyword_ideas_from_url(
 
     # Get the mocked idea service client
     mock_idea_client = keyword_plan_idea_service.client  # type: ignore
-    mock_idea_client.generate_keyword_ideas.return_value = mock_ideas  # type: ignore
+    mock_idea_client.generate_keyword_ideas.return_value = create_mock_pager(mock_ideas)  # type: ignore
 
     # Act
     result = await keyword_plan_idea_service.generate_keyword_ideas_from_url(
@@ -199,9 +211,10 @@ async def test_generate_keyword_ideas_from_url(
     )
 
     # Assert
-    assert len(result) == 2
-    assert result[0]["text"] == "marathon running shoes"
-    assert result[1]["text"] == "trail running footwear"
+    ideas = result["results"]
+    assert len(ideas) == 2
+    assert ideas[0]["text"] == "marathon running shoes"
+    assert ideas[1]["text"] == "trail running footwear"
 
     # Verify the API call
     mock_idea_client.generate_keyword_ideas.assert_called_once()  # type: ignore
@@ -244,7 +257,7 @@ async def test_generate_keyword_ideas_from_site(
 
     # Get the mocked idea service client
     mock_idea_client = keyword_plan_idea_service.client  # type: ignore
-    mock_idea_client.generate_keyword_ideas.return_value = mock_ideas  # type: ignore
+    mock_idea_client.generate_keyword_ideas.return_value = create_mock_pager(mock_ideas)  # type: ignore
 
     # Act
     result = await keyword_plan_idea_service.generate_keyword_ideas_from_site(
@@ -256,8 +269,9 @@ async def test_generate_keyword_ideas_from_site(
     )
 
     # Assert
-    assert len(result) == 1
-    assert result[0]["text"] == "sports equipment online"
+    ideas = result["results"]
+    assert len(ideas) == 1
+    assert ideas[0]["text"] == "sports equipment online"
 
     # Verify the API call
     mock_idea_client.generate_keyword_ideas.assert_called_once()  # type: ignore
@@ -299,7 +313,7 @@ async def test_generate_keyword_ideas_from_keywords_and_url(
 
     # Get the mocked idea service client
     mock_idea_client = keyword_plan_idea_service.client  # type: ignore
-    mock_idea_client.generate_keyword_ideas.return_value = mock_ideas  # type: ignore
+    mock_idea_client.generate_keyword_ideas.return_value = create_mock_pager(mock_ideas)  # type: ignore
 
     # Act
     result = (
@@ -316,9 +330,10 @@ async def test_generate_keyword_ideas_from_keywords_and_url(
     )
 
     # Assert
-    assert len(result) == 2
-    assert result[0]["text"] == "fitness running gear"
-    assert result[1]["text"] == "running fitness tracker"
+    ideas = result["results"]
+    assert len(ideas) == 2
+    assert ideas[0]["text"] == "fitness running gear"
+    assert ideas[1]["text"] == "running fitness tracker"
 
     # Verify the API call
     mock_idea_client.generate_keyword_ideas.assert_called_once()  # type: ignore

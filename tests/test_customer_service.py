@@ -13,7 +13,7 @@ from src.services.account.customer_service import (
 @pytest.fixture
 def mock_sdk_client() -> Any:
     """Create a mock SDK client."""
-    with patch("src.sdk_services.account.customer_service.get_sdk_client") as mock:
+    with patch("src.services.account.customer_service.get_sdk_client") as mock:
         client = MagicMock()
         mock.return_value = client  # type: ignore
         yield client
@@ -57,7 +57,7 @@ async def test_create_customer_client(
     }
 
     with patch(
-        "src.sdk_services.account.customer_service.serialize_proto_message",
+        "src.services.account.customer_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Call the method

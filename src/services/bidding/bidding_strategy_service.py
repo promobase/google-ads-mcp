@@ -5,6 +5,7 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
 from google.ads.googleads.v20.common.types.bidding import (
+    MaximizeConversionValue,
     MaximizeConversions,
     TargetCpa,
     TargetImpressionShare,
@@ -30,7 +31,13 @@ from google.ads.googleads.v20.services.types.bidding_strategy_service import (
 )
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -47,7 +54,9 @@ class BiddingStrategyService:
         """Get the bidding strategy service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("BiddingStrategyService")
+            self._client = sdk_client.client.get_service(
+                "BiddingStrategyService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -77,8 +86,8 @@ class BiddingStrategyService:
             # Create bidding strategy
             bidding_strategy = BiddingStrategy()
             bidding_strategy.name = name
-            bidding_strategy.status = getattr(
-                BiddingStrategyStatusEnum.BiddingStrategyStatus, status
+            bidding_strategy.status = resolve_enum(
+                BiddingStrategyStatusEnum.BiddingStrategyStatus, status, "status"
             )
             bidding_strategy.type_ = (
                 BiddingStrategyTypeEnum.BiddingStrategyType.TARGET_CPA
@@ -111,7 +120,7 @@ class BiddingStrategyService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -145,8 +154,8 @@ class BiddingStrategyService:
             # Create bidding strategy
             bidding_strategy = BiddingStrategy()
             bidding_strategy.name = name
-            bidding_strategy.status = getattr(
-                BiddingStrategyStatusEnum.BiddingStrategyStatus, status
+            bidding_strategy.status = resolve_enum(
+                BiddingStrategyStatusEnum.BiddingStrategyStatus, status, "status"
             )
             bidding_strategy.type_ = (
                 BiddingStrategyTypeEnum.BiddingStrategyType.TARGET_ROAS
@@ -179,7 +188,7 @@ class BiddingStrategyService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -213,8 +222,8 @@ class BiddingStrategyService:
             # Create bidding strategy
             bidding_strategy = BiddingStrategy()
             bidding_strategy.name = name
-            bidding_strategy.status = getattr(
-                BiddingStrategyStatusEnum.BiddingStrategyStatus, status
+            bidding_strategy.status = resolve_enum(
+                BiddingStrategyStatusEnum.BiddingStrategyStatus, status, "status"
             )
             bidding_strategy.type_ = (
                 BiddingStrategyTypeEnum.BiddingStrategyType.MAXIMIZE_CONVERSIONS
@@ -248,11 +257,75 @@ class BiddingStrategyService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
             error_msg = f"Failed to create Maximize Conversions strategy: {str(e)}"
+            await ctx.log(level="error", message=error_msg)
+            raise Exception(error_msg) from e
+
+    async def create_maximize_conversion_value_strategy(
+        self,
+        ctx: Context,
+        customer_id: str,
+        name: str,
+        target_roas: Optional[float] = None,
+        status: str = "ENABLED",
+    ) -> Dict[str, Any]:
+        """Create a Maximize Conversion Value bidding strategy.
+
+        Args:
+            ctx: FastMCP context
+            customer_id: The customer ID
+            name: Strategy name
+            target_roas: Optional target ROAS constraint (e.g. 4.0 for 400%)
+            status: Strategy status (ENABLED, PAUSED, REMOVED)
+
+        Returns:
+            Created bidding strategy details
+        """
+        try:
+            customer_id = format_customer_id(customer_id)
+
+            bidding_strategy = BiddingStrategy()
+            bidding_strategy.name = name
+            bidding_strategy.status = resolve_enum(
+                BiddingStrategyStatusEnum.BiddingStrategyStatus, status, "status"
+            )
+            bidding_strategy.type_ = (
+                BiddingStrategyTypeEnum.BiddingStrategyType.MAXIMIZE_CONVERSION_VALUE
+            )
+
+            maximize_conversion_value = MaximizeConversionValue()
+            if target_roas is not None:
+                maximize_conversion_value.target_roas = target_roas
+            bidding_strategy.maximize_conversion_value = maximize_conversion_value
+
+            operation = BiddingStrategyOperation()
+            operation.create = bidding_strategy
+
+            request = MutateBiddingStrategiesRequest()
+            request.customer_id = customer_id
+            request.operations = [operation]
+
+            response: MutateBiddingStrategiesResponse = (
+                self.client.mutate_bidding_strategies(request=request)
+            )
+
+            await ctx.log(
+                level="info",
+                message=f"Created Maximize Conversion Value strategy '{name}'",
+            )
+
+            return serialize_proto_message(response)
+
+        except GoogleAdsException as e:
+            error_msg = format_ads_error(e)
+            await ctx.log(level="error", message=error_msg)
+            raise Exception(error_msg) from e
+        except Exception as e:
+            error_msg = f"Failed to create Maximize Conversion Value strategy: {str(e)}"
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
 
@@ -286,8 +359,8 @@ class BiddingStrategyService:
             # Create bidding strategy
             bidding_strategy = BiddingStrategy()
             bidding_strategy.name = name
-            bidding_strategy.status = getattr(
-                BiddingStrategyStatusEnum.BiddingStrategyStatus, status
+            bidding_strategy.status = resolve_enum(
+                BiddingStrategyStatusEnum.BiddingStrategyStatus, status, "status"
             )
             bidding_strategy.type_ = (
                 BiddingStrategyTypeEnum.BiddingStrategyType.TARGET_IMPRESSION_SHARE
@@ -330,7 +403,7 @@ class BiddingStrategyService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -459,11 +532,38 @@ def create_bidding_strategy_tools(
             status=status,
         )
 
+    async def create_maximize_conversion_value_strategy(
+        ctx: Context,
+        customer_id: str,
+        name: str,
+        target_roas: Optional[float] = None,
+        status: str = "ENABLED",
+    ) -> Dict[str, Any]:
+        """Create a Maximize Conversion Value bidding strategy. Ideal for PMax revenue campaigns.
+
+        Args:
+            customer_id: The customer ID
+            name: Strategy name
+            target_roas: Optional target ROAS constraint (e.g., 4.0 for 400% ROAS)
+            status: Strategy status (ENABLED, PAUSED, REMOVED)
+
+        Returns:
+            Created bidding strategy details
+        """
+        return await service.create_maximize_conversion_value_strategy(
+            ctx=ctx,
+            customer_id=customer_id,
+            name=name,
+            target_roas=target_roas,
+            status=status,
+        )
+
     tools.extend(
         [
             create_target_cpa_strategy,
             create_target_roas_strategy,
             create_maximize_conversions_strategy,
+            create_maximize_conversion_value_strategy,
             create_target_impression_share_strategy,
         ]
     )

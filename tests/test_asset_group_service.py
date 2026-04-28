@@ -30,7 +30,7 @@ def asset_group_service(mock_sdk_client: Any) -> AssetGroupService:
     mock_sdk_client.client.get_service.return_value = mock_asset_group_client  # type: ignore
 
     with patch(
-        "src.sdk_services.assets.asset_group_service.get_sdk_client",
+        "src.services.assets.asset_group_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = AssetGroupService()
@@ -71,7 +71,7 @@ async def test_create_asset_group(
     }
 
     with patch(
-        "src.sdk_services.assets.asset_group_service.serialize_proto_message",
+        "src.services.assets.asset_group_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -143,7 +143,7 @@ async def test_create_asset_group_minimal(
     }
 
     with patch(
-        "src.sdk_services.assets.asset_group_service.serialize_proto_message",
+        "src.services.assets.asset_group_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -203,7 +203,7 @@ async def test_update_asset_group(
     }
 
     with patch(
-        "src.sdk_services.assets.asset_group_service.serialize_proto_message",
+        "src.services.assets.asset_group_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -314,7 +314,7 @@ async def test_list_asset_groups(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.assets.asset_group_service.get_sdk_client",
+        "src.services.assets.asset_group_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -381,7 +381,7 @@ async def test_list_asset_groups_include_removed(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.assets.asset_group_service.get_sdk_client",
+        "src.services.assets.asset_group_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -430,7 +430,7 @@ async def test_remove_asset_group(
     }
 
     with patch(
-        "src.sdk_services.assets.asset_group_service.serialize_proto_message",
+        "src.services.assets.asset_group_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

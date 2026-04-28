@@ -26,7 +26,7 @@ def geo_target_constant_service(mock_sdk_client: Any) -> GeoTargetConstantServic
     mock_sdk_client.client.get_service.return_value = mock_geo_target_client  # type: ignore
 
     with patch(
-        "src.sdk_services.targeting.geo_target_constant_service.get_sdk_client",
+        "src.services.targeting.geo_target_constant_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = GeoTargetConstantService()

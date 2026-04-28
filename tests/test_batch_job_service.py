@@ -29,7 +29,7 @@ def batch_job_service(mock_sdk_client: Any) -> BatchJobService:
     mock_sdk_client.client.get_service.return_value = mock_batch_job_client  # type: ignore
 
     with patch(
-        "src.sdk_services.data_import.batch_job_service.get_sdk_client",
+        "src.services.data_import.batch_job_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = BatchJobService()
@@ -63,7 +63,7 @@ async def test_create_batch_job(
     }
 
     with patch(
-        "src.sdk_services.data_import.batch_job_service.serialize_proto_message",
+        "src.services.data_import.batch_job_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -138,11 +138,11 @@ async def test_get_batch_job(
 
     with (
         patch(
-            "src.sdk_services.data_import.batch_job_service.get_sdk_client",
+            "src.services.data_import.batch_job_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.data_import.batch_job_service.serialize_proto_message",
+            "src.services.data_import.batch_job_service.serialize_proto_message",
             return_value=expected_result,
         ),
     ):
@@ -201,7 +201,7 @@ async def test_add_operations_to_batch_job(
     }
 
     with patch(
-        "src.sdk_services.data_import.batch_job_service.serialize_proto_message",
+        "src.services.data_import.batch_job_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -338,7 +338,7 @@ async def test_list_batch_job_results(
     }
 
     with patch(
-        "src.sdk_services.data_import.batch_job_service.serialize_proto_message",
+        "src.services.data_import.batch_job_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -403,11 +403,11 @@ async def test_list_batch_jobs(
     # Act
     with (
         patch(
-            "src.sdk_services.data_import.batch_job_service.get_sdk_client",
+            "src.services.data_import.batch_job_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.data_import.batch_job_service.serialize_proto_message",
+            "src.services.data_import.batch_job_service.serialize_proto_message",
             side_effect=[
                 {"batch_job": {"id": i + 100, "status": "PENDING"}} for i in range(3)
             ],

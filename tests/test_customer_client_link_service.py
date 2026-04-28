@@ -32,7 +32,7 @@ def customer_client_link_service(mock_sdk_client: Any) -> CustomerClientLinkServ
     mock_sdk_client.client.get_service.return_value = mock_customer_client_link_client  # type: ignore
 
     with patch(
-        "src.sdk_services.account.customer_client_link_service.get_sdk_client",
+        "src.services.account.customer_client_link_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = CustomerClientLinkService()
@@ -75,7 +75,7 @@ async def test_create_customer_client_link(
     }
 
     with patch(
-        "src.sdk_services.account.customer_client_link_service.serialize_proto_message",
+        "src.services.account.customer_client_link_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -137,7 +137,7 @@ async def test_create_customer_client_link_with_hidden(
     }
 
     with patch(
-        "src.sdk_services.account.customer_client_link_service.serialize_proto_message",
+        "src.services.account.customer_client_link_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -187,7 +187,7 @@ async def test_update_customer_client_link(
     expected_result = {"result": {"resource_name": link_resource_name}}
 
     with patch(
-        "src.sdk_services.account.customer_client_link_service.serialize_proto_message",
+        "src.services.account.customer_client_link_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -248,7 +248,7 @@ async def test_update_customer_client_link_status_only(
     expected_result = {"result": {"resource_name": link_resource_name}}
 
     with patch(
-        "src.sdk_services.account.customer_client_link_service.serialize_proto_message",
+        "src.services.account.customer_client_link_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -363,11 +363,11 @@ async def test_list_customer_client_links(
 
     with (
         patch(
-            "src.sdk_services.account.customer_client_link_service.get_sdk_client",
+            "src.services.account.customer_client_link_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.account.customer_client_link_service.serialize_proto_message",
+            "src.services.account.customer_client_link_service.serialize_proto_message",
             side_effect=serialize_side_effect,
         ),
     ):
@@ -432,7 +432,7 @@ async def test_list_customer_client_links_with_status_filter(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.account.customer_client_link_service.get_sdk_client",
+        "src.services.account.customer_client_link_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -544,7 +544,7 @@ async def test_error_handling_list_customer_client_links(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.account.customer_client_link_service.get_sdk_client",
+        "src.services.account.customer_client_link_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act & Assert

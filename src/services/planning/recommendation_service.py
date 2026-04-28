@@ -19,7 +19,12 @@ from google.ads.googleads.v20.services.types.recommendation_service import (
 )
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -36,7 +41,9 @@ class RecommendationService:
         """Get the recommendation service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("RecommendationService")
+            self._client = sdk_client.client.get_service(
+                "RecommendationService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -68,10 +75,10 @@ class RecommendationService:
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
             google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
-                "GoogleAdsService"
+                "GoogleAdsService", version="v20"
             )
 
-            # Build query
+            # Build query -- only select fields valid in v20 GAQL
             query = """
                 SELECT
                     recommendation.type,
@@ -85,11 +92,10 @@ class RecommendationService:
                     recommendation.text_ad_recommendation,
                     recommendation.target_cpa_opt_in_recommendation,
                     recommendation.responsive_search_ad_recommendation,
-                    recommendation.sitelink_extension_recommendation
+                    recommendation.sitelink_asset_recommendation
                 FROM recommendation
             """
 
-            # Add filters
             conditions = []
             if not dismissed:
                 conditions.append("recommendation.dismissed = FALSE")
@@ -108,7 +114,7 @@ class RecommendationService:
             if conditions:
                 query += " WHERE " + " AND ".join(conditions)
 
-            query += f" ORDER BY recommendation.impact.base_metrics.clicks DESC LIMIT {limit}"
+            query += f" LIMIT {limit}"
 
             # Execute search
             response = google_ads_service.search(customer_id=customer_id, query=query)
@@ -247,7 +253,7 @@ class RecommendationService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -301,7 +307,7 @@ class RecommendationService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:

@@ -19,7 +19,13 @@ from google.ads.googleads.v20.services.types.campaign_budget_service import (
 from google.protobuf import field_mask_pb2
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -36,7 +42,9 @@ class BudgetService:
         """Get the campaign budget service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("CampaignBudgetService")
+            self._client = sdk_client.client.get_service(
+                "CampaignBudgetService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -72,8 +80,10 @@ class BudgetService:
             campaign_budget.explicitly_shared = explicitly_shared
 
             # Set delivery method
-            campaign_budget.delivery_method = getattr(
-                BudgetDeliveryMethodEnum.BudgetDeliveryMethod, delivery_method
+            campaign_budget.delivery_method = resolve_enum(
+                BudgetDeliveryMethodEnum.BudgetDeliveryMethod,
+                delivery_method,
+                "delivery_method",
             )
 
             # Create the operation
@@ -93,7 +103,7 @@ class BudgetService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -143,8 +153,10 @@ class BudgetService:
                 update_mask_fields.append("amount_micros")
 
             if delivery_method is not None:
-                campaign_budget.delivery_method = getattr(
-                    BudgetDeliveryMethodEnum.BudgetDeliveryMethod, delivery_method
+                campaign_budget.delivery_method = resolve_enum(
+                    BudgetDeliveryMethodEnum.BudgetDeliveryMethod,
+                    delivery_method,
+                    "delivery_method",
                 )
                 update_mask_fields.append("delivery_method")
 
@@ -171,7 +183,7 @@ class BudgetService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:

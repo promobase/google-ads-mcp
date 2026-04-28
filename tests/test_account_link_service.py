@@ -39,7 +39,7 @@ def account_link_service(mock_sdk_client: Any) -> AccountLinkService:
     mock_sdk_client.client.get_service.return_value = mock_account_link_client  # type: ignore
 
     with patch(
-        "src.sdk_services.account.account_link_service.get_sdk_client",
+        "src.services.account.account_link_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = AccountLinkService()
@@ -74,7 +74,7 @@ async def test_create_account_link(
     expected_result = {"resource_name": "customers/1234567890/accountLinks/111222333"}
 
     with patch(
-        "src.sdk_services.account.account_link_service.serialize_proto_message",
+        "src.services.account.account_link_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -139,7 +139,7 @@ async def test_update_account_link(
     expected_result = {"result": {"resource_name": account_link_resource_name}}
 
     with patch(
-        "src.sdk_services.account.account_link_service.serialize_proto_message",
+        "src.services.account.account_link_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -195,7 +195,7 @@ async def test_update_account_link_no_changes(
     expected_result = {"result": {"resource_name": account_link_resource_name}}
 
     with patch(
-        "src.sdk_services.account.account_link_service.serialize_proto_message",
+        "src.services.account.account_link_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -277,11 +277,11 @@ async def test_list_account_links(
 
     with (
         patch(
-            "src.sdk_services.account.account_link_service.get_sdk_client",
+            "src.services.account.account_link_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.account.account_link_service.serialize_proto_message",
+            "src.services.account.account_link_service.serialize_proto_message",
             side_effect=serialize_side_effect,
         ),
     ):
@@ -345,7 +345,7 @@ async def test_list_account_links_include_removed(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.account.account_link_service.get_sdk_client",
+        "src.services.account.account_link_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -385,7 +385,7 @@ async def test_remove_account_link(
     expected_result = {"result": {"resource_name": account_link_resource_name}}
 
     with patch(
-        "src.sdk_services.account.account_link_service.serialize_proto_message",
+        "src.services.account.account_link_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -510,7 +510,7 @@ async def test_error_handling_list_account_links(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.account.account_link_service.get_sdk_client",
+        "src.services.account.account_link_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act & Assert

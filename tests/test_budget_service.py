@@ -29,7 +29,7 @@ def budget_service(mock_sdk_client: Any) -> BudgetService:
     mock_sdk_client.client.get_service.return_value = mock_budget_client  # type: ignore
 
     with patch(
-        "src.sdk_services.bidding.budget_service.get_sdk_client",
+        "src.services.bidding.budget_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = BudgetService()
@@ -69,7 +69,7 @@ async def test_create_campaign_budget(
     }
 
     with patch(
-        "src.sdk_services.bidding.budget_service.serialize_proto_message",
+        "src.services.bidding.budget_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -135,7 +135,7 @@ async def test_update_campaign_budget(
     }
 
     with patch(
-        "src.sdk_services.bidding.budget_service.serialize_proto_message",
+        "src.services.bidding.budget_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -213,7 +213,7 @@ async def test_update_campaign_budget_partial(
     }
 
     with patch(
-        "src.sdk_services.bidding.budget_service.serialize_proto_message",
+        "src.services.bidding.budget_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

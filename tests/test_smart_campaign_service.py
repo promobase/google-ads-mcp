@@ -28,7 +28,7 @@ def smart_campaign_service(mock_sdk_client: Any) -> SmartCampaignService:
     mock_sdk_client.client.get_service.return_value = mock_smart_campaign_client  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.smart_campaign_service.get_sdk_client",
+        "src.services.campaign.smart_campaign_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = SmartCampaignService()
@@ -81,7 +81,7 @@ async def test_suggest_budget_options_existing_campaign(
     }
 
     with patch(
-        "src.sdk_services.campaign.smart_campaign_service.serialize_proto_message",
+        "src.services.campaign.smart_campaign_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -168,7 +168,7 @@ async def test_suggest_keyword_themes(
     request = call_args[1]["request"]
     assert request.customer_id == customer_id
     assert request.suggestion_info.final_url == final_url
-    assert request.suggestion_info.business_info.business_name == business_name
+    assert request.suggestion_info.business_context.business_name == business_name
 
     # Verify logging
     mock_ctx.log.assert_called_once_with(  # type: ignore
@@ -237,7 +237,7 @@ async def test_suggest_ad_content(
     call_args = mock_smart_campaign_client.suggest_smart_campaign_ad.call_args  # type: ignore
     request = call_args[1]["request"]
     assert request.customer_id == customer_id
-    assert request.suggestion_info.business_info.business_name == business_name
+    assert request.suggestion_info.business_context.business_name == business_name
     assert request.suggestion_info.final_url == final_url
 
     # Verify logging

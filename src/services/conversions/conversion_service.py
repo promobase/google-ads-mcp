@@ -36,7 +36,13 @@ from google.ads.googleads.v20.services.types.conversion_action_service import (
 from google.protobuf import field_mask_pb2
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -53,7 +59,9 @@ class ConversionService:
         """Get the conversion action service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("ConversionActionService")
+            self._client = sdk_client.client.get_service(
+                "ConversionActionService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -97,14 +105,16 @@ class ConversionService:
             conversion_action.name = name
 
             # Set enums
-            conversion_action.status = getattr(
-                ConversionActionStatusEnum.ConversionActionStatus, status
+            conversion_action.status = resolve_enum(
+                ConversionActionStatusEnum.ConversionActionStatus, status, "status"
             )
-            conversion_action.type_ = getattr(
-                ConversionActionTypeEnum.ConversionActionType, type
+            conversion_action.type_ = resolve_enum(
+                ConversionActionTypeEnum.ConversionActionType, type, "type"
             )
-            conversion_action.category = getattr(
-                ConversionActionCategoryEnum.ConversionActionCategory, category
+            conversion_action.category = resolve_enum(
+                ConversionActionCategoryEnum.ConversionActionCategory,
+                category,
+                "category",
             )
 
             # Set counting type
@@ -132,8 +142,10 @@ class ConversionService:
 
             # Set attribution model
             attribution_settings = ConversionAction.AttributionModelSettings()
-            attribution_settings.attribution_model = getattr(
-                AttributionModelEnum.AttributionModel, attribution_model
+            attribution_settings.attribution_model = resolve_enum(
+                AttributionModelEnum.AttributionModel,
+                attribution_model,
+                "attribution_model",
             )
             attribution_settings.data_driven_model_status = (
                 DataDrivenModelStatusEnum.DataDrivenModelStatus.AVAILABLE
@@ -165,7 +177,7 @@ class ConversionService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -217,8 +229,8 @@ class ConversionService:
                 update_mask_fields.append("name")
 
             if status is not None:
-                conversion_action.status = getattr(
-                    ConversionActionStatusEnum.ConversionActionStatus, status
+                conversion_action.status = resolve_enum(
+                    ConversionActionStatusEnum.ConversionActionStatus, status, "status"
                 )
                 update_mask_fields.append("status")
 
@@ -263,7 +275,7 @@ class ConversionService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:

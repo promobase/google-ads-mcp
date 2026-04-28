@@ -31,7 +31,7 @@ def ad_group_asset_service(mock_sdk_client: Any) -> AdGroupAssetService:
     mock_sdk_client.client.get_service.return_value = mock_ad_group_asset_client  # type: ignore
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_asset_service.get_sdk_client",
+        "src.services.ad_group.ad_group_asset_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = AdGroupAssetService()
@@ -76,7 +76,7 @@ async def test_link_asset_to_ad_group(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_asset_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_asset_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -231,7 +231,7 @@ async def test_update_ad_group_asset_status(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_asset_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_asset_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -347,7 +347,7 @@ async def test_list_ad_group_assets(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_asset_service.get_sdk_client",
+        "src.services.ad_group.ad_group_asset_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -410,7 +410,7 @@ async def test_list_ad_group_assets_with_campaign_filter(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_asset_service.get_sdk_client",
+        "src.services.ad_group.ad_group_asset_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -467,7 +467,7 @@ async def test_remove_asset_from_ad_group(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_asset_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_asset_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

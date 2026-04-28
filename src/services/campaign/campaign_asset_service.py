@@ -19,7 +19,13 @@ from google.ads.googleads.v20.services.types.campaign_asset_service import (
 )
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -36,7 +42,9 @@ class CampaignAssetService:
         """Get the campaign asset service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("CampaignAssetService")
+            self._client = sdk_client.client.get_service(
+                "CampaignAssetService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -93,7 +101,7 @@ class CampaignAssetService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -134,8 +142,8 @@ class CampaignAssetService:
                 campaign_asset = CampaignAsset()
                 campaign_asset.campaign = campaign_resource
                 campaign_asset.asset = asset_resource
-                campaign_asset.field_type = getattr(
-                    AssetFieldTypeEnum.AssetFieldType, field_type
+                campaign_asset.field_type = resolve_enum(
+                    AssetFieldTypeEnum.AssetFieldType, field_type, "field_type"
                 )
 
                 # Create operation
@@ -174,7 +182,7 @@ class CampaignAssetService:
             return results
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -326,7 +334,7 @@ class CampaignAssetService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -375,7 +383,9 @@ def create_campaign_asset_tools(
             Created campaign asset link details including resource_name
         """
         # Convert string enum to proper enum type
-        field_type_enum = getattr(AssetFieldTypeEnum.AssetFieldType, field_type)
+        field_type_enum = resolve_enum(
+            AssetFieldTypeEnum.AssetFieldType, field_type, "field_type"
+        )
 
         return await service.link_asset_to_campaign(
             ctx=ctx,
@@ -430,7 +440,7 @@ def create_campaign_asset_tools(
         """
         # Convert string enum to proper enum type if provided
         field_type_enum = (
-            getattr(AssetFieldTypeEnum.AssetFieldType, field_type)
+            resolve_enum(AssetFieldTypeEnum.AssetFieldType, field_type, "field_type")
             if field_type
             else None
         )
@@ -462,7 +472,9 @@ def create_campaign_asset_tools(
             Removal result with status
         """
         # Convert string enum to proper enum type
-        field_type_enum = getattr(AssetFieldTypeEnum.AssetFieldType, field_type)
+        field_type_enum = resolve_enum(
+            AssetFieldTypeEnum.AssetFieldType, field_type, "field_type"
+        )
 
         return await service.remove_asset_from_campaign(
             ctx=ctx,

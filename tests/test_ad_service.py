@@ -27,7 +27,7 @@ def ad_service(mock_sdk_client: Any) -> AdService:
     mock_sdk_client.client.get_service.return_value = mock_ad_group_ad_client  # type: ignore
 
     with patch(
-        "src.sdk_services.ad_group.ad_service.get_sdk_client",
+        "src.services.ad_group.ad_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = AdService()
@@ -80,7 +80,7 @@ async def test_create_responsive_search_ad(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_service.serialize_proto_message",
+        "src.services.ad_group.ad_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -164,7 +164,7 @@ async def test_create_responsive_search_ad_minimal(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_service.serialize_proto_message",
+        "src.services.ad_group.ad_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -231,7 +231,7 @@ async def test_create_expanded_text_ad(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_service.serialize_proto_message",
+        "src.services.ad_group.ad_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -322,7 +322,7 @@ async def test_create_expanded_text_ad_minimal(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_service.serialize_proto_message",
+        "src.services.ad_group.ad_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -388,7 +388,7 @@ async def test_update_ad_status(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_service.serialize_proto_message",
+        "src.services.ad_group.ad_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

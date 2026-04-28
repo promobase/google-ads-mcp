@@ -27,7 +27,7 @@ def recommendation_service(mock_sdk_client: Any) -> RecommendationService:
     mock_sdk_client.client.get_service.return_value = mock_recommendation_client  # type: ignore
 
     with patch(
-        "src.sdk_services.planning.recommendation_service.get_sdk_client",
+        "src.services.planning.recommendation_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = RecommendationService()
@@ -140,7 +140,7 @@ async def test_get_recommendations(
 
     mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
-    def get_service_side_effect(service_name: str):
+    def get_service_side_effect(service_name: str, **_: Any) -> Any:
         if service_name == "GoogleAdsService":
             return mock_google_ads_service
         return recommendation_service.client
@@ -149,7 +149,7 @@ async def test_get_recommendations(
 
     # Act
     with patch(
-        "src.sdk_services.planning.recommendation_service.get_sdk_client",
+        "src.services.planning.recommendation_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         result = await recommendation_service.get_recommendations(
@@ -211,7 +211,7 @@ async def test_apply_recommendation(
     expected_result = {"results": [{"resource_name": recommendation_resource_name}]}
 
     with patch(
-        "src.sdk_services.planning.recommendation_service.serialize_proto_message",
+        "src.services.planning.recommendation_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -271,7 +271,7 @@ async def test_dismiss_recommendation(
     }
 
     with patch(
-        "src.sdk_services.planning.recommendation_service.serialize_proto_message",
+        "src.services.planning.recommendation_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -312,7 +312,7 @@ async def test_get_recommendations_minimal(
     mock_google_ads_service = Mock()
     mock_google_ads_service.search.return_value = []  # type: ignore
 
-    def get_service_side_effect(service_name: str):
+    def get_service_side_effect(service_name: str, **_: Any) -> Any:
         if service_name == "GoogleAdsService":
             return mock_google_ads_service
         return recommendation_service.client
@@ -321,7 +321,7 @@ async def test_get_recommendations_minimal(
 
     # Act
     with patch(
-        "src.sdk_services.planning.recommendation_service.get_sdk_client",
+        "src.services.planning.recommendation_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         result = await recommendation_service.get_recommendations(

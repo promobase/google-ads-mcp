@@ -38,7 +38,7 @@ def custom_interest_service(mock_sdk_client: Any) -> CustomInterestService:
     mock_sdk_client.client.get_service.return_value = mock_custom_client  # type: ignore
 
     with patch(
-        "src.sdk_services.audiences.custom_interest_service.get_sdk_client",
+        "src.services.audiences.custom_interest_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = CustomInterestService()
@@ -83,7 +83,7 @@ async def test_create_custom_interest(
     }
 
     with patch(
-        "src.sdk_services.audiences.custom_interest_service.serialize_proto_message",
+        "src.services.audiences.custom_interest_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -185,7 +185,7 @@ async def test_create_custom_interest_custom_intent(
     }
 
     with patch(
-        "src.sdk_services.audiences.custom_interest_service.serialize_proto_message",
+        "src.services.audiences.custom_interest_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -254,7 +254,7 @@ async def test_update_custom_interest(
     }
 
     with patch(
-        "src.sdk_services.audiences.custom_interest_service.serialize_proto_message",
+        "src.services.audiences.custom_interest_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -346,7 +346,7 @@ async def test_update_custom_interest_partial(
     }
 
     with patch(
-        "src.sdk_services.audiences.custom_interest_service.serialize_proto_message",
+        "src.services.audiences.custom_interest_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -434,11 +434,11 @@ async def test_list_custom_interests(
 
     with (
         patch(
-            "src.sdk_services.audiences.custom_interest_service.get_sdk_client",
+            "src.services.audiences.custom_interest_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.audiences.custom_interest_service.serialize_proto_message",
+            "src.services.audiences.custom_interest_service.serialize_proto_message",
             side_effect=mock_serialize,
         ),
     ):
@@ -538,11 +538,11 @@ async def test_get_custom_interest_details(
 
     with (
         patch(
-            "src.sdk_services.audiences.custom_interest_service.get_sdk_client",
+            "src.services.audiences.custom_interest_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.audiences.custom_interest_service.serialize_proto_message",
+            "src.services.audiences.custom_interest_service.serialize_proto_message",
             return_value=expected_result,
         ),
     ):

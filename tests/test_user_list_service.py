@@ -35,7 +35,7 @@ def user_list_service(mock_sdk_client: Any) -> UserListService:
     mock_sdk_client.client.get_service.return_value = mock_user_list_client  # type: ignore
 
     with patch(
-        "src.sdk_services.audiences.user_list_service.get_sdk_client",
+        "src.services.audiences.user_list_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = UserListService()
@@ -73,7 +73,7 @@ async def test_create_basic_user_list(
     }
 
     with patch(
-        "src.sdk_services.audiences.user_list_service.serialize_proto_message",
+        "src.services.audiences.user_list_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -143,7 +143,7 @@ async def test_create_crm_based_user_list(
     }
 
     with patch(
-        "src.sdk_services.audiences.user_list_service.serialize_proto_message",
+        "src.services.audiences.user_list_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -212,7 +212,7 @@ async def test_create_similar_user_list(
     }
 
     with patch(
-        "src.sdk_services.audiences.user_list_service.serialize_proto_message",
+        "src.services.audiences.user_list_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -284,7 +284,7 @@ async def test_create_logical_user_list(
     }
 
     with patch(
-        "src.sdk_services.audiences.user_list_service.serialize_proto_message",
+        "src.services.audiences.user_list_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -378,7 +378,7 @@ async def test_update_user_list(
     }
 
     with patch(
-        "src.sdk_services.audiences.user_list_service.serialize_proto_message",
+        "src.services.audiences.user_list_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -459,7 +459,7 @@ async def test_update_user_list_partial(
     }
 
     with patch(
-        "src.sdk_services.audiences.user_list_service.serialize_proto_message",
+        "src.services.audiences.user_list_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

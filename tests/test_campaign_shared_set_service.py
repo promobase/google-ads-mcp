@@ -33,7 +33,7 @@ def campaign_shared_set_service(mock_sdk_client: Any) -> CampaignSharedSetServic
     mock_sdk_client.client.get_service.return_value = mock_shared_set_client  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.campaign_shared_set_service.get_sdk_client",
+        "src.services.campaign.campaign_shared_set_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = CampaignSharedSetService()
@@ -77,7 +77,7 @@ async def test_attach_shared_set_to_campaign(
     }
 
     with patch(
-        "src.sdk_services.campaign.campaign_shared_set_service.serialize_proto_message",
+        "src.services.campaign.campaign_shared_set_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -158,7 +158,7 @@ async def test_attach_shared_sets_to_campaigns(
     }
 
     with patch(
-        "src.sdk_services.campaign.campaign_shared_set_service.serialize_proto_message",
+        "src.services.campaign.campaign_shared_set_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -236,7 +236,7 @@ async def test_update_campaign_shared_set_status(
     }
 
     with patch(
-        "src.sdk_services.campaign.campaign_shared_set_service.serialize_proto_message",
+        "src.services.campaign.campaign_shared_set_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -349,11 +349,11 @@ async def test_list_campaign_shared_sets(
 
     with (
         patch(
-            "src.sdk_services.campaign.campaign_shared_set_service.get_sdk_client",
+            "src.services.campaign.campaign_shared_set_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.campaign.campaign_shared_set_service.serialize_proto_message",
+            "src.services.campaign.campaign_shared_set_service.serialize_proto_message",
             side_effect=mock_serialize,
         ),
     ):
@@ -413,7 +413,7 @@ async def test_detach_shared_set_from_campaign(
     expected_result = {"results": [{"resource_name": resource_name}]}
 
     with patch(
-        "src.sdk_services.campaign.campaign_shared_set_service.serialize_proto_message",
+        "src.services.campaign.campaign_shared_set_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -503,11 +503,11 @@ async def test_get_campaigns_using_shared_set(
 
     with (
         patch(
-            "src.sdk_services.campaign.campaign_shared_set_service.get_sdk_client",
+            "src.services.campaign.campaign_shared_set_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.campaign.campaign_shared_set_service.serialize_proto_message",
+            "src.services.campaign.campaign_shared_set_service.serialize_proto_message",
             side_effect=mock_serialize,
         ),
     ):

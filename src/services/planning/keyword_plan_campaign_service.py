@@ -24,6 +24,7 @@ from google.ads.googleads.v20.services.types.keyword_plan_campaign_service impor
 )
 
 from src.sdk_client import get_sdk_client
+from src.utils import format_customer_id
 
 
 class KeywordPlanCampaignService:
@@ -38,7 +39,9 @@ class KeywordPlanCampaignService:
         """Get the keyword plan campaign service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("KeywordPlanCampaignService")
+            self._client = sdk_client.client.get_service(
+                "KeywordPlanCampaignService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -60,6 +63,7 @@ class KeywordPlanCampaignService:
         Returns:
             MutateKeywordPlanCampaignsResponse: The response containing results
         """
+        customer_id = format_customer_id(customer_id)
         request = MutateKeywordPlanCampaignsRequest(
             customer_id=customer_id,
             operations=operations,

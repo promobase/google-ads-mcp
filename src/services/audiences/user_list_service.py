@@ -30,7 +30,13 @@ from google.ads.googleads.v20.services.types.user_list_service import (
 from google.protobuf import field_mask_pb2
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -47,7 +53,9 @@ class UserListService:
         """Get the user list service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("UserListService")
+            self._client = sdk_client.client.get_service(
+                "UserListService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -82,8 +90,10 @@ class UserListService:
             if description:
                 user_list.description = description
 
-            user_list.membership_status = getattr(
-                UserListMembershipStatusEnum.UserListMembershipStatus, membership_status
+            user_list.membership_status = resolve_enum(
+                UserListMembershipStatusEnum.UserListMembershipStatus,
+                membership_status,
+                "membership_status",
             )
             user_list.membership_life_span = membership_life_span
 
@@ -114,7 +124,7 @@ class UserListService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -197,7 +207,7 @@ class UserListService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -272,7 +282,7 @@ class UserListService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -365,7 +375,7 @@ class UserListService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -451,7 +461,7 @@ class UserListService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:

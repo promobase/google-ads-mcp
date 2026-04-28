@@ -20,22 +20,20 @@ class TestConversionGoalCampaignConfigService:
     """Test cases for ConversionGoalCampaignConfigService"""
 
     @pytest.fixture
-    def mock_client(self) -> Any:
-        """Create a mock Google Ads client"""
-        client = Mock()
-        service = Mock()
-        client.get_service.return_value = service  # type: ignore
-        return client
+    def mock_service_client(self) -> Any:
+        return Mock()
 
     @pytest.fixture
-    def conversion_goal_campaign_config_service(self, mock_client: Any) -> Any:
+    def conversion_goal_campaign_config_service(self, mock_service_client: Any) -> Any:
         """Create ConversionGoalCampaignConfigService instance with mock client"""
         service = ConversionGoalCampaignConfigService()
-        service._client = mock_client  # type: ignore # Need to set private attribute for testing
+        service._client = mock_service_client  # type: ignore[reportPrivateUsage]
         return service
 
     def test_mutate_conversion_goal_campaign_configs(
-        self, conversion_goal_campaign_config_service: Any, mock_client: Any
+        self,
+        conversion_goal_campaign_config_service: Any,
+        mock_service_client: Any,
     ):
         """Test mutating conversion goal campaign configs"""
         # Setup
@@ -49,7 +47,9 @@ class TestConversionGoalCampaignConfigService:
                 )
             ]
         )
-        mock_client.get_service.return_value.mutate_conversion_goal_campaign_configs.return_value = mock_response  # type: ignore
+        mock_service_client.mutate_conversion_goal_campaign_configs.return_value = (
+            mock_response  # type: ignore
+        )
 
         # Execute
         response = conversion_goal_campaign_config_service.mutate_conversion_goal_campaign_configs(
@@ -58,12 +58,11 @@ class TestConversionGoalCampaignConfigService:
 
         # Verify
         assert response == mock_response
-        mock_client.get_service.assert_called_with(  # type: ignore
-            "ConversionGoalCampaignConfigService"
-        )
 
         # Verify request
-        call_args = mock_client.get_service.return_value.mutate_conversion_goal_campaign_configs.call_args  # type: ignore
+        call_args = (
+            mock_service_client.mutate_conversion_goal_campaign_configs.call_args
+        )  # type: ignore
         request = call_args.kwargs["request"]
         assert request.customer_id == customer_id
         assert request.operations == operations

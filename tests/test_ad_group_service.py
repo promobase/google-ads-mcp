@@ -28,7 +28,7 @@ def ad_group_service(mock_sdk_client: Any) -> AdGroupService:
     mock_sdk_client.client.get_service.return_value = mock_ad_group_service_client  # type: ignore
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_service.get_sdk_client",
+        "src.services.ad_group.ad_group_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = AdGroupService()
@@ -65,7 +65,7 @@ async def test_create_ad_group(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -138,7 +138,7 @@ async def test_update_ad_group(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -208,7 +208,7 @@ async def test_create_ad_group_with_cpm_bid(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

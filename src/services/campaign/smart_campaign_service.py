@@ -4,11 +4,15 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.common.types.criteria import LocationInfo
+from google.ads.googleads.v20.common.types.criteria import (
+    KeywordThemeInfo,
+    LocationInfo,
+)
 from google.ads.googleads.v20.services.services.smart_campaign_suggest_service import (
     SmartCampaignSuggestServiceClient,
 )
 from google.ads.googleads.v20.services.types.smart_campaign_suggest_service import (
+    SmartCampaignSuggestionInfo,
     SuggestKeywordThemesRequest,
     SuggestKeywordThemesResponse,
     SuggestSmartCampaignAdRequest,
@@ -18,7 +22,12 @@ from google.ads.googleads.v20.services.types.smart_campaign_suggest_service impo
 )
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -35,7 +44,9 @@ class SmartCampaignService:
         """Get the smart campaign suggest service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("SmartCampaignSuggestService")
+            self._client = sdk_client.client.get_service(
+                "SmartCampaignSuggestService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -125,7 +136,7 @@ class SmartCampaignService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -164,15 +175,20 @@ class SmartCampaignService:
             request = SuggestKeywordThemesRequest()
             request.customer_id = customer_id
 
-            # Set business info
             if business_name:
-                request.suggestion_info.business_info.business_name = business_name
+                request.suggestion_info.business_context = (
+                    SmartCampaignSuggestionInfo.BusinessContext(
+                        business_name=business_name
+                    )
+                )
 
             if final_url:
                 request.suggestion_info.final_url = final_url
 
             if keyword_text:
-                request.suggestion_info.keyword_seed = keyword_text
+                request.suggestion_info.keyword_themes.append(
+                    KeywordThemeInfo(free_form_keyword_theme=keyword_text)
+                )
 
             # Set location and language
             if location_id:
@@ -197,13 +213,27 @@ class SmartCampaignService:
             # Process results
             themes = []
             for theme in response.keyword_themes:
-                theme_dict = {
+                raw_ktc = theme.keyword_theme_constant
+                if isinstance(raw_ktc, str):
+                    ktc_val = raw_ktc
+                else:
+                    ktc_val = getattr(raw_ktc, "resource_name", "") or ""
+
+                theme_dict: Dict[str, Any] = {
                     "display_name": theme.display_name,
-                    "keyword_theme_constant": theme.keyword_theme_constant,
+                    "keyword_theme_constant": ktc_val,
                 }
 
-                # Add free-form keyword if present
-                if theme.HasField("free_form_keyword_theme"):
+                use_free_form = False
+                if hasattr(theme, "HasField"):
+                    use_free_form = bool(
+                        theme.HasField("free_form_keyword_theme")  # type: ignore[arg-type]
+                    )
+                else:
+                    ff = getattr(theme, "free_form_keyword_theme", None)
+                    use_free_form = isinstance(ff, str) and ff != ""
+
+                if use_free_form:
                     theme_dict["free_form_text"] = theme.free_form_keyword_theme
                     theme_dict["type"] = "FREE_FORM"
                 else:
@@ -219,7 +249,7 @@ class SmartCampaignService:
             return themes
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -256,8 +286,9 @@ class SmartCampaignService:
             request = SuggestSmartCampaignAdRequest()
             request.customer_id = customer_id
 
-            # Set business info
-            request.suggestion_info.business_info.business_name = business_name
+            request.suggestion_info.business_context = (
+                SmartCampaignSuggestionInfo.BusinessContext(business_name=business_name)
+            )
             request.suggestion_info.final_url = final_url
             request.suggestion_info.language_code = (
                 f"languageConstants/{language_id or '1000'}"
@@ -304,7 +335,7 @@ class SmartCampaignService:
             return result
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:

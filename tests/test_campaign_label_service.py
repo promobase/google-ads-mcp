@@ -29,7 +29,7 @@ def campaign_label_service(mock_sdk_client: Any) -> CampaignLabelService:
     mock_sdk_client.client.get_service.return_value = mock_campaign_label_client  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.campaign_label_service.get_sdk_client",
+        "src.services.campaign.campaign_label_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = CampaignLabelService()
@@ -70,7 +70,7 @@ async def test_apply_label_to_campaign(
     }
 
     with patch(
-        "src.sdk_services.campaign.campaign_label_service.serialize_proto_message",
+        "src.services.campaign.campaign_label_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -218,7 +218,7 @@ async def test_list_campaign_labels(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.campaign_label_service.get_sdk_client",
+        "src.services.campaign.campaign_label_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -285,7 +285,7 @@ async def test_remove_label_from_campaign(
     expected_result = {"results": [{"resource_name": resource_name}]}
 
     with patch(
-        "src.sdk_services.campaign.campaign_label_service.serialize_proto_message",
+        "src.services.campaign.campaign_label_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -376,7 +376,7 @@ async def test_error_handling_list_labels(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.campaign_label_service.get_sdk_client",
+        "src.services.campaign.campaign_label_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act & Assert

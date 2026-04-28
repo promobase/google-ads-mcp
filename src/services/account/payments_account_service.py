@@ -13,7 +13,7 @@ from google.ads.googleads.v20.services.types.payments_account_service import (
 from google.ads.googleads.errors import GoogleAdsException
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger
+from src.utils import format_ads_error, format_customer_id, get_logger
 
 logger = get_logger(__name__)
 
@@ -30,7 +30,9 @@ class PaymentsAccountService:
         """Get the payments account service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("PaymentsAccountService")
+            self._client = sdk_client.client.get_service(
+                "PaymentsAccountService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -92,7 +94,7 @@ class PaymentsAccountService:
             return accounts
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:

@@ -38,7 +38,7 @@ class TestAdGroupCriterionCustomizerService:
 
     @pytest.mark.asyncio
     @patch(
-        "src.sdk_services.ad_group.ad_group_criterion_customizer_service.serialize_proto_message"
+        "src.services.ad_group.ad_group_criterion_customizer_service.serialize_proto_message"
     )
     async def test_mutate_ad_group_criterion_customizers_create(
         self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
@@ -111,7 +111,7 @@ class TestAdGroupCriterionCustomizerService:
 
     @pytest.mark.asyncio
     @patch(
-        "src.sdk_services.ad_group.ad_group_criterion_customizer_service.serialize_proto_message"
+        "src.services.ad_group.ad_group_criterion_customizer_service.serialize_proto_message"
     )
     async def test_mutate_ad_group_criterion_customizers_remove(
         self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
@@ -171,7 +171,7 @@ class TestAdGroupCriterionCustomizerService:
 
     @pytest.mark.asyncio
     @patch(
-        "src.sdk_services.ad_group.ad_group_criterion_customizer_service.serialize_proto_message"
+        "src.services.ad_group.ad_group_criterion_customizer_service.serialize_proto_message"
     )
     async def test_mutate_ad_group_criterion_customizers_number_value(
         self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
@@ -226,7 +226,7 @@ class TestAdGroupCriterionCustomizerService:
 
     @pytest.mark.asyncio
     @patch(
-        "src.sdk_services.ad_group.ad_group_criterion_customizer_service.serialize_proto_message"
+        "src.services.ad_group.ad_group_criterion_customizer_service.serialize_proto_message"
     )
     async def test_mutate_ad_group_criterion_customizers_with_partial_failure(
         self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any

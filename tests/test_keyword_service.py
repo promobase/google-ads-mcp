@@ -32,7 +32,7 @@ def keyword_service(mock_sdk_client: Any) -> KeywordService:
     mock_sdk_client.client.get_service.return_value = mock_criterion_service_client  # type: ignore
 
     with patch(
-        "src.sdk_services.ad_group.keyword_service.get_sdk_client",
+        "src.services.ad_group.keyword_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = KeywordService()
@@ -83,7 +83,7 @@ async def test_add_keywords(
     }
 
     with patch(
-        "src.sdk_services.ad_group.keyword_service.serialize_proto_message",
+        "src.services.ad_group.keyword_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -183,7 +183,7 @@ async def test_update_keyword_bid(
     }
 
     with patch(
-        "src.sdk_services.ad_group.keyword_service.serialize_proto_message",
+        "src.services.ad_group.keyword_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -255,7 +255,7 @@ async def test_remove_keyword(
     }
 
     with patch(
-        "src.sdk_services.ad_group.keyword_service.serialize_proto_message",
+        "src.services.ad_group.keyword_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -329,7 +329,7 @@ async def test_add_keywords_without_bids(
     }
 
     with patch(
-        "src.sdk_services.ad_group.keyword_service.serialize_proto_message",
+        "src.services.ad_group.keyword_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -395,7 +395,7 @@ async def test_add_keywords_with_default_match_type(
     }
 
     with patch(
-        "src.sdk_services.ad_group.keyword_service.serialize_proto_message",
+        "src.services.ad_group.keyword_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

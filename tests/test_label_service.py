@@ -27,7 +27,7 @@ def label_service(mock_sdk_client: Any) -> LabelService:
     mock_sdk_client.client.get_service.return_value = mock_label_service_client  # type: ignore
 
     with patch(
-        "src.sdk_services.shared.label_service.get_sdk_client",
+        "src.services.shared.label_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = LabelService()
@@ -64,7 +64,7 @@ async def test_create_label(
     }
 
     with patch(
-        "src.sdk_services.shared.label_service.serialize_proto_message",
+        "src.services.shared.label_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -126,7 +126,7 @@ async def test_create_label_minimal(
     }
 
     with patch(
-        "src.sdk_services.shared.label_service.serialize_proto_message",
+        "src.services.shared.label_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -180,7 +180,7 @@ async def test_update_label(
     }
 
     with patch(
-        "src.sdk_services.shared.label_service.serialize_proto_message",
+        "src.services.shared.label_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -254,11 +254,11 @@ async def test_list_labels(
     # Act
     with (
         patch(
-            "src.sdk_services.shared.label_service.get_sdk_client",
+            "src.services.shared.label_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.shared.label_service.serialize_proto_message",
+            "src.services.shared.label_service.serialize_proto_message",
             side_effect=[
                 {"label": {"id": f"100{i}", "name": f"Label {i}", "status": "ENABLED"}}
                 for i in range(3)

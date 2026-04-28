@@ -16,7 +16,12 @@ from google.ads.googleads.v20.services.types.customer_service import (
 )
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -33,7 +38,9 @@ class CustomerService:
         """Get the customer service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("CustomerService")
+            self._client = sdk_client.client.get_service(
+                "CustomerService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -89,7 +96,7 @@ class CustomerService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -97,16 +104,14 @@ class CustomerService:
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
 
-    async def list_accessible_customers(
-        self, ctx: Context
-    ) -> ListAccessibleCustomersResponse:
+    async def list_accessible_customers(self, ctx: Context) -> List[str]:
         """List all accessible customers for the authenticated user.
 
         Args:
             ctx: FastMCP context
 
         Returns:
-            List of accessible customer IDs
+            Customer IDs (no hyphens) for each accessible resource name.
         """
         try:
             # Create the request
@@ -116,20 +121,13 @@ class CustomerService:
             response: ListAccessibleCustomersResponse = (
                 self.client.list_accessible_customers(request=request)
             )
-            await ctx.log(
-                level="info",
-                message=f"ListAccessibleCustomersResponse: {response.resource_names}",
-            )
-            return response
-
-            customer_ids = response.resource_names
+            customer_ids = list(response.resource_names)
 
             await ctx.log(
                 level="info",
                 message=f"Found {len(customer_ids)} accessible customers",
             )
 
-            # Extract customer IDs from resource names
             return [
                 resource_name.split("/")[-1]
                 for resource_name in customer_ids
@@ -137,7 +135,7 @@ class CustomerService:
             ]
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -186,10 +184,10 @@ def create_customer_tools(
         """List all accessible customers for the authenticated user.
 
         Returns:
-            List of accessible customer IDs
+            Dict with ``customer_ids`` (no hyphens) for each accessible account.
         """
-        response = await service.list_accessible_customers(ctx=ctx)
-        return serialize_proto_message(response)
+        customer_ids = await service.list_accessible_customers(ctx=ctx)
+        return {"customer_ids": customer_ids}
 
     tools.extend([create_customer_client, list_accessible_customers])
     return tools

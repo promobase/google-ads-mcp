@@ -27,7 +27,13 @@ from google.ads.googleads.v20.services.types.account_budget_proposal_service imp
 )
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -44,7 +50,9 @@ class AccountBudgetProposalService:
         """Get the account budget proposal service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("AccountBudgetProposalService")
+            self._client = sdk_client.client.get_service(
+                "AccountBudgetProposalService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -129,7 +137,7 @@ class AccountBudgetProposalService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -209,7 +217,7 @@ class AccountBudgetProposalService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -320,7 +328,7 @@ class AccountBudgetProposalService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -370,15 +378,23 @@ def create_account_budget_proposal_tools(
             Created account budget proposal details with resource_name
         """
         # Convert string enums to proper enum types
-        proposal_type_enum = getattr(
-            AccountBudgetProposalTypeEnum.AccountBudgetProposalType, proposal_type
+        proposal_type_enum = resolve_enum(
+            AccountBudgetProposalTypeEnum.AccountBudgetProposalType,
+            proposal_type,
+            "proposal_type",
         )
-        start_time_enum = getattr(TimeTypeEnum.TimeType, proposed_start_time_type)
-        spending_limit_enum = getattr(
-            SpendingLimitTypeEnum.SpendingLimitType, proposed_spending_limit_type
+        start_time_enum = resolve_enum(
+            TimeTypeEnum.TimeType, proposed_start_time_type, "proposed_start_time_type"
+        )
+        spending_limit_enum = resolve_enum(
+            SpendingLimitTypeEnum.SpendingLimitType,
+            proposed_spending_limit_type,
+            "proposed_spending_limit_type",
         )
         end_time_enum = (
-            getattr(TimeTypeEnum.TimeType, proposed_end_time_type)
+            resolve_enum(
+                TimeTypeEnum.TimeType, proposed_end_time_type, "proposed_end_time_type"
+            )
             if proposed_end_time_type
             else None
         )

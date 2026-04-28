@@ -30,7 +30,7 @@ def campaign_asset_service(mock_sdk_client: Any) -> CampaignAssetService:
     mock_sdk_client.client.get_service.return_value = mock_campaign_asset_client  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.campaign_asset_service.get_sdk_client",
+        "src.services.campaign.campaign_asset_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = CampaignAssetService()
@@ -75,7 +75,7 @@ async def test_link_asset_to_campaign(
     }
 
     with patch(
-        "src.sdk_services.campaign.campaign_asset_service.serialize_proto_message",
+        "src.services.campaign.campaign_asset_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -247,7 +247,7 @@ async def test_list_campaign_assets(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.campaign_asset_service.get_sdk_client",
+        "src.services.campaign.campaign_asset_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -315,7 +315,7 @@ async def test_list_campaign_assets_no_filters(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.campaign_asset_service.get_sdk_client",
+        "src.services.campaign.campaign_asset_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -362,7 +362,7 @@ async def test_list_campaign_assets_include_system_managed(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.campaign_asset_service.get_sdk_client",
+        "src.services.campaign.campaign_asset_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -432,7 +432,7 @@ async def test_list_campaign_assets_with_none_values(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.campaign_asset_service.get_sdk_client",
+        "src.services.campaign.campaign_asset_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -482,7 +482,7 @@ async def test_remove_asset_from_campaign(
     expected_result = {"results": [{"resource_name": campaign_asset_resource}]}
 
     with patch(
-        "src.sdk_services.campaign.campaign_asset_service.serialize_proto_message",
+        "src.services.campaign.campaign_asset_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -609,7 +609,7 @@ async def test_error_handling_list_assets(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.campaign_asset_service.get_sdk_client",
+        "src.services.campaign.campaign_asset_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act & Assert

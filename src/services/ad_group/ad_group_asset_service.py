@@ -21,7 +21,13 @@ from google.ads.googleads.v20.services.types.ad_group_asset_service import (
 from google.protobuf import field_mask_pb2
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -38,7 +44,9 @@ class AdGroupAssetService:
         """Get the ad group asset service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("AdGroupAssetService")
+            self._client = sdk_client.client.get_service(
+                "AdGroupAssetService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -73,10 +81,12 @@ class AdGroupAssetService:
             ad_group_asset = AdGroupAsset()
             ad_group_asset.ad_group = ad_group_resource
             ad_group_asset.asset = asset_resource
-            ad_group_asset.field_type = getattr(
-                AssetFieldTypeEnum.AssetFieldType, field_type
+            ad_group_asset.field_type = resolve_enum(
+                AssetFieldTypeEnum.AssetFieldType, field_type, "field_type"
             )
-            ad_group_asset.status = getattr(AssetLinkStatusEnum.AssetLinkStatus, status)
+            ad_group_asset.status = resolve_enum(
+                AssetLinkStatusEnum.AssetLinkStatus, status, "status"
+            )
 
             # Create operation
             operation = AdGroupAssetOperation()
@@ -100,7 +110,7 @@ class AdGroupAssetService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -142,11 +152,11 @@ class AdGroupAssetService:
                 ad_group_asset = AdGroupAsset()
                 ad_group_asset.ad_group = ad_group_resource
                 ad_group_asset.asset = asset_resource
-                ad_group_asset.field_type = getattr(
-                    AssetFieldTypeEnum.AssetFieldType, field_type
+                ad_group_asset.field_type = resolve_enum(
+                    AssetFieldTypeEnum.AssetFieldType, field_type, "field_type"
                 )
-                ad_group_asset.status = getattr(
-                    AssetLinkStatusEnum.AssetLinkStatus, status
+                ad_group_asset.status = resolve_enum(
+                    AssetLinkStatusEnum.AssetLinkStatus, status, "status"
                 )
 
                 # Create operation
@@ -186,7 +196,7 @@ class AdGroupAssetService:
             return results
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -224,7 +234,9 @@ class AdGroupAssetService:
             # Create ad group asset with updated status
             ad_group_asset = AdGroupAsset()
             ad_group_asset.resource_name = resource_name
-            ad_group_asset.status = getattr(AssetLinkStatusEnum.AssetLinkStatus, status)
+            ad_group_asset.status = resolve_enum(
+                AssetLinkStatusEnum.AssetLinkStatus, status, "status"
+            )
 
             # Create operation
             operation = AdGroupAssetOperation()
@@ -247,7 +259,7 @@ class AdGroupAssetService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -409,7 +421,7 @@ class AdGroupAssetService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:

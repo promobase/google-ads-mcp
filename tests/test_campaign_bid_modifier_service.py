@@ -34,7 +34,7 @@ def campaign_bid_modifier_service(mock_sdk_client: Any) -> CampaignBidModifierSe
     mock_sdk_client.client.get_service.return_value = mock_bid_modifier_client  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.campaign_bid_modifier_service.get_sdk_client",
+        "src.services.campaign.campaign_bid_modifier_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = CampaignBidModifierService()
@@ -78,7 +78,7 @@ async def test_create_interaction_type_bid_modifier(
     }
 
     with patch(
-        "src.sdk_services.campaign.campaign_bid_modifier_service.serialize_proto_message",
+        "src.services.campaign.campaign_bid_modifier_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -144,7 +144,7 @@ async def test_update_bid_modifier(
     expected_result = {"results": [{"resource_name": bid_modifier_resource_name}]}
 
     with patch(
-        "src.sdk_services.campaign.campaign_bid_modifier_service.serialize_proto_message",
+        "src.services.campaign.campaign_bid_modifier_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -222,7 +222,7 @@ async def test_list_campaign_bid_modifiers(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.campaign_bid_modifier_service.get_sdk_client",
+        "src.services.campaign.campaign_bid_modifier_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -296,7 +296,7 @@ async def test_list_campaign_bid_modifiers_no_interaction_type(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.campaign_bid_modifier_service.get_sdk_client",
+        "src.services.campaign.campaign_bid_modifier_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -337,7 +337,7 @@ async def test_remove_bid_modifier(
     expected_result = {"results": [{"resource_name": bid_modifier_resource_name}]}
 
     with patch(
-        "src.sdk_services.campaign.campaign_bid_modifier_service.serialize_proto_message",
+        "src.services.campaign.campaign_bid_modifier_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -430,7 +430,7 @@ async def test_error_handling_list_bid_modifiers(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.campaign_bid_modifier_service.get_sdk_client",
+        "src.services.campaign.campaign_bid_modifier_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act & Assert

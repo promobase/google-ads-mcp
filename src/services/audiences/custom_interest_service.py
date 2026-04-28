@@ -31,7 +31,13 @@ from google.ads.googleads.v20.services.types.custom_interest_service import (
 from google.protobuf import field_mask_pb2
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -48,7 +54,9 @@ class CustomInterestService:
         """Get the custom interest service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("CustomInterestService")
+            self._client = sdk_client.client.get_service(
+                "CustomInterestService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -87,11 +95,11 @@ class CustomInterestService:
             custom_interest = CustomInterest()
             custom_interest.name = name
             custom_interest.description = description
-            custom_interest.type_ = getattr(
-                CustomInterestTypeEnum.CustomInterestType, type_
+            custom_interest.type_ = resolve_enum(
+                CustomInterestTypeEnum.CustomInterestType, type_, "type_"
             )
-            custom_interest.status = getattr(
-                CustomInterestStatusEnum.CustomInterestStatus, status
+            custom_interest.status = resolve_enum(
+                CustomInterestStatusEnum.CustomInterestStatus, status, "status"
             )
 
             # Add members
@@ -131,7 +139,7 @@ class CustomInterestService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -185,8 +193,8 @@ class CustomInterestService:
                 update_mask_fields.append("description")
 
             if status is not None:
-                custom_interest.status = getattr(
-                    CustomInterestStatusEnum.CustomInterestStatus, status
+                custom_interest.status = resolve_enum(
+                    CustomInterestStatusEnum.CustomInterestStatus, status, "status"
                 )
                 update_mask_fields.append("status")
 
@@ -231,7 +239,7 @@ class CustomInterestService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:

@@ -32,7 +32,13 @@ from google.ads.googleads.v20.enums.types.gender_type import GenderTypeEnum
 from google.ads.googleads.errors import GoogleAdsException
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -49,7 +55,9 @@ class AudienceInsightsService:
         """Get the audience insights service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("AudienceInsightsService")
+            self._client = sdk_client.client.get_service(
+                "AudienceInsightsService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -99,7 +107,9 @@ class AudienceInsightsService:
             if baseline_audience_ages:
                 for age_range in baseline_audience_ages:
                     age_info = AgeRangeInfo()
-                    age_info.type_ = getattr(AgeRangeTypeEnum.AgeRangeType, age_range)
+                    age_info.type_ = resolve_enum(
+                        AgeRangeTypeEnum.AgeRangeType, age_range, "age_range"
+                    )
                     baseline_audience.age_ranges.append(age_info)
 
             # Add gender if provided (BasicInsightsAudience only supports one gender)
@@ -123,7 +133,9 @@ class AudienceInsightsService:
             if specific_audience_ages:
                 for age_range in specific_audience_ages:
                     age_info = AgeRangeInfo()
-                    age_info.type_ = getattr(AgeRangeTypeEnum.AgeRangeType, age_range)
+                    age_info.type_ = resolve_enum(
+                        AgeRangeTypeEnum.AgeRangeType, age_range, "age_range"
+                    )
                     specific_audience.age_ranges.append(age_info)
 
             # Add gender if provided (BasicInsightsAudience only supports one gender)
@@ -166,7 +178,7 @@ class AudienceInsightsService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -216,7 +228,9 @@ class AudienceInsightsService:
             if audience_ages:
                 for age_range in audience_ages:
                     age_info = AgeRangeInfo()
-                    age_info.type_ = getattr(AgeRangeTypeEnum.AgeRangeType, age_range)
+                    age_info.type_ = resolve_enum(
+                        AgeRangeTypeEnum.AgeRangeType, age_range, "age_range"
+                    )
                     audience.age_ranges.append(age_info)
 
             if audience_genders and len(audience_genders) > 0:
@@ -267,7 +281,7 @@ class AudienceInsightsService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -313,7 +327,9 @@ class AudienceInsightsService:
             if audience_ages:
                 for age_range in audience_ages:
                     age_info = AgeRangeInfo()
-                    age_info.type_ = getattr(AgeRangeTypeEnum.AgeRangeType, age_range)
+                    age_info.type_ = resolve_enum(
+                        AgeRangeTypeEnum.AgeRangeType, age_range, "age_range"
+                    )
                     audience.age_ranges.append(age_info)
 
             if audience_genders and len(audience_genders) > 0:
@@ -349,7 +365,7 @@ class AudienceInsightsService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:

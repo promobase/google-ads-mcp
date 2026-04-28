@@ -20,7 +20,7 @@ from google.ads.googleads.v20.services.types.ad_group_criterion_label_service im
 )
 
 from src.sdk_client import get_sdk_client
-from src.utils import serialize_proto_message
+from src.utils import format_customer_id, serialize_proto_message
 
 # Exception handling
 
@@ -41,7 +41,9 @@ class AdGroupCriterionLabelService:
         """Get the ad group criterion label service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("AdGroupCriterionLabelService")
+            self._client = sdk_client.client.get_service(
+                "AdGroupCriterionLabelService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -68,6 +70,7 @@ class AdGroupCriterionLabelService:
             GoogleAdsException: If the request fails.
         """
         try:
+            customer_id = format_customer_id(customer_id)
             request = MutateAdGroupCriterionLabelsRequest(
                 customer_id=customer_id,
                 operations=operations,
@@ -131,6 +134,7 @@ class AdGroupCriterionLabelService:
         Returns:
             MutateAdGroupCriterionLabelsResponse: The response containing the result.
         """
+        customer_id = format_customer_id(customer_id)
         operation = self.create_ad_group_criterion_label_operation(
             ad_group_criterion=ad_group_criterion,
             label=label,
@@ -158,6 +162,7 @@ class AdGroupCriterionLabelService:
         Returns:
             MutateAdGroupCriterionLabelsResponse: The response containing the result.
         """
+        customer_id = format_customer_id(customer_id)
         operation = self.create_remove_operation(resource_name=resource_name)
 
         return self.mutate_ad_group_criterion_labels(
@@ -184,6 +189,7 @@ class AdGroupCriterionLabelService:
         Returns:
             MutateAdGroupCriterionLabelsResponse: The response containing the results.
         """
+        customer_id = format_customer_id(customer_id)
         operations = []
         for label in labels:
             operation = self.create_ad_group_criterion_label_operation(
@@ -216,6 +222,7 @@ class AdGroupCriterionLabelService:
         Returns:
             MutateAdGroupCriterionLabelsResponse: The response containing the results.
         """
+        customer_id = format_customer_id(customer_id)
         operations = []
         for ad_group_criterion in ad_group_criteria:
             operation = self.create_ad_group_criterion_label_operation(

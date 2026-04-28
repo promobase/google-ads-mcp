@@ -38,7 +38,7 @@ def custom_audience_service(mock_sdk_client: Any) -> CustomAudienceService:
     mock_sdk_client.client.get_service.return_value = mock_custom_client  # type: ignore
 
     with patch(
-        "src.sdk_services.audiences.custom_audience_service.get_sdk_client",
+        "src.services.audiences.custom_audience_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = CustomAudienceService()
@@ -83,7 +83,7 @@ async def test_create_custom_audience(
     }
 
     with patch(
-        "src.sdk_services.audiences.custom_audience_service.serialize_proto_message",
+        "src.services.audiences.custom_audience_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -182,7 +182,7 @@ async def test_create_custom_audience_with_place_category(
     }
 
     with patch(
-        "src.sdk_services.audiences.custom_audience_service.serialize_proto_message",
+        "src.services.audiences.custom_audience_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -259,7 +259,7 @@ async def test_update_custom_audience(
     }
 
     with patch(
-        "src.sdk_services.audiences.custom_audience_service.serialize_proto_message",
+        "src.services.audiences.custom_audience_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -351,7 +351,7 @@ async def test_update_custom_audience_partial(
     }
 
     with patch(
-        "src.sdk_services.audiences.custom_audience_service.serialize_proto_message",
+        "src.services.audiences.custom_audience_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -439,11 +439,11 @@ async def test_list_custom_audiences(
 
     with (
         patch(
-            "src.sdk_services.audiences.custom_audience_service.get_sdk_client",
+            "src.services.audiences.custom_audience_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.audiences.custom_audience_service.serialize_proto_message",
+            "src.services.audiences.custom_audience_service.serialize_proto_message",
             side_effect=mock_serialize,
         ),
     ):
@@ -539,11 +539,11 @@ async def test_get_custom_audience_details(
 
     with (
         patch(
-            "src.sdk_services.audiences.custom_audience_service.get_sdk_client",
+            "src.services.audiences.custom_audience_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.audiences.custom_audience_service.serialize_proto_message",
+            "src.services.audiences.custom_audience_service.serialize_proto_message",
             return_value=expected_result,
         ),
     ):

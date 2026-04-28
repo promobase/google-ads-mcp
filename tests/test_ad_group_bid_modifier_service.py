@@ -34,7 +34,7 @@ def ad_group_bid_modifier_service(mock_sdk_client: Any) -> AdGroupBidModifierSer
     mock_sdk_client.client.get_service.return_value = mock_bid_modifier_client  # type: ignore
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_bid_modifier_service.get_sdk_client",
+        "src.services.ad_group.ad_group_bid_modifier_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = AdGroupBidModifierService()
@@ -74,7 +74,7 @@ async def test_create_device_bid_modifier(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_bid_modifier_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_bid_modifier_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -141,7 +141,7 @@ async def test_create_hotel_check_in_day_bid_modifier(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_bid_modifier_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_bid_modifier_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -213,7 +213,7 @@ async def test_create_hotel_date_selection_bid_modifier(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_bid_modifier_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_bid_modifier_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -278,7 +278,7 @@ async def test_update_bid_modifier(
     expected_result = {"results": [{"resource_name": bid_modifier_resource_name}]}
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_bid_modifier_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_bid_modifier_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -361,8 +361,8 @@ async def test_list_ad_group_bid_modifiers(
     # Initialize other criterion types to None
     row2.ad_group_bid_modifier.device = Mock(type=None)
     row2.ad_group_bid_modifier.hotel_date_selection_type = Mock(type=None)
-    row2.ad_group_bid_modifier.hotel_advance_booking_window = Mock(min_days=None)
-    row2.ad_group_bid_modifier.hotel_length_of_stay = Mock(min_nights=None)
+    row2.ad_group_bid_modifier.hotel_advance_booking_window = None
+    row2.ad_group_bid_modifier.hotel_length_of_stay = None
     row2.ad_group_bid_modifier.hotel_check_in_date_range = Mock(start_date=None)
     row2.ad_group = Mock(id="111", name="Test Ad Group")
     row2.campaign = Mock(id="222", name="Test Campaign")
@@ -379,7 +379,7 @@ async def test_list_ad_group_bid_modifiers(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_bid_modifier_service.get_sdk_client",
+        "src.services.ad_group.ad_group_bid_modifier_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -442,7 +442,7 @@ async def test_remove_bid_modifier(
     expected_result = {"results": [{"resource_name": bid_modifier_resource_name}]}
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_bid_modifier_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_bid_modifier_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

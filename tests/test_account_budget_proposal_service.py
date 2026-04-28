@@ -40,7 +40,7 @@ def account_budget_proposal_service(
     )
 
     with patch(
-        "src.sdk_services.account.account_budget_proposal_service.get_sdk_client",
+        "src.services.account.account_budget_proposal_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = AccountBudgetProposalService()
@@ -85,7 +85,7 @@ async def test_create_account_budget_proposal_basic(
     }
 
     with patch(
-        "src.sdk_services.account.account_budget_proposal_service.serialize_proto_message",
+        "src.services.account.account_budget_proposal_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -165,7 +165,7 @@ async def test_create_account_budget_proposal_with_spending_limit(
     }
 
     with patch(
-        "src.sdk_services.account.account_budget_proposal_service.serialize_proto_message",
+        "src.services.account.account_budget_proposal_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -234,7 +234,7 @@ async def test_update_account_budget_proposal_name_only(
     }
 
     with patch(
-        "src.sdk_services.account.account_budget_proposal_service.serialize_proto_message",
+        "src.services.account.account_budget_proposal_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -311,7 +311,7 @@ async def test_update_account_budget_proposal_all_fields(
     }
 
     with patch(
-        "src.sdk_services.account.account_budget_proposal_service.serialize_proto_message",
+        "src.services.account.account_budget_proposal_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -412,11 +412,11 @@ async def test_list_account_budget_proposals(
 
     with (
         patch(
-            "src.sdk_services.account.account_budget_proposal_service.get_sdk_client",
+            "src.services.account.account_budget_proposal_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.account.account_budget_proposal_service.serialize_proto_message",
+            "src.services.account.account_budget_proposal_service.serialize_proto_message",
             side_effect=serialize_side_effect,
         ),
     ):
@@ -479,7 +479,7 @@ async def test_remove_account_budget_proposal(
     expected_result = {"result": {"resource_name": proposal_resource_name}}
 
     with patch(
-        "src.sdk_services.account.account_budget_proposal_service.serialize_proto_message",
+        "src.services.account.account_budget_proposal_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -613,7 +613,7 @@ async def test_error_handling_list_proposals(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.account.account_budget_proposal_service.get_sdk_client",
+        "src.services.account.account_budget_proposal_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act & Assert

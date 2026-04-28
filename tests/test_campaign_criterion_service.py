@@ -28,7 +28,7 @@ def campaign_criterion_service(mock_sdk_client: Any) -> CampaignCriterionService
     mock_sdk_client.client.get_service.return_value = mock_campaign_criterion_client  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.campaign_criterion_service.get_sdk_client",
+        "src.services.campaign.campaign_criterion_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = CampaignCriterionService()
@@ -76,7 +76,7 @@ async def test_add_location_criteria(
     }
 
     with patch(
-        "src.sdk_services.campaign.campaign_criterion_service.serialize_proto_message",
+        "src.services.campaign.campaign_criterion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -151,7 +151,7 @@ async def test_add_location_criteria_negative(
     }
 
     with patch(
-        "src.sdk_services.campaign.campaign_criterion_service.serialize_proto_message",
+        "src.services.campaign.campaign_criterion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -214,7 +214,7 @@ async def test_add_language_criteria(
     }
 
     with patch(
-        "src.sdk_services.campaign.campaign_criterion_service.serialize_proto_message",
+        "src.services.campaign.campaign_criterion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -289,7 +289,7 @@ async def test_add_device_criteria(
     }
 
     with patch(
-        "src.sdk_services.campaign.campaign_criterion_service.serialize_proto_message",
+        "src.services.campaign.campaign_criterion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -366,7 +366,7 @@ async def test_add_device_criteria_no_bid_modifiers(
     }
 
     with patch(
-        "src.sdk_services.campaign.campaign_criterion_service.serialize_proto_message",
+        "src.services.campaign.campaign_criterion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -431,7 +431,7 @@ async def test_add_negative_keyword_criteria(
     }
 
     with patch(
-        "src.sdk_services.campaign.campaign_criterion_service.serialize_proto_message",
+        "src.services.campaign.campaign_criterion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -499,7 +499,7 @@ async def test_remove_campaign_criterion(
     expected_result = {"results": [{"resource_name": criterion_resource_name}]}
 
     with patch(
-        "src.sdk_services.campaign.campaign_criterion_service.serialize_proto_message",
+        "src.services.campaign.campaign_criterion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

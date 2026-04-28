@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock, Mock, patch
 from typing import Any
 
 import pytest
-from google.ads.googleads.errors import GoogleAdsException
+from tests.google_ads_test_utils import make_google_ads_exception_stub
 from google.ads.googleads.v20.enums.types.conversion_custom_variable_status import (
     ConversionCustomVariableStatusEnum,
 )
@@ -71,7 +71,7 @@ class TestConversionCustomVariableService:
         mock_custom_var.id = 123456
         mock_custom_var.name = "Product Category"
         mock_custom_var.tag = "product_category"
-        mock_result.conversion_custom_variable.CopyFrom(mock_custom_var)  # type: ignore
+        mock_result.conversion_custom_variable = mock_custom_var
 
         mock_response = MutateConversionCustomVariablesResponse()
         mock_response.results.append(mock_result)  # type: ignore
@@ -264,7 +264,7 @@ class TestConversionCustomVariableService:
         conversion_custom_variable_service._client = mock_client
 
         # Mock API error
-        error = GoogleAdsException(None, None, None, None)
+        error = make_google_ads_exception_stub()
         error.failure = Mock()  # type: ignore
         error.failure.__str__ = Mock(return_value="Tag already exists")  # type: ignore
         mock_client.mutate_conversion_custom_variables.side_effect = error  # type: ignore

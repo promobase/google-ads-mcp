@@ -31,7 +31,7 @@ def shared_set_service(mock_sdk_client: Any) -> SharedSetService:
     mock_sdk_client.client.get_service.return_value = mock_shared_set_client  # type: ignore
 
     with patch(
-        "src.sdk_services.shared.shared_set_service.get_sdk_client",
+        "src.services.shared.shared_set_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = SharedSetService()
@@ -70,7 +70,7 @@ async def test_create_shared_set(
     }
 
     with patch(
-        "src.sdk_services.shared.shared_set_service.serialize_proto_message",
+        "src.services.shared.shared_set_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -135,7 +135,7 @@ async def test_create_shared_set_negative_placements(
     }
 
     with patch(
-        "src.sdk_services.shared.shared_set_service.serialize_proto_message",
+        "src.services.shared.shared_set_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -191,7 +191,7 @@ async def test_update_shared_set_name_only(
     }
 
     with patch(
-        "src.sdk_services.shared.shared_set_service.serialize_proto_message",
+        "src.services.shared.shared_set_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -260,7 +260,7 @@ async def test_update_shared_set_status_only(
     }
 
     with patch(
-        "src.sdk_services.shared.shared_set_service.serialize_proto_message",
+        "src.services.shared.shared_set_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -320,7 +320,7 @@ async def test_update_shared_set_both_fields(
     }
 
     with patch(
-        "src.sdk_services.shared.shared_set_service.serialize_proto_message",
+        "src.services.shared.shared_set_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -405,11 +405,11 @@ async def test_list_shared_sets_no_filters(
 
     with (
         patch(
-            "src.sdk_services.shared.shared_set_service.get_sdk_client",
+            "src.services.shared.shared_set_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.shared.shared_set_service.serialize_proto_message",
+            "src.services.shared.shared_set_service.serialize_proto_message",
             side_effect=serialize_side_effect,
         ),
     ):
@@ -472,7 +472,7 @@ async def test_list_shared_sets_with_filters(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.shared.shared_set_service.get_sdk_client",
+        "src.services.shared.shared_set_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -521,7 +521,7 @@ async def test_list_shared_sets_type_filter_only(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.shared.shared_set_service.get_sdk_client",
+        "src.services.shared.shared_set_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -557,7 +557,7 @@ async def test_attach_shared_set_to_campaigns_not_implemented(
 
     # Mock the get_sdk_client call within the method
     with patch(
-        "src.sdk_services.shared.shared_set_service.get_sdk_client",
+        "src.services.shared.shared_set_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act & Assert
@@ -665,7 +665,7 @@ async def test_error_handling_list_shared_sets(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.shared.shared_set_service.get_sdk_client",
+        "src.services.shared.shared_set_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act & Assert

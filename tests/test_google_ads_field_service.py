@@ -35,7 +35,7 @@ def google_ads_field_service(
     mock_sdk_client.client.get_service.return_value = mock_field_service_client  # type: ignore
 
     with patch(
-        "src.sdk_services.metadata.google_ads_field_service.get_sdk_client",
+        "src.services.metadata.google_ads_field_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = GoogleAdsFieldService()
@@ -115,7 +115,7 @@ async def test_get_field_metadata(
     }
 
     with patch(
-        "src.sdk_services.metadata.google_ads_field_service.serialize_proto_message",
+        "src.services.metadata.google_ads_field_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -168,7 +168,7 @@ async def test_search_fields(
     ]
 
     with patch(
-        "src.sdk_services.metadata.google_ads_field_service.serialize_proto_message",
+        "src.services.metadata.google_ads_field_service.serialize_proto_message",
         side_effect=expected_results,
     ):
         # Act
@@ -223,7 +223,7 @@ async def test_get_resource_fields(
     ]
 
     with patch(
-        "src.sdk_services.metadata.google_ads_field_service.serialize_proto_message",
+        "src.services.metadata.google_ads_field_service.serialize_proto_message",
         side_effect=[
             {"name": "campaign.id", "data_type": "INT64"},
             {"name": "campaign.name", "data_type": "STRING"},
@@ -270,7 +270,7 @@ async def test_validate_query_fields(
     mock_field_service_client.get_google_ads_field.side_effect = mock_fields  # type: ignore
 
     with patch(
-        "src.sdk_services.metadata.google_ads_field_service.serialize_proto_message",
+        "src.services.metadata.google_ads_field_service.serialize_proto_message",
         side_effect=[{"field": f} for f in field_names],
     ):
         # Act

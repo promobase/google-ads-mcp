@@ -24,7 +24,13 @@ from google.ads.googleads.v20.services.types.customer_client_link_service import
 from google.protobuf import field_mask_pb2
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -41,7 +47,9 @@ class CustomerClientLinkService:
         """Get the customer client link service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("CustomerClientLinkService")
+            self._client = sdk_client.client.get_service(
+                "CustomerClientLinkService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -91,7 +99,7 @@ class CustomerClientLinkService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -160,7 +168,7 @@ class CustomerClientLinkService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -271,7 +279,9 @@ def create_customer_client_link_tools(
             Created customer client link details with resource_name and status
         """
         # Convert string enum to proper enum type
-        status_enum = getattr(ManagerLinkStatusEnum.ManagerLinkStatus, status)
+        status_enum = resolve_enum(
+            ManagerLinkStatusEnum.ManagerLinkStatus, status, "status"
+        )
 
         return await service.create_customer_client_link(
             ctx=ctx,
@@ -301,7 +311,9 @@ def create_customer_client_link_tools(
         """
         # Convert string enum to proper enum type if provided
         status_enum = (
-            getattr(ManagerLinkStatusEnum.ManagerLinkStatus, status) if status else None
+            resolve_enum(ManagerLinkStatusEnum.ManagerLinkStatus, status, "status")
+            if status
+            else None
         )
 
         return await service.update_customer_client_link(

@@ -20,6 +20,7 @@ from google.ads.googleads.v20.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
 
+from src.utils import resolve_enum
 from src.sdk_client import get_sdk_client
 
 
@@ -39,7 +40,9 @@ class CampaignAssetSetService:
         """Get the campaign asset set service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("CampaignAssetSetService")
+            self._client = sdk_client.client.get_service(
+                "CampaignAssetSetService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -256,8 +259,10 @@ def register_campaign_asset_set_tools(mcp: FastMCP[Any]) -> None:
         service = CampaignAssetSetService()
 
         # Convert response content type string to enum
-        response_content_type_enum = getattr(
-            ResponseContentTypeEnum.ResponseContentType, response_content_type
+        response_content_type_enum = resolve_enum(
+            ResponseContentTypeEnum.ResponseContentType,
+            response_content_type,
+            "response_content_type",
         )
 
         ops = []

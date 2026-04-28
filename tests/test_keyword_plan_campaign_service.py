@@ -22,22 +22,18 @@ class TestKeywordPlanCampaignService:
     """Test cases for KeywordPlanCampaignService"""
 
     @pytest.fixture
-    def mock_client(self) -> Any:
-        """Create a mock Google Ads client"""
-        client = Mock()
-        service = Mock()
-        client.get_service.return_value = service  # type: ignore
-        return client
+    def mock_service_client(self) -> Any:
+        return Mock()
 
     @pytest.fixture
-    def keyword_plan_campaign_service(self, mock_client: Any) -> Any:
+    def keyword_plan_campaign_service(self, mock_service_client: Any) -> Any:
         """Create KeywordPlanCampaignService instance with mock client"""
         service = KeywordPlanCampaignService()
-        service._client = mock_client  # type: ignore # Need to set private attribute for testing
+        service._client = mock_service_client  # type: ignore[reportPrivateUsage]
         return service
 
     def test_mutate_keyword_plan_campaigns(
-        self, keyword_plan_campaign_service: Any, mock_client: Any
+        self, keyword_plan_campaign_service: Any, mock_service_client: Any
     ):
         """Test mutating keyword plan campaigns"""
         # Setup
@@ -51,7 +47,7 @@ class TestKeywordPlanCampaignService:
                 )
             ]
         )
-        mock_client.get_service.return_value.mutate_keyword_plan_campaigns.return_value = mock_response  # type: ignore
+        mock_service_client.mutate_keyword_plan_campaigns.return_value = mock_response  # type: ignore
 
         # Execute
         response = keyword_plan_campaign_service.mutate_keyword_plan_campaigns(
@@ -63,12 +59,9 @@ class TestKeywordPlanCampaignService:
 
         # Verify
         assert response == mock_response
-        mock_client.get_service.assert_called_with("KeywordPlanCampaignService")  # type: ignore
 
         # Verify request
-        call_args = (
-            mock_client.get_service.return_value.mutate_keyword_plan_campaigns.call_args  # type: ignore
-        )
+        call_args = mock_service_client.mutate_keyword_plan_campaigns.call_args  # type: ignore
         request = call_args.kwargs["request"]
         assert request.customer_id == customer_id
         assert request.operations == operations

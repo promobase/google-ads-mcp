@@ -34,7 +34,13 @@ from google.ads.googleads.v20.services.types.audience_service import (
 from google.protobuf import field_mask_pb2
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -51,7 +57,9 @@ class AudienceService:
         """Get the audience service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("AudienceService")
+            self._client = sdk_client.client.get_service(
+                "AudienceService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -86,7 +94,9 @@ class AudienceService:
             audience = Audience()
             audience.name = name
             audience.description = description
-            audience.status = getattr(AudienceStatusEnum.AudienceStatus, status)
+            audience.status = resolve_enum(
+                AudienceStatusEnum.AudienceStatus, status, "status"
+            )
 
             # Add dimensions
             for dim_config in dimensions:
@@ -118,7 +128,7 @@ class AudienceService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -181,7 +191,7 @@ class AudienceService:
             for gender in genders:
                 if isinstance(gender, str):
                     gender_dim.genders.append(
-                        getattr(GenderTypeEnum.GenderType, gender)
+                        resolve_enum(GenderTypeEnum.GenderType, gender, "gender")
                     )
                 else:
                     gender_dim.genders.append(gender)
@@ -199,7 +209,11 @@ class AudienceService:
             for income_range in income_ranges:
                 if isinstance(income_range, str):
                     income_dim.income_ranges.append(
-                        getattr(IncomeRangeTypeEnum.IncomeRangeType, income_range)
+                        resolve_enum(
+                            IncomeRangeTypeEnum.IncomeRangeType,
+                            income_range,
+                            "income_range",
+                        )
                     )
                 else:
                     income_dim.income_ranges.append(income_range)
@@ -217,7 +231,11 @@ class AudienceService:
             for parent_type in parent_types:
                 if isinstance(parent_type, str):
                     parental_dim.parental_statuses.append(
-                        getattr(ParentalStatusTypeEnum.ParentalStatusType, parent_type)
+                        resolve_enum(
+                            ParentalStatusTypeEnum.ParentalStatusType,
+                            parent_type,
+                            "parent_type",
+                        )
                     )
                 else:
                     parental_dim.parental_statuses.append(parent_type)
@@ -358,7 +376,9 @@ class AudienceService:
                 update_mask_paths.append("description")
 
             if status is not None:
-                audience.status = getattr(AudienceStatusEnum.AudienceStatus, status)
+                audience.status = resolve_enum(
+                    AudienceStatusEnum.AudienceStatus, status, "status"
+                )
                 update_mask_paths.append("status")
 
             # Create operation
@@ -384,7 +404,7 @@ class AudienceService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:

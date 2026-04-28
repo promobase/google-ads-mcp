@@ -26,7 +26,7 @@ def user_data_service(mock_sdk_client: Any) -> UserDataService:
     mock_sdk_client.client.get_service.return_value = mock_user_data_client  # type: ignore
 
     with patch(
-        "src.sdk_services.data_import.user_data_service.get_sdk_client",
+        "src.services.data_import.user_data_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = UserDataService()

@@ -27,7 +27,14 @@ from google.ads.googleads.v20.services.types.keyword_plan_service import (
 )
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    RATE_LIMIT_MSG,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    is_resource_exhausted,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -44,7 +51,9 @@ class KeywordPlanService:
         """Get the keyword plan service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("KeywordPlanService")
+            self._client = sdk_client.client.get_service(
+                "KeywordPlanService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -104,10 +113,13 @@ class KeywordPlanService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
+            if is_resource_exhausted(e):
+                await ctx.log(level="error", message=RATE_LIMIT_MSG)
+                raise Exception(RATE_LIMIT_MSG) from e
             error_msg = f"Failed to create keyword plan: {str(e)}"
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
@@ -175,17 +187,13 @@ class KeywordPlanService:
             else:
                 raise ValueError("Either keywords or url must be provided")
 
-            # Make the API call
-            response = idea_service.generate_keyword_ideas(request=request)
+            # Make the API call — first page only (1 QPS planning quota)
+            pager = idea_service.generate_keyword_ideas(request=request)
+            pages = getattr(pager, "pages", None)
+            first_page = next(pages) if pages is not None else pager
+            results = getattr(first_page, "results", first_page)
 
-            # Process results
-            ideas = []
-            count = 0
-            for idea in response:
-                if count >= limit:
-                    break
-                ideas.append(serialize_proto_message(idea))
-                count += 1
+            ideas = [serialize_proto_message(idea) for idea in list(results)[:limit]]
 
             await ctx.log(
                 level="info",
@@ -195,6 +203,9 @@ class KeywordPlanService:
             return ideas
 
         except Exception as e:
+            if is_resource_exhausted(e):
+                await ctx.log(level="error", message=RATE_LIMIT_MSG)
+                raise Exception(RATE_LIMIT_MSG) from e
             error_msg = f"Failed to get keyword ideas: {str(e)}"
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
@@ -229,7 +240,9 @@ class KeywordPlanService:
             # Use KeywordPlanCampaignService
             sdk_client = get_sdk_client()
             campaign_service: KeywordPlanCampaignServiceClient = (
-                sdk_client.client.get_service("KeywordPlanCampaignService")
+                sdk_client.client.get_service(
+                    "KeywordPlanCampaignService", version="v20"
+                )
             )
 
             from google.ads.googleads.v20.resources.types.keyword_plan_campaign import (
@@ -286,6 +299,9 @@ class KeywordPlanService:
             return serialize_proto_message(response)
 
         except Exception as e:
+            if is_resource_exhausted(e):
+                await ctx.log(level="error", message=RATE_LIMIT_MSG)
+                raise Exception(RATE_LIMIT_MSG) from e
             error_msg = f"Failed to create keyword plan campaign: {str(e)}"
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
@@ -314,7 +330,9 @@ class KeywordPlanService:
             # Use KeywordPlanAdGroupKeywordService
             sdk_client = get_sdk_client()
             keyword_service: KeywordPlanAdGroupKeywordServiceClient = (
-                sdk_client.client.get_service("KeywordPlanAdGroupKeywordService")
+                sdk_client.client.get_service(
+                    "KeywordPlanAdGroupKeywordService", version="v20"
+                )
             )
 
             from google.ads.googleads.v20.enums.types.keyword_match_type import (
@@ -376,6 +394,9 @@ class KeywordPlanService:
             return results
 
         except Exception as e:
+            if is_resource_exhausted(e):
+                await ctx.log(level="error", message=RATE_LIMIT_MSG)
+                raise Exception(RATE_LIMIT_MSG) from e
             error_msg = f"Failed to add keywords to plan: {str(e)}"
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e

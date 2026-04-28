@@ -23,7 +23,7 @@ def search_service(mock_sdk_client: Any) -> SearchService:
     mock_sdk_client.client.get_service.return_value = mock_google_ads_service  # type: ignore
 
     with patch(
-        "src.sdk_services.metadata.search_service.get_sdk_client",
+        "src.services.metadata.search_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = SearchService()
@@ -62,7 +62,7 @@ async def test_search_campaigns(
     mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     with patch(
-        "src.sdk_services.metadata.search_service.serialize_proto_message",
+        "src.services.metadata.search_service.serialize_proto_message",
         side_effect=[{"campaign": f"data{i}"} for i in range(2)],
     ):
         # Act
@@ -122,7 +122,7 @@ async def test_search_ad_groups(
     mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     with patch(
-        "src.sdk_services.metadata.search_service.serialize_proto_message",
+        "src.services.metadata.search_service.serialize_proto_message",
         side_effect=[{"ad_group": f"data{i}"} for i in range(3)],
     ):
         # Act
@@ -187,7 +187,7 @@ async def test_search_keywords(
     mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     with patch(
-        "src.sdk_services.metadata.search_service.serialize_proto_message",
+        "src.services.metadata.search_service.serialize_proto_message",
         side_effect=[{"keyword": f"data{i}"} for i in range(5)],
     ):
         # Act
@@ -250,7 +250,7 @@ async def test_execute_query(
     mock_google_ads_service.search.return_value = mock_results  # type: ignore
 
     with patch(
-        "src.sdk_services.metadata.search_service.serialize_proto_message",
+        "src.services.metadata.search_service.serialize_proto_message",
         side_effect=[{"row": f"data{i}"} for i in range(2)],
     ):
         # Act

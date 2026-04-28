@@ -19,21 +19,20 @@ class TestProductLinkService:
     """Test cases for ProductLinkService"""
 
     @pytest.fixture
-    def mock_client(self) -> Any:
-        """Create a mock Google Ads client"""
-        client = Mock()
-        service = Mock()
-        client.get_service.return_value = service  # type: ignore
-        return client
+    def mock_service_client(self) -> Any:
+        """Mock ProductLinkService API client (from get_service)."""
+        return Mock()
 
     @pytest.fixture
-    def product_link_service(self, mock_client: Any) -> Any:
+    def product_link_service(self, mock_service_client: Any) -> Any:
         """Create ProductLinkService instance with mock client"""
         service = ProductLinkService()
-        service._client = mock_client  # type: ignore # Need to set private attribute for testing
+        service._client = mock_service_client  # type: ignore[reportPrivateUsage]
         return service
 
-    def test_create_product_link(self, product_link_service: Any, mock_client: Any):
+    def test_create_product_link(
+        self, product_link_service: Any, mock_service_client: Any
+    ):
         """Test creating a product link"""
         # Setup
         customer_id = "1234567890"
@@ -42,9 +41,7 @@ class TestProductLinkService:
         mock_response = CreateProductLinkResponse(
             resource_name="customers/1234567890/productLinks/123"
         )
-        mock_client.get_service.return_value.create_product_link.return_value = (  # type: ignore
-            mock_response
-        )
+        mock_service_client.create_product_link.return_value = mock_response  # type: ignore
 
         # Execute
         response = product_link_service.create_product_link(
@@ -53,24 +50,23 @@ class TestProductLinkService:
 
         # Verify
         assert response == mock_response
-        mock_client.get_service.assert_called_with("ProductLinkService")  # type: ignore
 
         # Verify request
-        call_args = mock_client.get_service.return_value.create_product_link.call_args  # type: ignore
+        call_args = mock_service_client.create_product_link.call_args  # type: ignore
         request = call_args.kwargs["request"]
         assert request.customer_id == customer_id
         assert request.product_link == product_link
 
-    def test_remove_product_link(self, product_link_service: Any, mock_client: Any):
+    def test_remove_product_link(
+        self, product_link_service: Any, mock_service_client: Any
+    ):
         """Test removing a product link"""
         # Setup
         customer_id = "1234567890"
         resource_name = "customers/1234567890/productLinks/123"
 
         mock_response = RemoveProductLinkResponse(resource_name=resource_name)
-        mock_client.get_service.return_value.remove_product_link.return_value = (  # type: ignore
-            mock_response
-        )
+        mock_service_client.remove_product_link.return_value = mock_response  # type: ignore
 
         # Execute
         response = product_link_service.remove_product_link(
@@ -81,13 +77,13 @@ class TestProductLinkService:
         assert response == mock_response
 
         # Verify request
-        call_args = mock_client.get_service.return_value.remove_product_link.call_args  # type: ignore
+        call_args = mock_service_client.remove_product_link.call_args  # type: ignore
         request = call_args.kwargs["request"]
         assert request.customer_id == customer_id
         assert request.resource_name == resource_name
 
     def test_create_merchant_center_link(
-        self, product_link_service: Any, mock_client: Any
+        self, product_link_service: Any, mock_service_client: Any
     ):
         """Test creating a Merchant Center link"""
         # Setup
@@ -97,9 +93,7 @@ class TestProductLinkService:
         mock_response = CreateProductLinkResponse(
             resource_name="customers/1234567890/productLinks/123"
         )
-        mock_client.get_service.return_value.create_product_link.return_value = (  # type: ignore
-            mock_response
-        )
+        mock_service_client.create_product_link.return_value = mock_response  # type: ignore
 
         # Execute
         response = product_link_service.create_merchant_center_link(
@@ -110,7 +104,7 @@ class TestProductLinkService:
         assert response == mock_response
 
         # Verify request
-        call_args = mock_client.get_service.return_value.create_product_link.call_args  # type: ignore
+        call_args = mock_service_client.create_product_link.call_args  # type: ignore
         request = call_args.kwargs["request"]
         assert request.customer_id == customer_id
         assert (
@@ -118,7 +112,9 @@ class TestProductLinkService:
             == merchant_center_id
         )
 
-    def test_create_google_ads_link(self, product_link_service: Any, mock_client: Any):
+    def test_create_google_ads_link(
+        self, product_link_service: Any, mock_service_client: Any
+    ):
         """Test creating a Google Ads link"""
         # Setup
         customer_id = "1234567890"
@@ -127,9 +123,7 @@ class TestProductLinkService:
         mock_response = CreateProductLinkResponse(
             resource_name="customers/1234567890/productLinks/123"
         )
-        mock_client.get_service.return_value.create_product_link.return_value = (  # type: ignore
-            mock_response
-        )
+        mock_service_client.create_product_link.return_value = mock_response  # type: ignore
 
         # Execute
         response = product_link_service.create_google_ads_link(
@@ -140,7 +134,7 @@ class TestProductLinkService:
         assert response == mock_response
 
         # Verify request
-        call_args = mock_client.get_service.return_value.create_product_link.call_args  # type: ignore
+        call_args = mock_service_client.create_product_link.call_args  # type: ignore
         request = call_args.kwargs["request"]
         assert request.customer_id == customer_id
         assert (
@@ -149,7 +143,7 @@ class TestProductLinkService:
         )
 
     def test_create_data_partner_link(
-        self, product_link_service: Any, mock_client: Any
+        self, product_link_service: Any, mock_service_client: Any
     ):
         """Test creating a data partner link"""
         # Setup
@@ -159,9 +153,7 @@ class TestProductLinkService:
         mock_response = CreateProductLinkResponse(
             resource_name="customers/1234567890/productLinks/123"
         )
-        mock_client.get_service.return_value.create_product_link.return_value = (  # type: ignore
-            mock_response
-        )
+        mock_service_client.create_product_link.return_value = mock_response  # type: ignore
 
         # Execute
         response = product_link_service.create_data_partner_link(
@@ -172,7 +164,7 @@ class TestProductLinkService:
         assert response == mock_response
 
         # Verify request
-        call_args = mock_client.get_service.return_value.create_product_link.call_args  # type: ignore
+        call_args = mock_service_client.create_product_link.call_args  # type: ignore
         request = call_args.kwargs["request"]
         assert request.customer_id == customer_id
         assert request.product_link.data_partner.data_partner_id == data_partner_id

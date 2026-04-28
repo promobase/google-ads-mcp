@@ -37,7 +37,7 @@ class TestAdParameterService:
     """Test cases for AdParameterService."""
 
     @pytest.mark.asyncio
-    @patch("src.sdk_services.ad_group.ad_parameter_service.serialize_proto_message")
+    @patch("src.services.ad_group.ad_parameter_service.serialize_proto_message")
     async def test_mutate_ad_parameters_create(
         self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
     ):
@@ -99,7 +99,7 @@ class TestAdParameterService:
         assert request.operations[0].create.insertion_text == "$99.99"
 
     @pytest.mark.asyncio
-    @patch("src.sdk_services.ad_group.ad_parameter_service.serialize_proto_message")
+    @patch("src.services.ad_group.ad_parameter_service.serialize_proto_message")
     async def test_mutate_ad_parameters_update(
         self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
     ):
@@ -158,7 +158,7 @@ class TestAdParameterService:
         assert "insertion_text" in request.operations[0].update_mask.paths
 
     @pytest.mark.asyncio
-    @patch("src.sdk_services.ad_group.ad_parameter_service.serialize_proto_message")
+    @patch("src.services.ad_group.ad_parameter_service.serialize_proto_message")
     async def test_mutate_ad_parameters_remove(
         self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
     ):
@@ -205,7 +205,7 @@ class TestAdParameterService:
         assert request.operations[0].remove == "customers/123/adParameters/456~789~1"
 
     @pytest.mark.asyncio
-    @patch("src.sdk_services.ad_group.ad_parameter_service.serialize_proto_message")
+    @patch("src.services.ad_group.ad_parameter_service.serialize_proto_message")
     async def test_mutate_ad_parameters_parameter_index_2(
         self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
     ):
@@ -253,7 +253,7 @@ class TestAdParameterService:
         assert request.operations[0].create.insertion_text == "50% off"
 
     @pytest.mark.asyncio
-    @patch("src.sdk_services.ad_group.ad_parameter_service.serialize_proto_message")
+    @patch("src.services.ad_group.ad_parameter_service.serialize_proto_message")
     async def test_mutate_ad_parameters_with_partial_failure(
         self, mock_serialize: Any, service: Any, mock_context: Any, mock_client: Any
     ):

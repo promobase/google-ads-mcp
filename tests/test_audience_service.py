@@ -30,7 +30,7 @@ def audience_service(mock_sdk_client: Any) -> AudienceService:
     mock_sdk_client.client.get_service.return_value = mock_audience_client  # type: ignore
 
     with patch(
-        "src.sdk_services.audiences.audience_service.get_sdk_client",
+        "src.services.audiences.audience_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = AudienceService()
@@ -69,7 +69,7 @@ async def test_create_combined_audience_with_age(
     }
 
     with patch(
-        "src.sdk_services.audiences.audience_service.serialize_proto_message",
+        "src.services.audiences.audience_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -136,7 +136,7 @@ async def test_create_combined_audience_with_multiple_dimensions(
     }
 
     with patch(
-        "src.sdk_services.audiences.audience_service.serialize_proto_message",
+        "src.services.audiences.audience_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -206,7 +206,7 @@ async def test_create_combined_audience_with_user_list(
     }
 
     with patch(
-        "src.sdk_services.audiences.audience_service.serialize_proto_message",
+        "src.services.audiences.audience_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -277,7 +277,7 @@ async def test_create_combined_audience_with_exclusions(
     }
 
     with patch(
-        "src.sdk_services.audiences.audience_service.serialize_proto_message",
+        "src.services.audiences.audience_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -344,7 +344,7 @@ async def test_update_audience(
     }
 
     with patch(
-        "src.sdk_services.audiences.audience_service.serialize_proto_message",
+        "src.services.audiences.audience_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -431,7 +431,7 @@ async def test_list_audiences(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.audiences.audience_service.get_sdk_client",
+        "src.services.audiences.audience_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -484,7 +484,7 @@ async def test_remove_audience(
     }
 
     with patch(
-        "src.sdk_services.audiences.audience_service.serialize_proto_message",
+        "src.services.audiences.audience_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

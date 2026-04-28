@@ -18,7 +18,13 @@ from google.ads.googleads.v20.services.types.ad_group_service import (
 from google.protobuf import field_mask_pb2
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -35,7 +41,9 @@ class AdGroupService:
         """Get the ad group service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("AdGroupService")
+            self._client = sdk_client.client.get_service(
+                "AdGroupService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -108,7 +116,7 @@ class AdGroupService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -190,7 +198,7 @@ class AdGroupService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -234,8 +242,8 @@ def create_ad_group_tools(
             Created ad group details
         """
         # Convert string enums to proper enum types
-        status_enum = getattr(AdGroupStatusEnum.AdGroupStatus, status)
-        type_enum = getattr(AdGroupTypeEnum.AdGroupType, type)
+        status_enum = resolve_enum(AdGroupStatusEnum.AdGroupStatus, status, "status")
+        type_enum = resolve_enum(AdGroupTypeEnum.AdGroupType, type, "type")
 
         return await service.create_ad_group(
             ctx=ctx,
@@ -272,7 +280,9 @@ def create_ad_group_tools(
         """
         # Convert string enum to proper enum type if provided
         status_enum = (
-            getattr(AdGroupStatusEnum.AdGroupStatus, status) if status else None
+            resolve_enum(AdGroupStatusEnum.AdGroupStatus, status, "status")
+            if status
+            else None
         )
 
         return await service.update_ad_group(

@@ -31,7 +31,7 @@ def asset_set_service(mock_sdk_client: Any) -> AssetSetService:
     mock_sdk_client.client.get_service.return_value = mock_asset_set_client  # type: ignore
 
     with patch(
-        "src.sdk_services.assets.asset_set_service.get_sdk_client",
+        "src.services.assets.asset_set_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = AssetSetService()
@@ -69,7 +69,7 @@ async def test_create_asset_set(
     }
 
     with patch(
-        "src.sdk_services.assets.asset_set_service.serialize_proto_message",
+        "src.services.assets.asset_set_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -125,7 +125,7 @@ async def test_create_asset_set_dynamic_education(
     }
 
     with patch(
-        "src.sdk_services.assets.asset_set_service.serialize_proto_message",
+        "src.services.assets.asset_set_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -183,7 +183,7 @@ async def test_update_asset_set(
     }
 
     with patch(
-        "src.sdk_services.assets.asset_set_service.serialize_proto_message",
+        "src.services.assets.asset_set_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -251,7 +251,7 @@ async def test_update_asset_set_name_only(
     }
 
     with patch(
-        "src.sdk_services.assets.asset_set_service.serialize_proto_message",
+        "src.services.assets.asset_set_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -328,7 +328,7 @@ async def test_list_asset_sets(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.assets.asset_set_service.get_sdk_client",
+        "src.services.assets.asset_set_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -391,7 +391,7 @@ async def test_list_asset_sets_with_type_filter(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.assets.asset_set_service.get_sdk_client",
+        "src.services.assets.asset_set_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -442,7 +442,7 @@ async def test_remove_asset_set(
     }
 
     with patch(
-        "src.sdk_services.assets.asset_set_service.serialize_proto_message",
+        "src.services.assets.asset_set_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

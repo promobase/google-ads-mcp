@@ -1,8 +1,14 @@
+import json
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List, TypeVar
+
+import grpc
+from google.ads.googleads.errors import GoogleAdsException
 from google.protobuf.json_format import MessageToDict
+
+E = TypeVar("E")
 
 
 def get_logger(name: str) -> logging.Logger:
@@ -48,6 +54,99 @@ def format_customer_id(customer_id: str) -> str:
         The customer ID without hyphens (e.g., "1234567890")
     """
     return customer_id.replace("-", "")
+
+
+def resolve_enum(enum_class: Any, value: str, param_name: str = "parameter") -> Any:
+    """Safely convert a string to a protobuf enum value.
+
+    Raises ``ValueError`` with a list of valid values instead of a raw
+    ``AttributeError`` when the caller supplies an invalid name.
+    """
+    result = getattr(enum_class, value, None)
+    if result is not None:
+        return result
+    try:
+        valid = sorted(m.name for m in enum_class if not m.name.startswith("_"))
+    except TypeError:
+        valid = []
+    raise ValueError(
+        f"Invalid {param_name} '{value}'. Valid values: {', '.join(valid)}"
+    )
+
+
+def ensure_list(value: Any) -> List[str]:
+    """Normalize a value to a list of strings.
+
+    MCP clients may send array parameters as JSON-encoded strings
+    (e.g., '["a", "b"]') instead of actual arrays. This handles both cases.
+    """
+    if isinstance(value, list):
+        return value
+    if isinstance(value, str):
+        value = value.strip()
+        if value.startswith("["):
+            try:
+                parsed = json.loads(value)
+                if isinstance(parsed, list):
+                    return [str(item) for item in parsed]
+            except (json.JSONDecodeError, ValueError):
+                pass
+        # Single value — wrap in a list
+        return [value]
+    return list(value)
+
+
+def is_resource_exhausted(ex: Exception) -> bool:
+    """Check if an exception is a gRPC RESOURCE_EXHAUSTED error.
+
+    The Google Ads SDK interceptor intentionally does NOT wrap
+    RESOURCE_EXHAUSTED in GoogleAdsException — it raises a raw
+    grpc.RpcError so that api_core can retry it.  In our MCP layer
+    we catch it ourselves to give the LLM a clear "do not retry" signal.
+    """
+    if isinstance(ex, grpc.RpcError) and hasattr(ex, "code"):
+        try:
+            return ex.code() == grpc.StatusCode.RESOURCE_EXHAUSTED
+        except Exception:
+            pass
+    return False
+
+
+RATE_LIMIT_MSG = (
+    "RATE_LIMITED: Google Ads Planning API allows only 1 request per second "
+    "per customer ID. Do NOT retry this request immediately. "
+    "Wait at least 60 seconds before trying again."
+)
+
+
+def format_ads_error(ex: GoogleAdsException) -> str:
+    """Extract concise, LLM-readable error messages from a GoogleAdsException.
+
+    Instead of dumping the raw protobuf ``GoogleAdsFailure``, this pulls the
+    human-readable ``.message`` from each ``GoogleAdsError`` and includes the
+    ``request_id`` for debugging.
+    """
+    parts: list[str] = []
+    failure = getattr(ex, "failure", None)
+    errors = getattr(failure, "errors", None)
+    if errors is not None:
+        try:
+            for error in errors:
+                parts.append(error.message or "Unknown error")
+        except TypeError:
+            parts = []
+
+    if parts:
+        summary = "; ".join(parts)
+    elif failure is not None:
+        str_method = getattr(failure, "__str__", None)
+        summary = str_method() if callable(str_method) else str(failure)
+    else:
+        summary = str(ex)
+
+    request_id = getattr(ex, "request_id", None)
+    suffix = f" (request_id={request_id})" if request_id else ""
+    return f"Google Ads API error: {summary}{suffix}"
 
 
 def serialize_proto_message(

@@ -36,7 +36,7 @@ def ad_group_criterion_service(mock_sdk_client: Any) -> AdGroupCriterionService:
     mock_sdk_client.client.get_service.return_value = mock_ad_group_criterion_client  # type: ignore
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_criterion_service.get_sdk_client",
+        "src.services.ad_group.ad_group_criterion_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = AdGroupCriterionService()
@@ -87,7 +87,7 @@ async def test_add_keywords(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_criterion_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_criterion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -174,7 +174,7 @@ async def test_add_negative_keywords(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_criterion_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_criterion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -363,7 +363,7 @@ async def test_add_demographic_criteria(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_criterion_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_criterion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -464,16 +464,30 @@ async def test_add_demographic_criteria_unknown_type(
     mock_ad_group_criterion_client = ad_group_criterion_service.client  # type: ignore
     mock_ad_group_criterion_client.mutate_ad_group_criteria.return_value = mock_response  # type: ignore
 
-    # Act
-    result = await ad_group_criterion_service.add_demographic_criteria(
-        ctx=mock_ctx,
-        customer_id=customer_id,
-        ad_group_id=ad_group_id,
-        demographics=demographics,
-    )
+    expected_serialized = {
+        "results": [
+            {
+                "resource_name": (
+                    f"customers/{customer_id}/adGroupCriteria/{ad_group_id}~401"
+                )
+            }
+        ]
+    }
+
+    with patch(
+        "src.services.ad_group.ad_group_criterion_service.serialize_proto_message",
+        return_value=expected_serialized,
+    ):
+        # Act
+        result = await ad_group_criterion_service.add_demographic_criteria(
+            ctx=mock_ctx,
+            customer_id=customer_id,
+            ad_group_id=ad_group_id,
+            demographics=demographics,
+        )
 
     # Assert - only 1 result since unknown type was skipped
-    assert len(result) == 1
+    assert len(result["results"]) == 1
 
     # Verify the API call - only 1 operation since unknown type was skipped
     call_args = mock_ad_group_criterion_client.mutate_ad_group_criteria.call_args  # type: ignore
@@ -513,7 +527,7 @@ async def test_update_criterion_bid(
     expected_result = {"results": [{"resource_name": criterion_resource_name}]}
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_criterion_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_criterion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -577,7 +591,7 @@ async def test_update_criterion_bid_partial(
     expected_result = {"results": [{"resource_name": criterion_resource_name}]}
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_criterion_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_criterion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -628,7 +642,7 @@ async def test_remove_ad_group_criterion(
     expected_result = {"results": [{"resource_name": criterion_resource_name}]}
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_criterion_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_criterion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

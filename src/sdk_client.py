@@ -1,66 +1,76 @@
 """Google Ads SDK client for MCP server."""
 
-from typing import Optional, Dict, Any
+from pathlib import Path
+from typing import Optional
 
-import yaml
 from google.ads.googleads.client import GoogleAdsClient
 
 from src.utils import get_logger
 
 logger = get_logger(__name__)
 
+# If this path exists, it is loaded via the SDK's YAML loader (same format as
+# ~/google-ads.yaml). Otherwise configuration is read from environment
+# variables GOOGLE_ADS_* (see google.ads.googleads.config.load_from_env).
+_DEFAULT_CONFIG_PATH = "./env/google-ads.yaml"
+
 
 class GoogleAdsSdkClient:
-    """SDK client for Google Ads with service account authentication."""
+    """SDK client for Google Ads (OAuth installed app or service account).
 
-    def __init__(self, config_path: str = "./env/google-ads.yaml"):
-        """Initialize the SDK client with configuration."""
+    Configuration resolution order:
+    1. If ``config_path`` points to an existing file, that YAML is loaded
+       (``GoogleAdsClient.load_from_storage``).
+    2. Otherwise ``GoogleAdsClient.load_from_env()`` is used. After
+       ``load_dotenv()`` in ``main.py``, variables from ``.env`` are visible
+       here. You may also set ``GOOGLE_ADS_CONFIGURATION_FILE_PATH`` to a YAML
+       file path; the SDK then loads that file instead of inline env keys.
+    """
+
+    def __init__(self, config_path: Optional[str] = _DEFAULT_CONFIG_PATH):
         self.config_path = config_path
         self._client: Optional[GoogleAdsClient] = None
 
-    def _load_config(self) -> Dict[str, Any]:
-        """Load configuration from YAML file."""
-        with open(self.config_path, "r") as f:
-            config = yaml.safe_load(f)
+    def _build_client(self) -> GoogleAdsClient:
+        if self.config_path:
+            path = Path(self.config_path)
+            if path.is_file():
+                resolved = str(path.resolve())
+                logger.info("Google Ads config: YAML file %s", resolved)
+                client = GoogleAdsClient.load_from_storage(resolved)
+                logger.info("login_customer_id=%s", client.login_customer_id)
+                return client
 
-        # Ensure required fields are present
-        required_fields = ["developer_token", "json_key_file_path"]
-        for field in required_fields:
-            if field not in config:
-                raise ValueError(f"Missing required field in config: {field}")
-
-        return config
+        logger.info("Google Ads config: environment (GOOGLE_ADS_*)")
+        client = GoogleAdsClient.load_from_env()
+        logger.info("login_customer_id=%s", client.login_customer_id)
+        return client
 
     @property
     def client(self) -> GoogleAdsClient:
         """Get or create the Google Ads client."""
         if self._client is None:
-            config = self._load_config()
-
-            # Build configuration dictionary for GoogleAdsClient
-            client_config = {
-                "developer_token": config["developer_token"],
-                "use_proto_plus": True,  # Use proto-plus for better type hints
-                "json_key_file_path": config["json_key_file_path"],
-            }
-
-            # Add optional fields if present
-            if "login_customer_id" in config:
-                # Remove hyphens from customer ID
-                login_customer_id = str(config["login_customer_id"]).replace("-", "")
-                client_config["login_customer_id"] = login_customer_id
-
-            # Create client from dictionary
-            self._client = GoogleAdsClient.load_from_dict(client_config)
+            self._client = self._build_client()
             logger.info("Google Ads SDK client initialized successfully")
-
         return self._client
+
+    def validate(self) -> None:
+        """Eagerly build the client and verify credentials.
+
+        Calls ``list_accessible_customers`` which is lightweight, free, and
+        proves that the OAuth / service-account token is valid.
+        """
+        try:
+            customer_service = self.client.get_service("CustomerService", version="v20")
+            customer_service.list_accessible_customers()
+            logger.info("Credential validation passed")
+        except Exception:
+            logger.error("Credential validation FAILED – check your config")
+            raise
 
     def close(self) -> None:
         """Close the client and clean up resources."""
         if self._client:
-            # The SDK client doesn't have an explicit close method
-            # but we can clear the reference
             self._client = None
             logger.info("Google Ads SDK client closed")
 

@@ -26,6 +26,7 @@ from google.ads.googleads.v20.enums.types.customizer_attribute_type import (
 )
 from google.ads.googleads.v20.common.types.customizer_value import CustomizerValue
 
+from src.utils import resolve_enum
 from src.sdk_client import get_sdk_client
 
 
@@ -45,7 +46,9 @@ class AdGroupCustomizerService:
         """Get the ad group customizer service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("AdGroupCustomizerService")
+            self._client = sdk_client.client.get_service(
+                "AdGroupCustomizerService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -330,8 +333,10 @@ def register_ad_group_customizer_tools(mcp: FastMCP[Any]) -> None:
         service = AdGroupCustomizerService()
 
         # Convert response content type string to enum
-        response_content_type_enum = getattr(
-            ResponseContentTypeEnum.ResponseContentType, response_content_type
+        response_content_type_enum = resolve_enum(
+            ResponseContentTypeEnum.ResponseContentType,
+            response_content_type,
+            "response_content_type",
         )
 
         ops = []
@@ -425,8 +430,10 @@ def register_ad_group_customizer_tools(mcp: FastMCP[Any]) -> None:
         service = AdGroupCustomizerService()
 
         # Convert value type string to enum
-        value_type_enum = getattr(
-            CustomizerAttributeTypeEnum.CustomizerAttributeType, value_type
+        value_type_enum = resolve_enum(
+            CustomizerAttributeTypeEnum.CustomizerAttributeType,
+            value_type,
+            "value_type",
         )
 
         response = service.create_ad_group_customizer(

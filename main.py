@@ -216,6 +216,7 @@ async def lifespan(app: Any) -> AsyncGenerator[None, None]:  # noqa: ARG001
     client = None
     try:
         client = GoogleAdsSdkClient()
+        client.validate()
         set_sdk_client(client)
         logger.info("Google Ads SDK client initialized successfully")
         yield
@@ -310,17 +311,17 @@ SERVER_GROUPS = {
     "bidding": [
         ("bidding_strategy", bidding_strategy_server),
         ("campaign_bid_modifier", campaign_bid_modifier_server),
-        ("ad_group_bid_modifier", ad_group_bid_modifier_server),
-        ("bidding_data_exclusion", bidding_data_exclusion_server),
-        ("bidding_seasonality_adjustment", bidding_seasonality_adjustment_server),
+        ("ag_bid_mod", ad_group_bid_modifier_server),
+        ("bid_exclusion", bidding_data_exclusion_server),
+        ("bid_seasonal", bidding_seasonality_adjustment_server),
     ],
     "planning": [
         ("keyword_plan", keyword_plan_server),
         ("keyword_plan_idea", keyword_plan_idea_server),
         ("keyword_plan_ad_group", keyword_plan_ad_group_server),
         ("keyword_plan_campaign", keyword_plan_campaign_server),
-        ("keyword_plan_ad_group_keyword", keyword_plan_ad_group_keyword_server),
-        ("keyword_plan_campaign_keyword", keyword_plan_campaign_keyword_server),
+        ("kp_adgroup_kw", keyword_plan_ad_group_keyword_server),
+        ("kp_campaign_kw", keyword_plan_campaign_keyword_server),
         ("reach_plan", reach_plan_server),
         ("brand_suggestion", brand_suggestion_server),
     ],
@@ -341,7 +342,7 @@ SERVER_GROUPS = {
         ("conversion_adjustment_upload", conversion_adjustment_upload_server),
         ("conversion_value_rule", conversion_value_rule_server),
         ("conversion_custom_variable", conversion_custom_variable_server),
-        ("conversion_goal_campaign_config", conversion_goal_campaign_config_server),
+        ("conv_goal_config", conversion_goal_campaign_config_server),
         ("custom_conversion_goal", custom_conversion_goal_server),
         ("customer_conversion_goal", customer_conversion_goal_server),
         ("campaign_conversion_goal", campaign_conversion_goal_server),
@@ -364,12 +365,12 @@ SERVER_GROUPS = {
         ("customer_customizer", customer_customizer_server),
         ("campaign_customizer", campaign_customizer_server),
         ("ad_group_customizer", ad_group_customizer_server),
-        ("ad_group_criterion_customizer", ad_group_criterion_customizer_server),
+        ("ag_crit_custom", ad_group_criterion_customizer_server),
         ("ad_parameter", ad_parameter_server),
     ],
     "account": [
         ("customer_user_access", customer_user_access_server),
-        ("customer_user_access_invitation", customer_user_access_invitation_server),
+        ("access_invite", customer_user_access_invitation_server),
         ("customer_client_link", customer_client_link_server),
         ("customer_manager_link", customer_manager_link_server),
         ("account_link", account_link_server),

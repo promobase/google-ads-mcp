@@ -21,7 +21,13 @@ from google.ads.googleads.v20.services.types.ad_group_ad_service import (
 from google.protobuf import field_mask_pb2
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -38,7 +44,9 @@ class AdGroupAdService:
         """Get the ad group ad service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("AdGroupAdService")
+            self._client = sdk_client.client.get_service(
+                "AdGroupAdService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -93,7 +101,7 @@ class AdGroupAdService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -148,7 +156,7 @@ class AdGroupAdService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -277,7 +285,7 @@ class AdGroupAdService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -315,7 +323,9 @@ def create_ad_group_ad_tools(
             Created ad group ad details including resource_name and status
         """
         # Convert string enum to proper enum type
-        status_enum = getattr(AdGroupAdStatusEnum.AdGroupAdStatus, status)
+        status_enum = resolve_enum(
+            AdGroupAdStatusEnum.AdGroupAdStatus, status, "status"
+        )
 
         return await service.create_ad_group_ad(
             ctx=ctx,
@@ -342,7 +352,9 @@ def create_ad_group_ad_tools(
             Updated ad group ad details
         """
         # Convert string enum to proper enum type
-        status_enum = getattr(AdGroupAdStatusEnum.AdGroupAdStatus, status)
+        status_enum = resolve_enum(
+            AdGroupAdStatusEnum.AdGroupAdStatus, status, "status"
+        )
 
         return await service.update_ad_group_ad_status(
             ctx=ctx,

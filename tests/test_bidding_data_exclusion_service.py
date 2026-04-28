@@ -39,7 +39,7 @@ def bidding_data_exclusion_service(mock_sdk_client: Any) -> BiddingDataExclusion
     mock_sdk_client.client.get_service.return_value = mock_exclusion_client  # type: ignore
 
     with patch(
-        "src.sdk_services.bidding.bidding_data_exclusion_service.get_sdk_client",
+        "src.services.bidding.bidding_data_exclusion_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = BiddingDataExclusionService()
@@ -84,7 +84,7 @@ async def test_create_bidding_data_exclusion_customer_scope(
     }
 
     with patch(
-        "src.sdk_services.bidding.bidding_data_exclusion_service.serialize_proto_message",
+        "src.services.bidding.bidding_data_exclusion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -179,7 +179,7 @@ async def test_create_bidding_data_exclusion_campaign_scope(
     }
 
     with patch(
-        "src.sdk_services.bidding.bidding_data_exclusion_service.serialize_proto_message",
+        "src.services.bidding.bidding_data_exclusion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -239,7 +239,7 @@ async def test_update_bidding_data_exclusion(
     expected_result = {"results": [{"resource_name": exclusion_resource_name}]}
 
     with patch(
-        "src.sdk_services.bidding.bidding_data_exclusion_service.serialize_proto_message",
+        "src.services.bidding.bidding_data_exclusion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -304,7 +304,7 @@ async def test_update_bidding_data_exclusion_dates_only(
     expected_result = {"results": [{"resource_name": exclusion_resource_name}]}
 
     with patch(
-        "src.sdk_services.bidding.bidding_data_exclusion_service.serialize_proto_message",
+        "src.services.bidding.bidding_data_exclusion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -408,7 +408,7 @@ async def test_list_bidding_data_exclusions(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.bidding.bidding_data_exclusion_service.get_sdk_client",
+        "src.services.bidding.bidding_data_exclusion_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -477,7 +477,7 @@ async def test_list_bidding_data_exclusions_with_scope_filter(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.bidding.bidding_data_exclusion_service.get_sdk_client",
+        "src.services.bidding.bidding_data_exclusion_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -522,7 +522,7 @@ async def test_remove_bidding_data_exclusion(
     expected_result = {"results": [{"resource_name": exclusion_resource_name}]}
 
     with patch(
-        "src.sdk_services.bidding.bidding_data_exclusion_service.serialize_proto_message",
+        "src.services.bidding.bidding_data_exclusion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

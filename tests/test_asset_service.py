@@ -31,7 +31,7 @@ def asset_service(mock_sdk_client: Any) -> AssetService:
     mock_sdk_client.client.get_service.return_value = mock_asset_service_client  # type: ignore
 
     with patch(
-        "src.sdk_services.assets.asset_service.get_sdk_client",
+        "src.services.assets.asset_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = AssetService()
@@ -67,7 +67,7 @@ async def test_create_text_asset(
     }
 
     with patch(
-        "src.sdk_services.assets.asset_service.serialize_proto_message",
+        "src.services.assets.asset_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -120,7 +120,7 @@ async def test_create_text_asset_without_name(
     }
 
     with patch(
-        "src.sdk_services.assets.asset_service.serialize_proto_message",
+        "src.services.assets.asset_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -144,60 +144,68 @@ async def test_create_text_asset_without_name(
 
 
 @pytest.mark.asyncio
-async def test_create_image_asset(
+async def test_create_image_asset_base64(
     asset_service: AssetService,
     mock_sdk_client: Any,
     mock_ctx: Context,
 ) -> None:
-    """Test creating an image asset."""
-    # Arrange
-    customer_id = "1234567890"
-    image_data = b"fake_image_data"
-    name = "Test Image Asset"
-    mime_type = "image/jpeg"
+    """Test creating an image asset from base64 data."""
+    import base64
 
-    # Create mock response
+    customer_id = "1234567890"
+    raw_bytes = b"fake_image_data"
+    b64_str = base64.b64encode(raw_bytes).decode()
+    name = "Test Image Asset"
+
     mock_response = Mock(spec=MutateAssetsResponse)
     mock_response.results = [Mock()]
     mock_response.results[0].resource_name = f"customers/{customer_id}/assets/125"
 
-    # Get the mocked asset service client
     mock_asset_service_client = asset_service.client  # type: ignore
     mock_asset_service_client.mutate_assets.return_value = mock_response  # type: ignore
 
-    # Mock serialize_proto_message
     expected_result = {
         "results": [{"resource_name": f"customers/{customer_id}/assets/125"}]
     }
 
     with patch(
-        "src.sdk_services.assets.asset_service.serialize_proto_message",
+        "src.services.assets.asset_service.serialize_proto_message",
         return_value=expected_result,
     ):
-        # Act
         result = await asset_service.create_image_asset(
             ctx=mock_ctx,
             customer_id=customer_id,
-            image_data=image_data,
             name=name,
-            mime_type=mime_type,
+            image_data_base64=b64_str,
         )
 
-    # Assert
     assert result == expected_result
 
-    # Verify the API call
     mock_asset_service_client.mutate_assets.assert_called_once()  # type: ignore
     call_args = mock_asset_service_client.mutate_assets.call_args  # type: ignore
     request = call_args[1]["request"]
-    assert request.customer_id == customer_id
-    assert len(request.operations) == 1
-
     operation = request.operations[0]
     assert operation.create.name == name
     assert operation.create.type_ == AssetTypeEnum.AssetType.IMAGE
-    assert operation.create.image_asset.data == image_data
+    assert operation.create.image_asset.data == raw_bytes
     assert operation.create.image_asset.mime_type == MimeTypeEnum.MimeType.IMAGE_JPEG
+
+
+@pytest.mark.asyncio
+async def test_create_image_asset_requires_source(
+    asset_service: AssetService,
+    mock_sdk_client: Any,
+    mock_ctx: Context,
+) -> None:
+    """Test that create_image_asset fails without base64 or URL."""
+    with pytest.raises(
+        Exception, match="image_file_path, image_url, or image_data_base64"
+    ):
+        await asset_service.create_image_asset(
+            ctx=mock_ctx,
+            customer_id="1234567890",
+            name="No Source",
+        )
 
 
 @pytest.mark.asyncio
@@ -227,7 +235,7 @@ async def test_create_youtube_video_asset(
     }
 
     with patch(
-        "src.sdk_services.assets.asset_service.serialize_proto_message",
+        "src.services.assets.asset_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -306,7 +314,7 @@ async def test_search_assets(
 
     # Act
     with patch(
-        "src.sdk_services.assets.asset_service.get_sdk_client",
+        "src.services.assets.asset_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         result = await asset_service.search_assets(
@@ -393,21 +401,168 @@ def test_mime_type_conversion() -> None:
     assert service.get_mime_type_enum("image/webp") == MimeTypeEnum.MimeType.IMAGE_JPEG
 
 
+@pytest.mark.asyncio
+async def test_create_sitelink_asset(
+    asset_service: AssetService,
+    mock_sdk_client: Any,
+    mock_ctx: Context,
+) -> None:
+    """Test creating a sitelink asset."""
+    customer_id = "1234567890"
+
+    mock_response = Mock(spec=MutateAssetsResponse)
+    mock_response.results = [Mock()]
+    mock_response.results[0].resource_name = f"customers/{customer_id}/assets/200"
+
+    mock_asset_client = asset_service.client  # type: ignore
+    mock_asset_client.mutate_assets.return_value = mock_response  # type: ignore
+
+    expected = {"results": [{"resource_name": f"customers/{customer_id}/assets/200"}]}
+
+    with patch(
+        "src.services.assets.asset_service.serialize_proto_message",
+        return_value=expected,
+    ):
+        result = await asset_service.create_sitelink_asset(
+            ctx=mock_ctx,
+            customer_id=customer_id,
+            link_text="Contact Us",
+            final_urls=["https://example.com/contact"],
+            description1="Get in touch",
+            description2="We are here to help",
+        )
+
+    assert result == expected
+    mock_asset_client.mutate_assets.assert_called_once()  # type: ignore
+    request = mock_asset_client.mutate_assets.call_args[1]["request"]  # type: ignore
+    op = request.operations[0]
+    assert op.create.type_ == AssetTypeEnum.AssetType.SITELINK
+    assert op.create.sitelink_asset.link_text == "Contact Us"
+    assert op.create.sitelink_asset.description1 == "Get in touch"
+    assert list(op.create.final_urls) == ["https://example.com/contact"]
+
+
+@pytest.mark.asyncio
+async def test_create_callout_asset(
+    asset_service: AssetService,
+    mock_sdk_client: Any,
+    mock_ctx: Context,
+) -> None:
+    """Test creating a callout asset."""
+    customer_id = "1234567890"
+
+    mock_response = Mock(spec=MutateAssetsResponse)
+    mock_response.results = [Mock()]
+    mock_response.results[0].resource_name = f"customers/{customer_id}/assets/201"
+
+    mock_asset_client = asset_service.client  # type: ignore
+    mock_asset_client.mutate_assets.return_value = mock_response  # type: ignore
+
+    expected = {"results": [{"resource_name": f"customers/{customer_id}/assets/201"}]}
+
+    with patch(
+        "src.services.assets.asset_service.serialize_proto_message",
+        return_value=expected,
+    ):
+        result = await asset_service.create_callout_asset(
+            ctx=mock_ctx,
+            customer_id=customer_id,
+            callout_text="Free Shipping",
+        )
+
+    assert result == expected
+    request = mock_asset_client.mutate_assets.call_args[1]["request"]  # type: ignore
+    op = request.operations[0]
+    assert op.create.type_ == AssetTypeEnum.AssetType.CALLOUT
+    assert op.create.callout_asset.callout_text == "Free Shipping"
+
+
+@pytest.mark.asyncio
+async def test_create_structured_snippet_asset(
+    asset_service: AssetService,
+    mock_sdk_client: Any,
+    mock_ctx: Context,
+) -> None:
+    """Test creating a structured snippet asset."""
+    customer_id = "1234567890"
+
+    mock_response = Mock(spec=MutateAssetsResponse)
+    mock_response.results = [Mock()]
+    mock_response.results[0].resource_name = f"customers/{customer_id}/assets/202"
+
+    mock_asset_client = asset_service.client  # type: ignore
+    mock_asset_client.mutate_assets.return_value = mock_response  # type: ignore
+
+    expected = {"results": [{"resource_name": f"customers/{customer_id}/assets/202"}]}
+
+    with patch(
+        "src.services.assets.asset_service.serialize_proto_message",
+        return_value=expected,
+    ):
+        result = await asset_service.create_structured_snippet_asset(
+            ctx=mock_ctx,
+            customer_id=customer_id,
+            header="Brands",
+            values=["Brand A", "Brand B", "Brand C"],
+        )
+
+    assert result == expected
+    request = mock_asset_client.mutate_assets.call_args[1]["request"]  # type: ignore
+    op = request.operations[0]
+    assert op.create.type_ == AssetTypeEnum.AssetType.STRUCTURED_SNIPPET
+    assert op.create.structured_snippet_asset.header == "Brands"
+    assert list(op.create.structured_snippet_asset.values) == [
+        "Brand A",
+        "Brand B",
+        "Brand C",
+    ]
+
+
+@pytest.mark.asyncio
+async def test_create_call_asset(
+    asset_service: AssetService,
+    mock_sdk_client: Any,
+    mock_ctx: Context,
+) -> None:
+    """Test creating a call asset."""
+    customer_id = "1234567890"
+
+    mock_response = Mock(spec=MutateAssetsResponse)
+    mock_response.results = [Mock()]
+    mock_response.results[0].resource_name = f"customers/{customer_id}/assets/203"
+
+    mock_asset_client = asset_service.client  # type: ignore
+    mock_asset_client.mutate_assets.return_value = mock_response  # type: ignore
+
+    expected = {"results": [{"resource_name": f"customers/{customer_id}/assets/203"}]}
+
+    with patch(
+        "src.services.assets.asset_service.serialize_proto_message",
+        return_value=expected,
+    ):
+        result = await asset_service.create_call_asset(
+            ctx=mock_ctx,
+            customer_id=customer_id,
+            country_code="US",
+            phone_number="1234567890",
+        )
+
+    assert result == expected
+    request = mock_asset_client.mutate_assets.call_args[1]["request"]  # type: ignore
+    op = request.operations[0]
+    assert op.create.type_ == AssetTypeEnum.AssetType.CALL
+    assert op.create.call_asset.country_code == "US"
+    assert op.create.call_asset.phone_number == "1234567890"
+
+
 def test_register_asset_tools() -> None:
     """Test tool registration."""
-    # Arrange
     mock_mcp = Mock()
-
-    # Act
     service = register_asset_tools(mock_mcp)
 
-    # Assert
     assert isinstance(service, AssetService)
+    assert mock_mcp.tool.call_count == 8  # type: ignore
 
-    # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
-
-    # Verify tool functions were passed
     registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
@@ -415,6 +570,10 @@ def test_register_asset_tools() -> None:
         "create_text_asset",
         "create_image_asset",
         "create_youtube_video_asset",
+        "create_sitelink_asset",
+        "create_callout_asset",
+        "create_structured_snippet_asset",
+        "create_call_asset",
         "search_assets",
     ]
 

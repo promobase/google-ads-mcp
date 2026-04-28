@@ -9,9 +9,9 @@ Goal: 1:1 mapping of ALL Google Ads services with full type safety using generat
 - ✅ Implemented: 90 (87.4%)
 - ❌ Not Implemented: 13 (12.6%)
 
-**Last Audit Date:** 2025-06-27
+**Last Audit Date:** 2026-03-22
 **Audit Method:** Complete analysis of google-ads-python v20 services directory and cross-referenced with implementations
-**Latest Implementation:** `identity_verification`, `ad_group_criterion_customizer`, `ad_parameter`, `customer_conversion_goal` - Account verification, criterion customization, ad parameters, and customer-level conversion goals
+**Latest Implementation:** Campaign service refactored for PMax/Search/Display/Shopping/Video with full bidding strategy support. Extension assets (sitelink, callout, structured snippet, call) added to asset service. MaximizeConversionValue bidding strategy added.
 
 ## Type Safety Verification
 ✅ **ALL implemented services use full v20 type safety:**
@@ -56,7 +56,7 @@ Goal: 1:1 mapping of ALL Google Ads services with full type safety using generat
 1. ✅ `asset` - Asset management
 2. ✅ `asset_group` - Asset group management (Performance Max)
 3. ✅ `asset_group_asset` - Assets within asset groups
-4. ❌ `asset_group_listing_group_filter` - Listing filters for Performance Max
+4. ❌ `asset_group_listing_group_filter` - Not available in v20 SDK
 5. ✅ `asset_group_signal` - Audience signals for asset groups (NEWLY IMPLEMENTED)
 6. ✅ `asset_set` - Asset set management
 7. ❌ `asset_set_asset` - Assets within asset sets
@@ -164,13 +164,13 @@ Services that implement ALL operations from the Google Ads API:
 
 1. ✅ `google_ads_service` - search, search_stream, mutate, mutate_operation
 2. ✅ `customer_service` - list_accessible_customers, create_customer_client, mutate_customer  
-3. ✅ `campaign_service` - mutate_campaigns (create, update, remove)
+3. ✅ `campaign_service` - create/update campaigns with full bidding & channel type support (Search, Display, Shopping, Video, PMax)
 4. ✅ `ad_group_service` - mutate_ad_groups (create, update, remove)
 5. ✅ `budget_service` - mutate_campaign_budgets (create, update, remove)
 6. ✅ `ad_service` - mutate_ads, get_ad
-7. ✅ `bidding_strategy_service` - mutate_bidding_strategies (create, update, remove)
+7. ✅ `bidding_strategy_service` - Target CPA, Target ROAS, MaxConversions, MaxConversionValue, Target Impression Share
 8. ✅ `conversion_action_service` - mutate_conversion_actions (create, update, remove)
-9. ✅ `asset_service` - mutate_assets (create, update)
+9. ✅ `asset_service` - text, image, youtube video, sitelink, callout, structured snippet, call assets
 10. ✅ `user_list_service` - mutate_user_lists (create, update, remove)
 
 ### Partially Implemented Services
@@ -179,6 +179,24 @@ Services missing some operations:
 1. ⚠️ `keyword_plan_service` - Missing: generate_forecast_curve, generate_forecast_time_series, generate_forecast_metrics
 2. ⚠️ `reach_plan_service` - Missing: generate_reach_forecast
 3. ⚠️ `recommendation_service` - Missing: dismiss_recommendation
+
+### Recent Enhancements (2026-03-22)
+
+**Campaign Service (MAJOR):**
+- `create_campaign` now supports ALL channel types: SEARCH, DISPLAY, SHOPPING, VIDEO, PERFORMANCE_MAX
+- Supports all bidding strategies: MANUAL_CPC, TARGET_CPA, TARGET_ROAS, MAXIMIZE_CONVERSIONS, MAXIMIZE_CONVERSION_VALUE, TARGET_SPEND, TARGET_IMPRESSION_SHARE, PORTFOLIO
+- `advertising_channel_sub_type` parameter added
+- Network settings are conditional (skipped for PMax)
+- `update_campaign` now supports changing bidding strategies
+
+**Asset Service (NEW extension types):**
+- `create_sitelink_asset` - Sitelink extensions with link text, descriptions, and final URLs
+- `create_callout_asset` - Callout extensions
+- `create_structured_snippet_asset` - Structured snippet extensions with headers and values
+- `create_call_asset` - Call extensions with country code and phone number
+
+**Bidding Strategy Service (NEW):**
+- `create_maximize_conversion_value_strategy` - MaximizeConversionValue with optional target ROAS
 
 ## Next Steps
 

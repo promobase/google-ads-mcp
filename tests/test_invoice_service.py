@@ -27,7 +27,7 @@ def invoice_service(mock_sdk_client: Any) -> InvoiceService:
     mock_sdk_client.client.get_service.return_value = mock_invoice_client  # type: ignore
 
     with patch(
-        "src.sdk_services.account.invoice_service.get_sdk_client",
+        "src.services.account.invoice_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = InvoiceService()
@@ -141,7 +141,7 @@ async def test_list_invoices(
     }
 
     with patch(
-        "src.sdk_services.account.invoice_service.serialize_proto_message",
+        "src.services.account.invoice_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -198,7 +198,7 @@ async def test_list_invoices_december(
     expected_result = {"invoices": []}
 
     with patch(
-        "src.sdk_services.account.invoice_service.serialize_proto_message",
+        "src.services.account.invoice_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -305,7 +305,7 @@ async def test_list_invoices_with_credit_memo(
     }
 
     with patch(
-        "src.sdk_services.account.invoice_service.serialize_proto_message",
+        "src.services.account.invoice_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -405,7 +405,7 @@ async def test_tool_wrapper_list_invoices(
     list_invoices_tool = tools[0]  # First (and only) tool
 
     with patch(
-        "src.sdk_services.account.invoice_service.serialize_proto_message",
+        "src.services.account.invoice_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -457,7 +457,7 @@ async def test_tool_wrapper_list_invoices_case_insensitive(
     list_invoices_tool = tools[0]
 
     with patch(
-        "src.sdk_services.account.invoice_service.serialize_proto_message",
+        "src.services.account.invoice_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

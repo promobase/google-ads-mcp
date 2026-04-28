@@ -31,7 +31,7 @@ def experiment_service(mock_sdk_client: Any) -> ExperimentService:
     mock_sdk_client.client.get_service.return_value = mock_experiment_client  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.experiment_service.get_sdk_client",
+        "src.services.campaign.experiment_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = ExperimentService()
@@ -72,7 +72,7 @@ async def test_create_experiment(
     }
 
     with patch(
-        "src.sdk_services.campaign.experiment_service.serialize_proto_message",
+        "src.services.campaign.experiment_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -140,7 +140,7 @@ async def test_create_experiment_minimal(
     }
 
     with patch(
-        "src.sdk_services.campaign.experiment_service.serialize_proto_message",
+        "src.services.campaign.experiment_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -202,7 +202,7 @@ async def test_schedule_experiment(
     }
 
     with patch(
-        "src.sdk_services.campaign.experiment_service.serialize_proto_message",
+        "src.services.campaign.experiment_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -258,7 +258,7 @@ async def test_schedule_experiment_validate_only(
     }
 
     with patch(
-        "src.sdk_services.campaign.experiment_service.serialize_proto_message",
+        "src.services.campaign.experiment_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -304,7 +304,7 @@ async def test_end_experiment(
     }
 
     with patch(
-        "src.sdk_services.campaign.experiment_service.serialize_proto_message",
+        "src.services.campaign.experiment_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -357,7 +357,7 @@ async def test_promote_experiment(
     }
 
     with patch(
-        "src.sdk_services.campaign.experiment_service.serialize_proto_message",
+        "src.services.campaign.experiment_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -460,11 +460,11 @@ async def test_list_experiments(
 
     with (
         patch(
-            "src.sdk_services.campaign.experiment_service.get_sdk_client",
+            "src.services.campaign.experiment_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.campaign.experiment_service.serialize_proto_message",
+            "src.services.campaign.experiment_service.serialize_proto_message",
             side_effect=mock_serialize,
         ),
     ):
@@ -521,7 +521,7 @@ async def test_list_experiments_no_filters(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.campaign.experiment_service.get_sdk_client",
+        "src.services.campaign.experiment_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act

@@ -25,7 +25,13 @@ from google.ads.googleads.v20.services.types.campaign_criterion_service import (
 )
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -42,7 +48,9 @@ class CampaignCriterionService:
         """Get the campaign criterion service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("CampaignCriterionService")
+            self._client = sdk_client.client.get_service(
+                "CampaignCriterionService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -111,7 +119,7 @@ class CampaignCriterionService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -179,7 +187,7 @@ class CampaignCriterionService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -254,7 +262,7 @@ class CampaignCriterionService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -323,7 +331,7 @@ class CampaignCriterionService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -372,7 +380,7 @@ class CampaignCriterionService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -464,7 +472,8 @@ def create_campaign_criterion_tools(
         """
         # Convert string enums to proper enum types
         device_type_enums = [
-            getattr(DeviceEnum.Device, device_type) for device_type in device_types
+            resolve_enum(DeviceEnum.Device, device_type, "device_type")
+            for device_type in device_types
         ]
 
         return await service.add_device_criteria(

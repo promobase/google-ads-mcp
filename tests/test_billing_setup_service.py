@@ -30,7 +30,7 @@ def billing_setup_service(mock_sdk_client: Any) -> BillingSetupService:
     mock_sdk_client.client.get_service.return_value = mock_billing_setup_client  # type: ignore
 
     with patch(
-        "src.sdk_services.account.billing_setup_service.get_sdk_client",
+        "src.services.account.billing_setup_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = BillingSetupService()
@@ -69,7 +69,7 @@ async def test_create_billing_setup(
     }
 
     with patch(
-        "src.sdk_services.account.billing_setup_service.serialize_proto_message",
+        "src.services.account.billing_setup_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -137,7 +137,7 @@ async def test_create_billing_setup_with_specific_start_date(
     }
 
     with patch(
-        "src.sdk_services.account.billing_setup_service.serialize_proto_message",
+        "src.services.account.billing_setup_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -190,7 +190,7 @@ async def test_create_billing_setup_with_end_date(
     }
 
     with patch(
-        "src.sdk_services.account.billing_setup_service.serialize_proto_message",
+        "src.services.account.billing_setup_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -274,11 +274,11 @@ async def test_list_billing_setups(
 
     with (
         patch(
-            "src.sdk_services.account.billing_setup_service.get_sdk_client",
+            "src.services.account.billing_setup_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.account.billing_setup_service.serialize_proto_message",
+            "src.services.account.billing_setup_service.serialize_proto_message",
             side_effect=serialize_side_effect,
         ),
     ):
@@ -338,7 +338,7 @@ async def test_list_billing_setups_with_status_filter(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.account.billing_setup_service.get_sdk_client",
+        "src.services.account.billing_setup_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -411,11 +411,11 @@ async def test_get_billing_setup(
 
     with (
         patch(
-            "src.sdk_services.account.billing_setup_service.get_sdk_client",
+            "src.services.account.billing_setup_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.account.billing_setup_service.serialize_proto_message",
+            "src.services.account.billing_setup_service.serialize_proto_message",
             return_value=expected_result,
         ),
     ):
@@ -466,7 +466,7 @@ async def test_get_billing_setup_not_found(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.account.billing_setup_service.get_sdk_client",
+        "src.services.account.billing_setup_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act & Assert
@@ -535,11 +535,11 @@ async def test_list_payments_accounts(
 
     with (
         patch(
-            "src.sdk_services.account.billing_setup_service.get_sdk_client",
+            "src.services.account.billing_setup_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.account.billing_setup_service.serialize_proto_message",
+            "src.services.account.billing_setup_service.serialize_proto_message",
             side_effect=serialize_side_effect,
         ),
     ):
@@ -633,7 +633,7 @@ async def test_error_handling_list_billing_setups(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.account.billing_setup_service.get_sdk_client",
+        "src.services.account.billing_setup_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act & Assert
@@ -676,7 +676,7 @@ async def test_error_handling_list_payments_accounts(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.account.billing_setup_service.get_sdk_client",
+        "src.services.account.billing_setup_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act & Assert

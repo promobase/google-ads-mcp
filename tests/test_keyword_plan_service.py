@@ -32,7 +32,7 @@ def keyword_plan_service(mock_sdk_client: Any) -> KeywordPlanService:
     mock_sdk_client.client.get_service.return_value = mock_keyword_plan_client  # type: ignore
 
     with patch(
-        "src.sdk_services.planning.keyword_plan_service.get_sdk_client",
+        "src.services.planning.keyword_plan_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = KeywordPlanService()
@@ -68,7 +68,7 @@ async def test_create_keyword_plan(
     }
 
     with patch(
-        "src.sdk_services.planning.keyword_plan_service.serialize_proto_message",
+        "src.services.planning.keyword_plan_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -136,7 +136,7 @@ async def test_get_keyword_ideas(
 
     mock_idea_service.generate_keyword_ideas.return_value = mock_ideas  # type: ignore
 
-    def get_service_side_effect(service_name: str):
+    def get_service_side_effect(service_name: str, **_: Any):
         if service_name == "KeywordPlanIdeaService":
             return mock_idea_service
         return keyword_plan_service.client
@@ -158,11 +158,11 @@ async def test_get_keyword_ideas(
 
     with (
         patch(
-            "src.sdk_services.planning.keyword_plan_service.get_sdk_client",
+            "src.services.planning.keyword_plan_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.planning.keyword_plan_service.serialize_proto_message",
+            "src.services.planning.keyword_plan_service.serialize_proto_message",
             side_effect=serialize_side_effect,
         ),
     ):
@@ -224,7 +224,7 @@ async def test_create_keyword_plan_campaign(
     ].resource_name = f"customers/{customer_id}/keywordPlanCampaigns/456"
     mock_campaign_service.mutate_keyword_plan_campaigns.return_value = mock_response  # type: ignore
 
-    def get_service_side_effect(service_name: str):
+    def get_service_side_effect(service_name: str, **_: Any):
         if service_name == "KeywordPlanCampaignService":
             return mock_campaign_service
         return keyword_plan_service.client
@@ -240,11 +240,11 @@ async def test_create_keyword_plan_campaign(
 
     with (
         patch(
-            "src.sdk_services.planning.keyword_plan_service.get_sdk_client",
+            "src.services.planning.keyword_plan_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.planning.keyword_plan_service.serialize_proto_message",
+            "src.services.planning.keyword_plan_service.serialize_proto_message",
             return_value=expected_result,
         ),
     ):
@@ -323,7 +323,7 @@ async def test_add_keywords_to_plan(
         mock_response
     )
 
-    def get_service_side_effect(service_name: str):
+    def get_service_side_effect(service_name: str, **_: Any):
         if service_name == "KeywordPlanAdGroupKeywordService":
             return mock_keyword_service
         return keyword_plan_service.client
@@ -331,7 +331,7 @@ async def test_add_keywords_to_plan(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.planning.keyword_plan_service.get_sdk_client",
+        "src.services.planning.keyword_plan_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act

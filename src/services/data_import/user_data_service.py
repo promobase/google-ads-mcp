@@ -27,7 +27,7 @@ from google.ads.googleads.v20.enums.types.user_identifier_source import (
 from google.ads.googleads.errors import GoogleAdsException
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger
+from src.utils import format_ads_error, format_customer_id, get_logger
 
 logger = get_logger(__name__)
 
@@ -44,7 +44,9 @@ class UserDataService:
         """Get the user data service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("UserDataService")
+            self._client = sdk_client.client.get_service(
+                "UserDataService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -167,7 +169,7 @@ class UserDataService:
             return result
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -306,7 +308,7 @@ class UserDataService:
             return result
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -419,7 +421,7 @@ class UserDataService:
             return result
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:

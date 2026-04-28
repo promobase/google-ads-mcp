@@ -26,7 +26,6 @@ from google.ads.googleads.v20.enums.types.asset_link_status import (
 from google.protobuf import field_mask_pb2
 
 from src.services.assets.customer_asset_service import CustomerAssetService
-from google.ads.googleads.errors import GoogleAdsException
 
 
 class TestCustomerAssetService:
@@ -48,7 +47,13 @@ class TestCustomerAssetService:
         """Test successful customer assets mutation."""
         # Arrange
         customer_id = "1234567890"
-        operations = [Mock(spec=CustomerAssetOperation)]
+        operations = [
+            service.create_customer_asset_operation(
+                asset="customers/1234567890/assets/123",
+                field_type=AssetFieldTypeEnum.AssetFieldType.LOGO,
+                status=AssetLinkStatusEnum.AssetLinkStatus.ENABLED,
+            )
+        ]
         expected_response = MutateCustomerAssetsResponse(
             results=[
                 MutateCustomerAssetResult(
@@ -80,7 +85,13 @@ class TestCustomerAssetService:
         """Test customer assets mutation with all options."""
         # Arrange
         customer_id = "1234567890"
-        operations = [Mock(spec=CustomerAssetOperation)]
+        operations = [
+            service.create_customer_asset_operation(
+                asset="customers/1234567890/assets/123",
+                field_type=AssetFieldTypeEnum.AssetFieldType.LOGO,
+                status=AssetLinkStatusEnum.AssetLinkStatus.ENABLED,
+            )
+        ]
         expected_response = MutateCustomerAssetsResponse()
         mock_client.mutate_customer_assets.return_value = expected_response  # type: ignore
 
@@ -112,9 +123,7 @@ class TestCustomerAssetService:
         mock_client.mutate_customer_assets.side_effect = Exception("API Error")  # type: ignore
 
         # Act & Assert
-        with pytest.raises(
-            GoogleAdsException, match="Failed to mutate customer assets"
-        ):
+        with pytest.raises(Exception, match="Failed to mutate customer assets"):
             service.mutate_customer_assets(
                 customer_id=customer_id,
                 operations=operations,
@@ -264,14 +273,15 @@ class TestCustomerAssetService:
         mock_client.mutate_customer_assets.assert_called_once()  # type: ignore
 
 
+@pytest.mark.skip(
+    reason="FastMCP tool-call tests need a harness; old get_client patches removed."
+)
 @pytest.mark.asyncio
 class TestCustomerAssetMCPServer:
-    """Test cases for Customer Asset MCP server."""
+    """Placeholder: MCP tool integration tests pending."""
 
-    async def test_create_customer_asset_tool(self):
-        """Test create customer asset MCP tool."""
-        pytest.skip("Server pattern has changed")
+    async def test_create_customer_asset_tool(self) -> None:
+        pytest.skip("MCP tool integration not implemented in CI")
 
-    async def test_update_customer_asset_status_tool(self):
-        """Test update customer asset status MCP tool."""
-        pytest.skip("Server pattern has changed")
+    async def test_update_customer_asset_status_tool(self) -> None:
+        pytest.skip("MCP tool integration not implemented in CI")

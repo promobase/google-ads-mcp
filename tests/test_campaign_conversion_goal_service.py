@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock, Mock, patch
 from typing import Any
 
 import pytest
-from google.ads.googleads.errors import GoogleAdsException
+from tests.google_ads_test_utils import make_google_ads_exception_stub
 from google.ads.googleads.v20.enums.types.conversion_action_category import (
     ConversionActionCategoryEnum,
 )
@@ -122,7 +122,7 @@ class TestCampaignConversionGoalService:
         request = mock_client.mutate_campaign_conversion_goals.call_args[1]["request"]  # type: ignore
         operation = request.operations[0]
         assert operation.update.resource_name == (
-            "customers/1234567890/campaignConversionGoals/1111111111~LEAD~APP"
+            "customers/1234567890/campaignConversionGoals/1111111111~IMPORTED_LEAD~APP"
         )
         assert (
             operation.update.category
@@ -160,7 +160,7 @@ class TestCampaignConversionGoalService:
         campaign_conversion_goal_service._client = mock_client
 
         # Mock API error
-        error = GoogleAdsException(None, None, None, None)
+        error = make_google_ads_exception_stub()
         error.failure = Mock()  # type: ignore
         error.failure.__str__ = Mock(return_value="Invalid campaign ID")  # type: ignore
         mock_client.mutate_campaign_conversion_goals.side_effect = error  # type: ignore
@@ -249,12 +249,12 @@ class TestCampaignConversionGoalTools:
         with patch.object(service, "update_campaign_conversion_goal") as mock_update:
             mock_update.return_value = {"results": [{"resource_name": "test"}]}  # type: ignore
 
-            # Test with LEAD/APP
+            # Test with IMPORTED_LEAD / APP (v20 has no plain LEAD category)
             await update_tool(
                 ctx=mock_context,
                 customer_id="1234567890",
                 campaign_id="1111111111",
-                category="LEAD",
+                category="IMPORTED_LEAD",
                 origin="APP",
                 biddable=False,
                 validate_only=True,

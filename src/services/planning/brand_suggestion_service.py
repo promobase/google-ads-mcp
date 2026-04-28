@@ -16,6 +16,7 @@ from google.ads.googleads.v20.services.types.brand_suggestion_service import (
 )
 
 from src.sdk_client import get_sdk_client
+from src.utils import format_customer_id
 
 
 class BrandSuggestionService:
@@ -30,7 +31,9 @@ class BrandSuggestionService:
         """Get the brand suggestion service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("BrandSuggestionService")
+            self._client = sdk_client.client.get_service(
+                "BrandSuggestionService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -50,6 +53,7 @@ class BrandSuggestionService:
         Returns:
             SuggestBrandsResponse: The response containing brand suggestions
         """
+        customer_id = format_customer_id(customer_id)
         request = SuggestBrandsRequest(
             customer_id=customer_id,
             brand_prefix=brand_prefix,

@@ -28,7 +28,7 @@ def conversion_upload_service(mock_sdk_client: Any) -> ConversionUploadService:
     mock_sdk_client.client.get_service.return_value = mock_conversion_upload_client  # type: ignore
 
     with patch(
-        "src.sdk_services.conversions.conversion_upload_service.get_sdk_client",
+        "src.services.conversions.conversion_upload_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = ConversionUploadService()
@@ -115,7 +115,7 @@ async def test_upload_click_conversions_basic(
     }
 
     with patch(
-        "src.sdk_services.conversions.conversion_upload_service.serialize_proto_message",
+        "src.services.conversions.conversion_upload_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -215,7 +215,7 @@ async def test_upload_click_conversions_with_user_identifiers(
     expected_result = {"results": [{"gclid": "gclid123"}]}
 
     with patch(
-        "src.sdk_services.conversions.conversion_upload_service.serialize_proto_message",
+        "src.services.conversions.conversion_upload_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -297,7 +297,7 @@ async def test_upload_click_conversions_partial_address(
     expected_result = {"results": [{"gclid": "gclid123"}]}
 
     with patch(
-        "src.sdk_services.conversions.conversion_upload_service.serialize_proto_message",
+        "src.services.conversions.conversion_upload_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -385,7 +385,7 @@ async def test_upload_call_conversions(
     }
 
     with patch(
-        "src.sdk_services.conversions.conversion_upload_service.serialize_proto_message",
+        "src.services.conversions.conversion_upload_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -473,7 +473,7 @@ async def test_upload_click_conversions_no_partial_failure(
     expected_result = {"results": [{"gclid": "gclid123"}]}
 
     with patch(
-        "src.sdk_services.conversions.conversion_upload_service.serialize_proto_message",
+        "src.services.conversions.conversion_upload_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

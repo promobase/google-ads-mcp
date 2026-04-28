@@ -35,7 +35,7 @@ def bidding_strategy_service(mock_sdk_client: Any) -> BiddingStrategyService:
     mock_sdk_client.client.get_service.return_value = mock_bidding_strategy_client  # type: ignore
 
     with patch(
-        "src.sdk_services.bidding.bidding_strategy_service.get_sdk_client",
+        "src.services.bidding.bidding_strategy_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = BiddingStrategyService()
@@ -74,7 +74,7 @@ async def test_create_target_cpa_strategy(
     }
 
     with patch(
-        "src.sdk_services.bidding.bidding_strategy_service.serialize_proto_message",
+        "src.services.bidding.bidding_strategy_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -144,7 +144,7 @@ async def test_create_target_roas_strategy(
     }
 
     with patch(
-        "src.sdk_services.bidding.bidding_strategy_service.serialize_proto_message",
+        "src.services.bidding.bidding_strategy_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -215,7 +215,7 @@ async def test_create_maximize_conversions_strategy(
     }
 
     with patch(
-        "src.sdk_services.bidding.bidding_strategy_service.serialize_proto_message",
+        "src.services.bidding.bidding_strategy_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -285,7 +285,7 @@ async def test_create_maximize_conversions_strategy_without_target(
     }
 
     with patch(
-        "src.sdk_services.bidding.bidding_strategy_service.serialize_proto_message",
+        "src.services.bidding.bidding_strategy_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -343,7 +343,7 @@ async def test_create_target_impression_share_strategy(
     }
 
     with patch(
-        "src.sdk_services.bidding.bidding_strategy_service.serialize_proto_message",
+        "src.services.bidding.bidding_strategy_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -433,21 +433,116 @@ async def test_error_handling(
     )
 
 
+@pytest.mark.asyncio
+async def test_create_maximize_conversion_value_strategy(
+    bidding_strategy_service: BiddingStrategyService,
+    mock_sdk_client: Any,
+    mock_ctx: Context,
+) -> None:
+    """Test creating a Maximize Conversion Value bidding strategy."""
+    customer_id = "1234567890"
+    name = "Test Max Conv Value Strategy"
+    target_roas = 5.0
+    status = "ENABLED"
+
+    mock_response = Mock(spec=MutateBiddingStrategiesResponse)
+    mock_response.results = [Mock()]
+    mock_response.results[
+        0
+    ].resource_name = f"customers/{customer_id}/biddingStrategies/888"
+
+    mock_client = bidding_strategy_service.client  # type: ignore
+    mock_client.mutate_bidding_strategies.return_value = mock_response  # type: ignore
+
+    expected_result = {
+        "results": [{"resource_name": f"customers/{customer_id}/biddingStrategies/888"}]
+    }
+
+    with patch(
+        "src.services.bidding.bidding_strategy_service.serialize_proto_message",
+        return_value=expected_result,
+    ):
+        result = (
+            await bidding_strategy_service.create_maximize_conversion_value_strategy(
+                ctx=mock_ctx,
+                customer_id=customer_id,
+                name=name,
+                target_roas=target_roas,
+                status=status,
+            )
+        )
+
+    assert result == expected_result
+
+    mock_client.mutate_bidding_strategies.assert_called_once()  # type: ignore
+    call_args = mock_client.mutate_bidding_strategies.call_args  # type: ignore
+    request = call_args[1]["request"]
+    operation = request.operations[0]
+    assert operation.create.name == name
+    assert (
+        operation.create.status
+        == BiddingStrategyStatusEnum.BiddingStrategyStatus.ENABLED
+    )
+    assert (
+        operation.create.type_
+        == BiddingStrategyTypeEnum.BiddingStrategyType.MAXIMIZE_CONVERSION_VALUE
+    )
+    assert operation.create.maximize_conversion_value.target_roas == target_roas
+
+    mock_ctx.log.assert_called_once_with(  # type: ignore
+        level="info",
+        message=f"Created Maximize Conversion Value strategy '{name}'",
+    )
+
+
+@pytest.mark.asyncio
+async def test_create_maximize_conversion_value_strategy_no_target(
+    bidding_strategy_service: BiddingStrategyService,
+    mock_sdk_client: Any,
+    mock_ctx: Context,
+) -> None:
+    """Test creating a Maximize Conversion Value strategy without target ROAS."""
+    customer_id = "1234567890"
+
+    mock_response = Mock(spec=MutateBiddingStrategiesResponse)
+    mock_response.results = [Mock()]
+    mock_response.results[
+        0
+    ].resource_name = f"customers/{customer_id}/biddingStrategies/889"
+
+    mock_client = bidding_strategy_service.client  # type: ignore
+    mock_client.mutate_bidding_strategies.return_value = mock_response  # type: ignore
+
+    expected = {
+        "results": [{"resource_name": f"customers/{customer_id}/biddingStrategies/889"}]
+    }
+
+    with patch(
+        "src.services.bidding.bidding_strategy_service.serialize_proto_message",
+        return_value=expected,
+    ):
+        result = (
+            await bidding_strategy_service.create_maximize_conversion_value_strategy(
+                ctx=mock_ctx,
+                customer_id=customer_id,
+                name="MaxConvValue Unconstrained",
+            )
+        )
+
+    assert result == expected
+    request = mock_client.mutate_bidding_strategies.call_args[1]["request"]  # type: ignore
+    op = request.operations[0]
+    assert op.create.maximize_conversion_value is not None
+
+
 def test_register_bidding_strategy_tools() -> None:
     """Test tool registration."""
-    # Arrange
     mock_mcp = Mock()
-
-    # Act
     service = register_bidding_strategy_tools(mock_mcp)
 
-    # Assert
     assert isinstance(service, BiddingStrategyService)
+    assert mock_mcp.tool.call_count == 5  # type: ignore
 
-    # Verify that tools were registered
-    assert mock_mcp.tool.call_count == 4  # 4 tools registered  # type: ignore
-
-    # Verify tool functions were passed
     registered_tools = [call[0][0] for call in mock_mcp.tool.call_args_list]  # type: ignore
     tool_names = [tool.__name__ for tool in registered_tools]
 
@@ -455,6 +550,7 @@ def test_register_bidding_strategy_tools() -> None:
         "create_target_cpa_strategy",
         "create_target_roas_strategy",
         "create_maximize_conversions_strategy",
+        "create_maximize_conversion_value_strategy",
         "create_target_impression_share_strategy",
     ]
 

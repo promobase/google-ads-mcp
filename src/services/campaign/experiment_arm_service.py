@@ -18,6 +18,7 @@ from google.ads.googleads.v20.services.types.experiment_arm_service import (
 )
 
 from src.sdk_client import get_sdk_client
+from src.utils import format_customer_id
 
 
 class ExperimentArmService:
@@ -32,7 +33,9 @@ class ExperimentArmService:
         """Get the experiment arm service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("ExperimentArmService")
+            self._client = sdk_client.client.get_service(
+                "ExperimentArmService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -54,6 +57,7 @@ class ExperimentArmService:
         Returns:
             MutateExperimentArmsResponse: The response containing results
         """
+        customer_id = format_customer_id(customer_id)
         request = MutateExperimentArmsRequest(
             customer_id=customer_id,
             operations=operations,

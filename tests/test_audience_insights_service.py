@@ -33,7 +33,7 @@ def audience_insights_service(mock_sdk_client: Any) -> AudienceInsightsService:
     mock_sdk_client.client.get_service.return_value = mock_insights_client  # type: ignore
 
     with patch(
-        "src.sdk_services.audiences.audience_insights_service.get_sdk_client",
+        "src.services.audiences.audience_insights_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = AudienceInsightsService()
@@ -72,7 +72,7 @@ async def test_generate_insights_finder_report(
     expected_result = {"saved_report_url": "https://example.com/report/123456"}
 
     with patch(
-        "src.sdk_services.audiences.audience_insights_service.serialize_proto_message",
+        "src.services.audiences.audience_insights_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -159,7 +159,7 @@ async def test_generate_insights_finder_report_minimal(
     expected_result = {"saved_report_url": "https://example.com/report/minimal"}
 
     with patch(
-        "src.sdk_services.audiences.audience_insights_service.serialize_proto_message",
+        "src.services.audiences.audience_insights_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -239,7 +239,7 @@ async def test_generate_audience_composition_insights(
     }
 
     with patch(
-        "src.sdk_services.audiences.audience_insights_service.serialize_proto_message",
+        "src.services.audiences.audience_insights_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -314,7 +314,7 @@ async def test_generate_audience_composition_insights_with_attribute_groups(
     expected_result = {"sections": []}
 
     with patch(
-        "src.sdk_services.audiences.audience_insights_service.serialize_proto_message",
+        "src.services.audiences.audience_insights_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -394,7 +394,7 @@ async def test_generate_suggested_targeting_insights(
     }
 
     with patch(
-        "src.sdk_services.audiences.audience_insights_service.serialize_proto_message",
+        "src.services.audiences.audience_insights_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -457,7 +457,7 @@ async def test_generate_suggested_targeting_insights_minimal(
     expected_result = {"suggestions": []}
 
     with patch(
-        "src.sdk_services.audiences.audience_insights_service.serialize_proto_message",
+        "src.services.audiences.audience_insights_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

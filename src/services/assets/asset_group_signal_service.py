@@ -22,6 +22,7 @@ from google.ads.googleads.v20.enums.types.response_content_type import (
 from google.ads.googleads.v20.common.types.criteria import AudienceInfo, SearchThemeInfo
 from google.ads.googleads.v20.common.types.policy import PolicyViolationKey
 
+from src.utils import resolve_enum
 from src.sdk_client import get_sdk_client
 
 # Exception handling
@@ -43,7 +44,9 @@ class AssetGroupSignalService:
         """Get the asset group signal service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("AssetGroupSignalService")
+            self._client = sdk_client.client.get_service(
+                "AssetGroupSignalService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -218,8 +221,10 @@ def register_asset_group_signal_tools(mcp: FastMCP[Any]) -> None:
         service = AssetGroupSignalService()
 
         # Convert response content type string to enum
-        response_content_type_enum = getattr(
-            ResponseContentTypeEnum.ResponseContentType, response_content_type
+        response_content_type_enum = resolve_enum(
+            ResponseContentTypeEnum.ResponseContentType,
+            response_content_type,
+            "response_content_type",
         )
 
         ops = []

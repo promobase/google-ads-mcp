@@ -29,7 +29,7 @@ def remarketing_action_service(mock_sdk_client: Any) -> RemarketingActionService
     mock_sdk_client.client.get_service.return_value = mock_remarketing_client  # type: ignore
 
     with patch(
-        "src.sdk_services.audiences.remarketing_action_service.get_sdk_client",
+        "src.services.audiences.remarketing_action_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = RemarketingActionService()
@@ -65,7 +65,7 @@ async def test_create_remarketing_action(
     }
 
     with patch(
-        "src.sdk_services.audiences.remarketing_action_service.serialize_proto_message",
+        "src.services.audiences.remarketing_action_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -129,7 +129,7 @@ async def test_update_remarketing_action(
     }
 
     with patch(
-        "src.sdk_services.audiences.remarketing_action_service.serialize_proto_message",
+        "src.services.audiences.remarketing_action_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -212,11 +212,11 @@ async def test_list_remarketing_actions(
 
     with (
         patch(
-            "src.sdk_services.audiences.remarketing_action_service.get_sdk_client",
+            "src.services.audiences.remarketing_action_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.audiences.remarketing_action_service.serialize_proto_message",
+            "src.services.audiences.remarketing_action_service.serialize_proto_message",
             side_effect=mock_serialize,
         ),
     ):
@@ -322,11 +322,11 @@ async def test_get_remarketing_action_tags(
 
     with (
         patch(
-            "src.sdk_services.audiences.remarketing_action_service.get_sdk_client",
+            "src.services.audiences.remarketing_action_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.audiences.remarketing_action_service.serialize_proto_message",
+            "src.services.audiences.remarketing_action_service.serialize_proto_message",
             return_value=expected_result,
         ),
     ):
@@ -383,7 +383,7 @@ async def test_get_remarketing_action_tags_not_found(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.audiences.remarketing_action_service.get_sdk_client",
+        "src.services.audiences.remarketing_action_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act & Assert

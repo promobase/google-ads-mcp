@@ -44,7 +44,7 @@ def conversion_service(mock_sdk_client: Any) -> ConversionService:
     mock_sdk_client.client.get_service.return_value = mock_conversion_action_client  # type: ignore
 
     with patch(
-        "src.sdk_services.conversions.conversion_service.get_sdk_client",
+        "src.services.conversions.conversion_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = ConversionService()
@@ -92,7 +92,7 @@ async def test_create_conversion_action(
     }
 
     with patch(
-        "src.sdk_services.conversions.conversion_service.serialize_proto_message",
+        "src.services.conversions.conversion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -185,7 +185,7 @@ async def test_create_conversion_action_with_defaults(
     }
 
     with patch(
-        "src.sdk_services.conversions.conversion_service.serialize_proto_message",
+        "src.services.conversions.conversion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -248,7 +248,7 @@ async def test_update_conversion_action(
     }
 
     with patch(
-        "src.sdk_services.conversions.conversion_service.serialize_proto_message",
+        "src.services.conversions.conversion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -341,7 +341,7 @@ async def test_update_conversion_action_partial(
     }
 
     with patch(
-        "src.sdk_services.conversions.conversion_service.serialize_proto_message",
+        "src.services.conversions.conversion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -404,7 +404,7 @@ async def test_update_conversion_action_value_settings_only(
     }
 
     with patch(
-        "src.sdk_services.conversions.conversion_service.serialize_proto_message",
+        "src.services.conversions.conversion_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

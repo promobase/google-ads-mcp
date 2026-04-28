@@ -31,7 +31,13 @@ from google.ads.googleads.v20.services.types.custom_audience_service import (
 from google.protobuf import field_mask_pb2
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -48,7 +54,9 @@ class CustomAudienceService:
         """Get the custom audience service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("CustomAudienceService")
+            self._client = sdk_client.client.get_service(
+                "CustomAudienceService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -88,11 +96,11 @@ class CustomAudienceService:
             custom_audience = CustomAudience()
             custom_audience.name = name
             custom_audience.description = description
-            custom_audience.type_ = getattr(
-                CustomAudienceTypeEnum.CustomAudienceType, type_
+            custom_audience.type_ = resolve_enum(
+                CustomAudienceTypeEnum.CustomAudienceType, type_, "type_"
             )
-            custom_audience.status = getattr(
-                CustomAudienceStatusEnum.CustomAudienceStatus, status
+            custom_audience.status = resolve_enum(
+                CustomAudienceStatusEnum.CustomAudienceStatus, status, "status"
             )
 
             # Add members
@@ -149,7 +157,7 @@ class CustomAudienceService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -203,8 +211,8 @@ class CustomAudienceService:
                 update_mask_fields.append("description")
 
             if status is not None:
-                custom_audience.status = getattr(
-                    CustomAudienceStatusEnum.CustomAudienceStatus, status
+                custom_audience.status = resolve_enum(
+                    CustomAudienceStatusEnum.CustomAudienceStatus, status, "status"
                 )
                 update_mask_fields.append("status")
 
@@ -266,7 +274,7 @@ class CustomAudienceService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:

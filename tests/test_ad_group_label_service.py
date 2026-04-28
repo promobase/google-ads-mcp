@@ -30,7 +30,7 @@ def ad_group_label_service(mock_sdk_client: Any) -> AdGroupLabelService:
     mock_sdk_client.client.get_service.return_value = mock_ad_group_label_client  # type: ignore
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_label_service.get_sdk_client",
+        "src.services.ad_group.ad_group_label_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = AdGroupLabelService()
@@ -73,7 +73,7 @@ async def test_apply_label_to_ad_group(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_label_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_label_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -211,7 +211,7 @@ async def test_remove_label_from_ad_group(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_label_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_label_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -325,7 +325,7 @@ async def test_list_ad_group_labels(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_label_service.get_sdk_client",
+        "src.services.ad_group.ad_group_label_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -388,7 +388,7 @@ async def test_list_ad_group_labels_with_filters(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_label_service.get_sdk_client",
+        "src.services.ad_group.ad_group_label_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act

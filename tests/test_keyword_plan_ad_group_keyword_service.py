@@ -20,22 +20,20 @@ class TestKeywordPlanAdGroupKeywordService:
     """Test cases for KeywordPlanAdGroupKeywordService"""
 
     @pytest.fixture
-    def mock_client(self):
-        """Create a mock Google Ads client"""
-        client = Mock()
-        service = Mock()
-        client.get_service.return_value = service  # type: ignore
-        return client
+    def mock_service_client(self) -> Any:
+        return Mock()
 
     @pytest.fixture
-    def keyword_plan_ad_group_keyword_service(self, mock_client: Any) -> Any:
+    def keyword_plan_ad_group_keyword_service(self, mock_service_client: Any) -> Any:
         """Create KeywordPlanAdGroupKeywordService instance with mock client"""
         service = KeywordPlanAdGroupKeywordService()
-        service._client = mock_client  # type: ignore # Need to set private attribute for testing
+        service._client = mock_service_client  # type: ignore[reportPrivateUsage]
         return service
 
     def test_mutate_keyword_plan_ad_group_keywords(
-        self, keyword_plan_ad_group_keyword_service: Any, mock_client: Any
+        self,
+        keyword_plan_ad_group_keyword_service: Any,
+        mock_service_client: Any,
     ):
         """Test mutating keyword plan ad group keywords"""
         # Setup
@@ -49,7 +47,9 @@ class TestKeywordPlanAdGroupKeywordService:
                 )
             ]
         )
-        mock_client.get_service.return_value.mutate_keyword_plan_ad_group_keywords.return_value = mock_response  # type: ignore
+        mock_service_client.mutate_keyword_plan_ad_group_keywords.return_value = (
+            mock_response  # type: ignore
+        )
 
         # Execute
         response = (
@@ -63,10 +63,9 @@ class TestKeywordPlanAdGroupKeywordService:
 
         # Verify
         assert response == mock_response
-        mock_client.get_service.assert_called_with("KeywordPlanAdGroupKeywordService")  # type: ignore
 
         # Verify request
-        call_args = mock_client.get_service.return_value.mutate_keyword_plan_ad_group_keywords.call_args  # type: ignore
+        call_args = mock_service_client.mutate_keyword_plan_ad_group_keywords.call_args  # type: ignore
         request = call_args.kwargs["request"]
         assert request.customer_id == customer_id
         assert request.operations == operations

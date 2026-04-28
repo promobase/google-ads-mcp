@@ -30,7 +30,7 @@ def ad_group_ad_service(mock_sdk_client: Any) -> AdGroupAdService:
     mock_sdk_client.client.get_service.return_value = mock_ad_group_ad_client  # type: ignore
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_ad_service.get_sdk_client",
+        "src.services.ad_group.ad_group_ad_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = AdGroupAdService()
@@ -71,7 +71,7 @@ async def test_create_ad_group_ad(
     }
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_ad_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_ad_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -128,7 +128,7 @@ async def test_update_ad_group_ad_status(
     expected_result = {"results": [{"resource_name": ad_group_ad_resource_name}]}
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_ad_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_ad_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
@@ -242,11 +242,11 @@ async def test_list_ad_group_ads(
 
     with (
         patch(
-            "src.sdk_services.ad_group.ad_group_ad_service.get_sdk_client",
+            "src.services.ad_group.ad_group_ad_service.get_sdk_client",
             return_value=mock_sdk_client,
         ),
         patch(
-            "src.sdk_services.ad_group.ad_group_ad_service.serialize_proto_message",
+            "src.services.ad_group.ad_group_ad_service.serialize_proto_message",
             side_effect=serialize_side_effect,
         ),
     ):
@@ -306,7 +306,7 @@ async def test_list_ad_group_ads_no_filter(
     mock_sdk_client.client.get_service.side_effect = get_service_side_effect  # type: ignore
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_ad_service.get_sdk_client",
+        "src.services.ad_group.ad_group_ad_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         # Act
@@ -353,7 +353,7 @@ async def test_remove_ad_group_ad(
     expected_result = {"results": [{"resource_name": ad_group_ad_resource_name}]}
 
     with patch(
-        "src.sdk_services.ad_group.ad_group_ad_service.serialize_proto_message",
+        "src.services.ad_group.ad_group_ad_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act

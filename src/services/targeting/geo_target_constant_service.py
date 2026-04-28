@@ -13,7 +13,7 @@ from google.ads.googleads.v20.services.types.geo_target_constant_service import 
 from google.ads.googleads.errors import GoogleAdsException
 
 from src.sdk_client import get_sdk_client
-from src.utils import get_logger
+from src.utils import format_ads_error, get_logger
 
 logger = get_logger(__name__)
 
@@ -30,7 +30,9 @@ class GeoTargetConstantService:
         """Get the geo target constant service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("GeoTargetConstantService")
+            self._client = sdk_client.client.get_service(
+                "GeoTargetConstantService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -99,7 +101,7 @@ class GeoTargetConstantService:
             return suggestions
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -130,12 +132,8 @@ class GeoTargetConstantService:
             request = SuggestGeoTargetConstantsRequest()
             request.locale = locale
 
-            # Set address
-            address_obj = request.GeoTargets()
-            address_geo_target = address_obj.GeoTarget()
-            address_geo_target.address = address_text
-            address_obj.geo_targets.append(address_geo_target)
-            request.geo_targets = address_obj
+            # Address text uses the location_names query (mutually exclusive with geo_targets).
+            request.location_names.names.append(address_text)
 
             if country_code:
                 request.country_code = country_code
@@ -174,7 +172,7 @@ class GeoTargetConstantService:
             return suggestions
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:

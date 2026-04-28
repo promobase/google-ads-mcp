@@ -30,7 +30,13 @@ from google.ads.googleads.v20.services.services.google_ads_service import (
 from google.protobuf import field_mask_pb2
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -93,8 +99,8 @@ class BiddingSeasonalityAdjustmentService:
             # Create bidding seasonality adjustment
             adjustment = BiddingSeasonalityAdjustment()
             adjustment.name = name
-            adjustment.scope = getattr(
-                SeasonalityEventScopeEnum.SeasonalityEventScope, scope
+            adjustment.scope = resolve_enum(
+                SeasonalityEventScopeEnum.SeasonalityEventScope, scope, "scope"
             )
             adjustment.start_date_time = start_date_time
             adjustment.end_date_time = end_date_time
@@ -120,7 +126,9 @@ class BiddingSeasonalityAdjustmentService:
             # Set devices
             if devices:
                 for device in devices:
-                    adjustment.devices.append(getattr(DeviceEnum.Device, device))
+                    adjustment.devices.append(
+                        resolve_enum(DeviceEnum.Device, device, "device")
+                    )
 
             # Create operation
             operation = BiddingSeasonalityAdjustmentOperation()
@@ -145,7 +153,7 @@ class BiddingSeasonalityAdjustmentService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -235,7 +243,7 @@ class BiddingSeasonalityAdjustmentService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -379,7 +387,7 @@ class BiddingSeasonalityAdjustmentService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:

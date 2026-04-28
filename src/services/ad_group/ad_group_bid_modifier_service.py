@@ -31,7 +31,13 @@ from google.ads.googleads.v20.services.types.ad_group_bid_modifier_service impor
 from google.protobuf import field_mask_pb2
 
 from src.sdk_client import get_sdk_client
-from src.utils import format_customer_id, get_logger, serialize_proto_message
+from src.utils import (
+    resolve_enum,
+    format_ads_error,
+    format_customer_id,
+    get_logger,
+    serialize_proto_message,
+)
 
 logger = get_logger(__name__)
 
@@ -48,7 +54,9 @@ class AdGroupBidModifierService:
         """Get the ad group bid modifier service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("AdGroupBidModifierService")
+            self._client = sdk_client.client.get_service(
+                "AdGroupBidModifierService", version="v20"
+            )
         assert self._client is not None
         return self._client
 
@@ -83,7 +91,9 @@ class AdGroupBidModifierService:
 
             # Set device criterion
             device_info = DeviceInfo()
-            device_info.type_ = getattr(DeviceEnum.Device, device_type)
+            device_info.type_ = resolve_enum(
+                DeviceEnum.Device, device_type, "device_type"
+            )
             bid_modifier_obj.device = device_info
 
             # Create operation
@@ -108,7 +118,7 @@ class AdGroupBidModifierService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -147,8 +157,8 @@ class AdGroupBidModifierService:
 
             # Set hotel check-in day criterion
             hotel_check_in_day = HotelCheckInDayInfo()
-            hotel_check_in_day.day_of_week = getattr(
-                DayOfWeekEnum.DayOfWeek, day_of_week
+            hotel_check_in_day.day_of_week = resolve_enum(
+                DayOfWeekEnum.DayOfWeek, day_of_week, "day_of_week"
             )
             bid_modifier_obj.hotel_check_in_day = hotel_check_in_day
 
@@ -174,7 +184,7 @@ class AdGroupBidModifierService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -213,8 +223,10 @@ class AdGroupBidModifierService:
 
             # Set hotel date selection type criterion
             hotel_date_selection = HotelDateSelectionTypeInfo()
-            hotel_date_selection.type_ = getattr(
-                HotelDateSelectionTypeEnum.HotelDateSelectionType, date_selection_type
+            hotel_date_selection.type_ = resolve_enum(
+                HotelDateSelectionTypeEnum.HotelDateSelectionType,
+                date_selection_type,
+                "date_selection_type",
             )
             bid_modifier_obj.hotel_date_selection_type = hotel_date_selection
 
@@ -240,7 +252,7 @@ class AdGroupBidModifierService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -297,7 +309,7 @@ class AdGroupBidModifierService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:
@@ -474,7 +486,7 @@ class AdGroupBidModifierService:
             return serialize_proto_message(response)
 
         except GoogleAdsException as e:
-            error_msg = f"Google Ads API error: {e.failure}"
+            error_msg = format_ads_error(e)
             await ctx.log(level="error", message=error_msg)
             raise Exception(error_msg) from e
         except Exception as e:

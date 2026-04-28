@@ -27,7 +27,7 @@ def reach_plan_service(mock_sdk_client: Any) -> ReachPlanService:
     mock_sdk_client.client.get_service.return_value = mock_reach_plan_client  # type: ignore
 
     with patch(
-        "src.sdk_services.planning.reach_plan_service.get_sdk_client",
+        "src.services.planning.reach_plan_service.get_sdk_client",
         return_value=mock_sdk_client,
     ):
         service = ReachPlanService()
@@ -92,7 +92,7 @@ async def test_list_plannable_locations(
     }
 
     with patch(
-        "src.sdk_services.planning.reach_plan_service.serialize_proto_message",
+        "src.services.planning.reach_plan_service.serialize_proto_message",
         return_value=expected_result,
     ):
         # Act
