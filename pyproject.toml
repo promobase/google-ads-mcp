@@ -15,7 +15,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "ruff>=0.15.12",
+    "ruff>=0.15.13",
     "types-protobuf>=6.32.1.20260221",
     "pytest>=8.4.2",
     "pytest-asyncio",
