@@ -7,7 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "aiohttp>=3.13.5",
     "fastmcp>=2.14.7",
-    "google-ads>=29.0.0",
+    "google-ads>=31.0.0",
     "google-auth>=2.49.2",
     "pyyaml>=6.0.3",
     "requests>=2.33.1",

@@ -5,15 +5,15 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.audience_insights_dimension import (
+from google.ads.googleads.v24.enums.types.audience_insights_dimension import (
     AudienceInsightsDimensionEnum,
 )
-from google.ads.googleads.v20.enums.types.age_range_type import AgeRangeTypeEnum
-from google.ads.googleads.v20.enums.types.gender_type import GenderTypeEnum
-from google.ads.googleads.v20.services.services.audience_insights_service import (
+from google.ads.googleads.v24.enums.types.age_range_type import AgeRangeTypeEnum
+from google.ads.googleads.v24.enums.types.gender_type import GenderTypeEnum
+from google.ads.googleads.v24.services.services.audience_insights_service import (
     AudienceInsightsServiceClient,
 )
-from google.ads.googleads.v20.services.types.audience_insights_service import (
+from google.ads.googleads.v24.services.types.audience_insights_service import (
     GenerateInsightsFinderReportResponse,
     GenerateAudienceCompositionInsightsResponse,
     GenerateSuggestedTargetingInsightsResponse,
@@ -99,9 +99,9 @@ async def test_generate_insights_finder_report(
     assert request.customer_id == customer_id
 
     # Verify baseline audience
-    assert len(request.baseline_audience.country_location) == 1
+    assert len(request.baseline_audience.country_locations) == 1
     assert (
-        request.baseline_audience.country_location[0].geo_target_constant
+        request.baseline_audience.country_locations[0].geo_target_constant
         == "geoTargetConstants/2840"
     )
     assert len(request.baseline_audience.age_ranges) == 2
@@ -115,13 +115,15 @@ async def test_generate_insights_finder_report(
     # Verify specific audience
     specific_audience = getattr(request, "specific_audience", None)
     assert specific_audience is not None
-    assert len(specific_audience.country_location) == 2
+    assert len(specific_audience.country_locations) == 2
     assert len(specific_audience.age_ranges) == 2
     # BasicInsightsAudience only has a single gender field
     assert specific_audience.gender.type_ == GenderTypeEnum.GenderType.FEMALE
-    assert len(specific_audience.user_interests) == 2
+    assert len(specific_audience.topic_audience_combinations) == 1
+    attr_group = specific_audience.topic_audience_combinations[0]
+    assert len(attr_group.attributes) == 2
     assert (
-        specific_audience.user_interests[0].user_interest_category
+        attr_group.attributes[0].user_interest.user_interest_category
         == "customers/1234567890/userInterests/12345"
     )
 
@@ -180,18 +182,18 @@ async def test_generate_insights_finder_report_minimal(
     request = call_args[1]["request"]
 
     # Verify minimal setup - only countries
-    assert len(request.baseline_audience.country_location) == 1
+    assert len(request.baseline_audience.country_locations) == 1
     assert len(request.baseline_audience.age_ranges) == 0
     # BasicInsightsAudience gender field should be unset
     # For proto-plus, checking if the field is set is complex, so we skip this check
-
+ 
     specific_audience = getattr(request, "specific_audience", None)
     assert specific_audience is not None
-    assert len(specific_audience.country_location) == 1
+    assert len(specific_audience.country_locations) == 1
     assert len(specific_audience.age_ranges) == 0
     # BasicInsightsAudience gender field should be unset
     # For proto-plus, checking if the field is set is complex, so we skip this check
-    assert len(specific_audience.user_interests) == 0
+    assert len(specific_audience.topic_audience_combinations) == 0
 
     # Note: In v20, GenerateInsightsFinderReportRequest doesn't have dimensions field
 

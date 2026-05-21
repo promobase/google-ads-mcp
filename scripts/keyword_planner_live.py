@@ -47,15 +47,15 @@ def main() -> None:
     print()
 
     # --- Build request ---
-    kw_service = client.get_service("KeywordPlanIdeaService", version="v20")
+    kw_service = client.get_service("KeywordPlanIdeaService", version="v24")
 
-    request = client.get_type("GenerateKeywordIdeasRequest", version="v20")
+    request = client.get_type("GenerateKeywordIdeasRequest", version="v24")
     request.customer_id = customer_id
     request.language = "languageConstants/1000"  # English
     request.geo_target_constants.append("geoTargetConstants/2840")  # US
     request.page_size = 5
 
-    keyword_seed = client.get_type("KeywordSeed", version="v20")
+    keyword_seed = client.get_type("KeywordSeed", version="v24")
     keyword_seed.keywords.extend(args.keywords)
     request.keyword_seed = keyword_seed
 

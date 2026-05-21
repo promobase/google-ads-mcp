@@ -3,32 +3,34 @@
 from typing import Any, Dict, List, Optional, Callable, Awaitable
 
 from fastmcp import Context, FastMCP
-from google.ads.googleads.v20.services.services.audience_insights_service import (
+from google.ads.googleads.v24.services.services.audience_insights_service import (
     AudienceInsightsServiceClient,
 )
-from google.ads.googleads.v20.services.types.audience_insights_service import (
+from google.ads.googleads.v24.services.types.audience_insights_service import (
     GenerateInsightsFinderReportRequest,
     GenerateInsightsFinderReportResponse,
     GenerateAudienceCompositionInsightsRequest,
     GenerateAudienceCompositionInsightsResponse,
     GenerateSuggestedTargetingInsightsRequest,
     GenerateSuggestedTargetingInsightsResponse,
-    BasicInsightsAudience,
     InsightsAudience,
-    InsightsAudienceAttributeGroup,
     InsightsAudienceDefinition,
 )
-from google.ads.googleads.v20.common.types.criteria import (
+from google.ads.googleads.v24.common.types.audience_insights_attribute import (
+    InsightsAudienceAttributeGroup,
+    AudienceInsightsAttribute,
+)
+from google.ads.googleads.v24.common.types.criteria import (
     AgeRangeInfo,
     GenderInfo,
     LocationInfo,
     UserInterestInfo,
 )
-from google.ads.googleads.v20.enums.types.audience_insights_dimension import (
+from google.ads.googleads.v24.enums.types.audience_insights_dimension import (
     AudienceInsightsDimensionEnum,
 )
-from google.ads.googleads.v20.enums.types.age_range_type import AgeRangeTypeEnum
-from google.ads.googleads.v20.enums.types.gender_type import GenderTypeEnum
+from google.ads.googleads.v24.enums.types.age_range_type import AgeRangeTypeEnum
+from google.ads.googleads.v24.enums.types.gender_type import GenderTypeEnum
 from google.ads.googleads.errors import GoogleAdsException
 
 from src.sdk_client import get_sdk_client
@@ -56,7 +58,7 @@ class AudienceInsightsService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "AudienceInsightsService", version="v20"
+                "AudienceInsightsService", version="v24"
             )
         assert self._client is not None
         return self._client
@@ -95,13 +97,13 @@ class AudienceInsightsService:
             customer_id = format_customer_id(customer_id)
 
             # Create baseline audience
-            baseline_audience = BasicInsightsAudience()
+            baseline_audience = InsightsAudience()
 
             # Add countries
             for country_id in baseline_audience_countries:
                 location = LocationInfo()
                 location.geo_target_constant = f"geoTargetConstants/{country_id}"
-                baseline_audience.country_location.append(location)
+                baseline_audience.country_locations.append(location)
 
             # Add age ranges if provided
             if baseline_audience_ages:
@@ -112,7 +114,7 @@ class AudienceInsightsService:
                     )
                     baseline_audience.age_ranges.append(age_info)
 
-            # Add gender if provided (BasicInsightsAudience only supports one gender)
+            # Add gender if provided
             if baseline_audience_genders and len(baseline_audience_genders) > 0:
                 gender_info = GenderInfo()
                 gender_info.type_ = getattr(
@@ -120,14 +122,14 @@ class AudienceInsightsService:
                 )
                 baseline_audience.gender = gender_info
 
-            # Create specific audience (also BasicInsightsAudience)
-            specific_audience = BasicInsightsAudience()
+            # Create specific audience
+            specific_audience = InsightsAudience()
 
             # Add countries
             for country_id in specific_audience_countries:
                 location = LocationInfo()
                 location.geo_target_constant = f"geoTargetConstants/{country_id}"
-                specific_audience.country_location.append(location)
+                specific_audience.country_locations.append(location)
 
             # Add age ranges if provided
             if specific_audience_ages:
@@ -138,7 +140,7 @@ class AudienceInsightsService:
                     )
                     specific_audience.age_ranges.append(age_info)
 
-            # Add gender if provided (BasicInsightsAudience only supports one gender)
+            # Add gender if provided
             if specific_audience_genders and len(specific_audience_genders) > 0:
                 gender_info = GenderInfo()
                 gender_info.type_ = getattr(
@@ -148,12 +150,16 @@ class AudienceInsightsService:
 
             # Add user interests if provided
             if specific_audience_user_interests:
+                attr_group = InsightsAudienceAttributeGroup()
                 for interest_id in specific_audience_user_interests:
                     interest_info = UserInterestInfo()
                     interest_info.user_interest_category = (
                         f"customers/{customer_id}/userInterests/{interest_id}"
                     )
-                    specific_audience.user_interests.append(interest_info)
+                    attribute = AudienceInsightsAttribute()
+                    attribute.user_interest = interest_info
+                    attr_group.attributes.append(attribute)
+                specific_audience.topic_audience_combinations.append(attr_group)
 
             # Create request
             request = GenerateInsightsFinderReportRequest()

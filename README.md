@@ -22,7 +22,7 @@ Built by [**Promobase**](https://openpromo.app) for [**OpenPromo**](https://open
 
 ## What
 
-`google-ads-mcp` wraps the official Google Ads Python SDK in a Model Context Protocol server. It exposes Google Ads API v20 services as typed MCP tools, so LLMs and agent runtimes can safely inspect accounts, create campaigns, manage budgets, upload conversions, work with assets, and run GAQL search.
+`google-ads-mcp` wraps the official Google Ads Python SDK in a Model Context Protocol server. It exposes Google Ads API v24 services as typed MCP tools, so LLMs and agent runtimes can safely inspect accounts, create campaigns, manage budgets, upload conversions, work with assets, and run GAQL search.
 
 This repo is the Google Ads execution layer behind OpenPromo's agent workflows. For application-facing, multi-platform ad publishing and inbox automation, use the companion SDK:
 
@@ -33,7 +33,7 @@ This repo is the Google Ads execution layer behind OpenPromo's agent workflows. 
 Google Ads has a large, typed API surface, but it is hard for agents to use directly. This server keeps the reliability of the official Python SDK while giving agents a structured tool interface:
 
 - **Official SDK foundation** - built on `google-ads`, including its auth, retries, paging, and protobuf types.
-- **Typed service wrappers** - implementations use Google Ads API v20 generated service, resource, enum, and operation types.
+- **Typed service wrappers** - implementations use Google Ads API v24 generated service, resource, enum, and operation types.
 - **Agent-ready MCP tools** - FastMCP servers grouped by workflow: core, assets, targeting, bidding, planning, reporting, conversions, account management, and more.
 - **GAQL access** - search and metadata tools for reporting, discovery, and account inspection.
 - **Production-oriented scope** - designed for OpenPromo's ads loop: generate creative, build campaigns, publish, measure, and iterate.
@@ -148,7 +148,7 @@ uv run pytest
 
 When adding a service:
 
-1. Check the Google Ads API v20 generated service types.
+1. Check the Google Ads API v24 generated service types.
 2. Implement the service wrapper with generated protobuf request, operation, resource, and enum types.
 3. Register lightweight MCP tools for the service.
 4. Add focused tests.

@@ -6,10 +6,10 @@ from fastmcp import Context, FastMCP
 
 # Note: Value rule types may not be available in v20 - using simplified implementation
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.services.services.conversion_value_rule_service import (
+from google.ads.googleads.v24.services.services.conversion_value_rule_service import (
     ConversionValueRuleServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v24.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
 
@@ -32,7 +32,7 @@ class ConversionValueRuleService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "ConversionValueRuleService", version="v20"
+                "ConversionValueRuleService", version="v24"
             )
         assert self._client is not None
         return self._client
@@ -68,7 +68,7 @@ class ConversionValueRuleService:
                 "customer_id": customer_id,
                 "conversion_value_rule_set_id": conversion_value_rule_set_id,
                 "status": status,
-                "result": "Request processed - conversion value rule creation requires additional v20 type support",
+                "result": "Request processed - conversion value rule creation requires additional v24 type support",
                 "note": "This is a simplified implementation due to v20 API limitations",
             }
 
@@ -110,7 +110,7 @@ class ConversionValueRuleService:
             return {
                 "resource_name": rule_resource_name,
                 "status": status,
-                "result": "Request processed - conversion value rule updates require additional v20 type support",
+                "result": "Request processed - conversion value rule updates require additional v24 type support",
                 "note": "This is a simplified implementation due to v20 API limitations",
             }
 

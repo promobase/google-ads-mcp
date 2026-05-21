@@ -3,7 +3,7 @@
 from typing import Any, Dict, List, Optional, Callable, Awaitable
 
 from fastmcp import Context, FastMCP
-from google.ads.googleads.v20.services.services.data_link_service import (
+from google.ads.googleads.v24.services.services.data_link_service import (
     DataLinkServiceClient,
 )
 
@@ -30,7 +30,7 @@ class DataLinkService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "DataLinkService", version="v20"
+                "DataLinkService", version="v24"
             )
         assert self._client is not None
         return self._client
@@ -69,7 +69,7 @@ class DataLinkService:
                 "data_link_name": data_link_name,
                 "type": data_link_type,
                 "external_id": external_id,
-                "status": "Request processed - full data link creation requires additional v20 type support",
+                "status": "Request processed - full data link creation requires additional v24 type support",
                 "note": "This is a simplified implementation due to v20 API limitations",
             }
 
@@ -108,7 +108,7 @@ class DataLinkService:
             return [
                 {
                     "customer_id": customer_id,
-                    "status": "Request processed - data link listing requires additional v20 type support",
+                    "status": "Request processed - data link listing requires additional v24 type support",
                     "note": "This is a simplified implementation due to v20 API limitations",
                 }
             ]

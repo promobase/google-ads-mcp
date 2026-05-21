@@ -1,4 +1,4 @@
-"""Customer Asset Service for Google Ads API v20.
+"""Customer Asset Service for Google Ads API v24.
 
 This service manages customer-level asset associations, allowing assets to be linked
 to customers for use across campaigns.
@@ -7,22 +7,22 @@ to customers for use across campaigns.
 from typing import Any, List, Optional
 
 from fastmcp import FastMCP
-from google.ads.googleads.v20.services.services.customer_asset_service import (
+from google.ads.googleads.v24.services.services.customer_asset_service import (
     CustomerAssetServiceClient,
 )
-from google.ads.googleads.v20.services.types.customer_asset_service import (
+from google.ads.googleads.v24.services.types.customer_asset_service import (
     CustomerAssetOperation,
     MutateCustomerAssetsRequest,
     MutateCustomerAssetsResponse,
 )
-from google.ads.googleads.v20.resources.types.customer_asset import CustomerAsset
-from google.ads.googleads.v20.enums.types.response_content_type import (
+from google.ads.googleads.v24.resources.types.customer_asset import CustomerAsset
+from google.ads.googleads.v24.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.asset_field_type import (
+from google.ads.googleads.v24.enums.types.asset_field_type import (
     AssetFieldTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.asset_link_status import (
+from google.ads.googleads.v24.enums.types.asset_link_status import (
     AssetLinkStatusEnum,
 )
 from google.protobuf import field_mask_pb2
@@ -48,7 +48,7 @@ class CustomerAssetService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "CustomerAssetService", version="v20"
+                "CustomerAssetService", version="v24"
             )
         assert self._client is not None
         return self._client

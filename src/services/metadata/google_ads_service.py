@@ -1,19 +1,19 @@
-"""Google Ads service implementation with full v20 type safety."""
+"""Google Ads service implementation with full v24 type safety."""
 
 from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.enums.types.response_content_type import (
+from google.ads.googleads.v24.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.summary_row_setting import (
+from google.ads.googleads.v24.enums.types.summary_row_setting import (
     SummaryRowSettingEnum,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v24.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.google_ads_service import (
+from google.ads.googleads.v24.services.types.google_ads_service import (
     GoogleAdsRow,
     MutateGoogleAdsRequest,
     MutateGoogleAdsResponse,
@@ -49,7 +49,7 @@ class GoogleAdsService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "GoogleAdsService", version="v20"
+                "GoogleAdsService", version="v24"
             )
         assert self._client is not None
         return self._client

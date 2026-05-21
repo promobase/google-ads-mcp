@@ -1,4 +1,4 @@
-"""Customer Customizer Service for Google Ads API v20.
+"""Customer Customizer Service for Google Ads API v24.
 
 This service manages customizer values at the customer level, allowing dynamic
 content insertion in ads based on customer-specific data.
@@ -8,24 +8,24 @@ from typing import Any, List, Optional
 
 from fastmcp import FastMCP
 
-from google.ads.googleads.v20.services.services.customer_customizer_service import (
+from google.ads.googleads.v24.services.services.customer_customizer_service import (
     CustomerCustomizerServiceClient,
 )
-from google.ads.googleads.v20.services.types.customer_customizer_service import (
+from google.ads.googleads.v24.services.types.customer_customizer_service import (
     CustomerCustomizerOperation,
     MutateCustomerCustomizersRequest,
     MutateCustomerCustomizersResponse,
 )
-from google.ads.googleads.v20.resources.types.customer_customizer import (
+from google.ads.googleads.v24.resources.types.customer_customizer import (
     CustomerCustomizer,
 )
-from google.ads.googleads.v20.enums.types.response_content_type import (
+from google.ads.googleads.v24.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.customizer_attribute_type import (
+from google.ads.googleads.v24.enums.types.customizer_attribute_type import (
     CustomizerAttributeTypeEnum,
 )
-from google.ads.googleads.v20.common.types.customizer_value import CustomizerValue
+from google.ads.googleads.v24.common.types.customizer_value import CustomizerValue
 
 from src.sdk_client import get_sdk_client
 from src.utils import resolve_enum, format_customer_id
@@ -48,7 +48,7 @@ class CustomerCustomizerService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "CustomerCustomizerService", version="v20"
+                "CustomerCustomizerService", version="v24"
             )
         assert self._client is not None
         return self._client

@@ -61,7 +61,7 @@ class GoogleAdsSdkClient:
         proves that the OAuth / service-account token is valid.
         """
         try:
-            customer_service = self.client.get_service("CustomerService", version="v20")
+            customer_service = self.client.get_service("CustomerService", version="v24")
             customer_service.list_accessible_customers()
             logger.info("Credential validation passed")
         except Exception:

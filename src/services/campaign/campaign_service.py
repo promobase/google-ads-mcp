@@ -4,7 +4,7 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.common.types.bidding import (
+from google.ads.googleads.v24.common.types.bidding import (
     ManualCpc,
     MaximizeConversions,
     MaximizeConversionValue,
@@ -13,24 +13,24 @@ from google.ads.googleads.v20.common.types.bidding import (
     TargetRoas,
     TargetSpend,
 )
-from google.ads.googleads.v20.enums.types.advertising_channel_sub_type import (
+from google.ads.googleads.v24.enums.types.advertising_channel_sub_type import (
     AdvertisingChannelSubTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.advertising_channel_type import (
+from google.ads.googleads.v24.enums.types.advertising_channel_type import (
     AdvertisingChannelTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.campaign_experiment_type import (
+from google.ads.googleads.v24.enums.types.campaign_experiment_type import (
     CampaignExperimentTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.campaign_status import CampaignStatusEnum
-from google.ads.googleads.v20.enums.types.eu_political_advertising_status import (
+from google.ads.googleads.v24.enums.types.campaign_status import CampaignStatusEnum
+from google.ads.googleads.v24.enums.types.eu_political_advertising_status import (
     EuPoliticalAdvertisingStatusEnum,
 )
-from google.ads.googleads.v20.resources.types.campaign import Campaign
-from google.ads.googleads.v20.services.services.campaign_service import (
+from google.ads.googleads.v24.resources.types.campaign import Campaign
+from google.ads.googleads.v24.services.services.campaign_service import (
     CampaignServiceClient,
 )
-from google.ads.googleads.v20.services.types.campaign_service import (
+from google.ads.googleads.v24.services.types.campaign_service import (
     CampaignOperation,
     MutateCampaignsRequest,
     MutateCampaignsResponse,
@@ -117,7 +117,7 @@ class CampaignService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "CampaignService", version="v20"
+                "CampaignService", version="v24"
             )
         assert self._client is not None
         return self._client
@@ -204,9 +204,9 @@ class CampaignService:
             )
 
             if start_date:
-                campaign.start_date = start_date.replace("-", "")
+                campaign.start_date_time = start_date if " " in start_date else f"{start_date} 00:00:00"
             if end_date:
-                campaign.end_date = end_date.replace("-", "")
+                campaign.end_date_time = end_date if " " in end_date else f"{end_date} 23:59:59"
 
             operation = CampaignOperation()
             operation.create = campaign
@@ -283,12 +283,12 @@ class CampaignService:
                 update_mask_fields.append("status")
 
             if start_date is not None:
-                campaign.start_date = start_date.replace("-", "")
-                update_mask_fields.append("start_date")
+                campaign.start_date_time = start_date if " " in start_date else f"{start_date} 00:00:00"
+                update_mask_fields.append("start_date_time")
 
             if end_date is not None:
-                campaign.end_date = end_date.replace("-", "")
-                update_mask_fields.append("end_date")
+                campaign.end_date_time = end_date if " " in end_date else f"{end_date} 23:59:59"
+                update_mask_fields.append("end_date_time")
 
             if bidding_strategy_type is not None:
                 bst = bidding_strategy_type.upper()

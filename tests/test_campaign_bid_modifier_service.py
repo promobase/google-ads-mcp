@@ -1,6 +1,6 @@
 """Tests for CampaignBidModifierService.
 
-Note: In Google Ads API v20, CampaignBidModifier is only for interaction type bid modifiers.
+Note: In Google Ads API v24, CampaignBidModifier is only for interaction type bid modifiers.
 For device, location, demographic, and ad schedule bid modifiers, use CampaignCriterion.
 """
 
@@ -9,14 +9,14 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.interaction_type import InteractionTypeEnum
-from google.ads.googleads.v20.services.services.campaign_bid_modifier_service import (
+from google.ads.googleads.v24.enums.types.interaction_type import InteractionTypeEnum
+from google.ads.googleads.v24.services.services.campaign_bid_modifier_service import (
     CampaignBidModifierServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v24.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.campaign_bid_modifier_service import (
+from google.ads.googleads.v24.services.types.campaign_bid_modifier_service import (
     MutateCampaignBidModifiersResponse,
 )
 

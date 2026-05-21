@@ -5,15 +5,15 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.experiment_status import ExperimentStatusEnum
-from google.ads.googleads.v20.enums.types.experiment_type import ExperimentTypeEnum
-from google.ads.googleads.v20.services.services.experiment_service import (
+from google.ads.googleads.v24.enums.types.experiment_status import ExperimentStatusEnum
+from google.ads.googleads.v24.enums.types.experiment_type import ExperimentTypeEnum
+from google.ads.googleads.v24.services.services.experiment_service import (
     ExperimentServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v24.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.experiment_service import (
+from google.ads.googleads.v24.services.types.experiment_service import (
     MutateExperimentsResponse,
 )
 
