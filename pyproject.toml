@@ -15,11 +15,11 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "ruff>=0.15.12",
+    "ruff>=0.15.15",
     "types-protobuf>=6.32.1.20260221",
     "pytest>=8.4.2",
     "pytest-asyncio",
-    "pyright>=1.1.409",
+    "pyright>=1.1.410",
 ]
 
 [tool.ruff]
@@ -83,7 +83,7 @@ docstring-code-format = false
 docstring-code-line-length = "dynamic"
 
 [dependency-groups]
-dev = ["pytest-asyncio>=1.3.0"]
+dev = ["pytest-asyncio>=1.4.0"]
 
 [tool.pyright]
 include = ["src", "tests", "main.py"]
