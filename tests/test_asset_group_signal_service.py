@@ -4,19 +4,19 @@ import pytest
 from typing import Any
 from unittest.mock import Mock
 
-from google.ads.googleads.v20.services.services.asset_group_signal_service import (
+from google.ads.googleads.v23.services.services.asset_group_signal_service import (
     AssetGroupSignalServiceClient,
 )
-from google.ads.googleads.v20.services.types.asset_group_signal_service import (
+from google.ads.googleads.v23.services.types.asset_group_signal_service import (
     AssetGroupSignalOperation,
     MutateAssetGroupSignalsRequest,
     MutateAssetGroupSignalsResponse,
     MutateAssetGroupSignalResult,
 )
-from google.ads.googleads.v20.enums.types.response_content_type import (
+from google.ads.googleads.v23.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
-from google.ads.googleads.v20.common.types.criteria import AudienceInfo, SearchThemeInfo
+from google.ads.googleads.v23.common.types.criteria import AudienceInfo, SearchThemeInfo
 
 from src.services.assets.asset_group_signal_service import AssetGroupSignalService
 

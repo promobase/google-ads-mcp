@@ -3,15 +3,15 @@
 from typing import Any, Dict, List, Optional, Callable, Awaitable
 
 from fastmcp import Context, FastMCP
-from google.ads.googleads.v20.services.services.identity_verification_service import (
+from google.ads.googleads.v23.services.services.identity_verification_service import (
     IdentityVerificationServiceClient,
 )
-from google.ads.googleads.v20.services.types.identity_verification_service import (
+from google.ads.googleads.v23.services.types.identity_verification_service import (
     StartIdentityVerificationRequest,
     GetIdentityVerificationRequest,
     GetIdentityVerificationResponse,
 )
-from google.ads.googleads.v20.enums.types.identity_verification_program import (
+from google.ads.googleads.v23.enums.types.identity_verification_program import (
     IdentityVerificationProgramEnum,
 )
 from google.ads.googleads.errors import GoogleAdsException
@@ -35,7 +35,7 @@ class IdentityVerificationService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "IdentityVerificationService", version="v20"
+                "IdentityVerificationService", version="v23"
             )
         assert self._client is not None
         return self._client

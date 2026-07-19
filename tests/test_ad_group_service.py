@@ -5,12 +5,12 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.ad_group_status import AdGroupStatusEnum
-from google.ads.googleads.v20.enums.types.ad_group_type import AdGroupTypeEnum
-from google.ads.googleads.v20.services.services.ad_group_service import (
+from google.ads.googleads.v23.enums.types.ad_group_status import AdGroupStatusEnum
+from google.ads.googleads.v23.enums.types.ad_group_type import AdGroupTypeEnum
+from google.ads.googleads.v23.services.services.ad_group_service import (
     AdGroupServiceClient,
 )
-from google.ads.googleads.v20.services.types.ad_group_service import (
+from google.ads.googleads.v23.services.types.ad_group_service import (
     MutateAdGroupsResponse,
 )
 

@@ -5,16 +5,16 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.ad_group_criterion_status import (
+from google.ads.googleads.v23.enums.types.ad_group_criterion_status import (
     AdGroupCriterionStatusEnum,
 )
-from google.ads.googleads.v20.enums.types.keyword_match_type import (
+from google.ads.googleads.v23.enums.types.keyword_match_type import (
     KeywordMatchTypeEnum,
 )
-from google.ads.googleads.v20.services.services.ad_group_criterion_service import (
+from google.ads.googleads.v23.services.services.ad_group_criterion_service import (
     AdGroupCriterionServiceClient,
 )
-from google.ads.googleads.v20.services.types.ad_group_criterion_service import (
+from google.ads.googleads.v23.services.types.ad_group_criterion_service import (
     MutateAdGroupCriteriaResponse,
 )
 

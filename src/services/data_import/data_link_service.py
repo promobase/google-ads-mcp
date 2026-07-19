@@ -3,7 +3,7 @@
 from typing import Any, Dict, List, Optional, Callable, Awaitable
 
 from fastmcp import Context, FastMCP
-from google.ads.googleads.v20.services.services.data_link_service import (
+from google.ads.googleads.v23.services.services.data_link_service import (
     DataLinkServiceClient,
 )
 
@@ -30,7 +30,7 @@ class DataLinkService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "DataLinkService", version="v20"
+                "DataLinkService", version="v23"
             )
         assert self._client is not None
         return self._client

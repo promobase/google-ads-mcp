@@ -5,13 +5,13 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.common.types.offline_user_data import (
+from google.ads.googleads.v23.common.types.offline_user_data import (
     UserIdentifier,
 )
-from google.ads.googleads.v20.services.services.conversion_upload_service import (
+from google.ads.googleads.v23.services.services.conversion_upload_service import (
     ConversionUploadServiceClient,
 )
-from google.ads.googleads.v20.services.types.conversion_upload_service import (
+from google.ads.googleads.v23.services.types.conversion_upload_service import (
     CallConversion,
     ClickConversion,
     UploadCallConversionsRequest,
@@ -44,7 +44,7 @@ class ConversionUploadService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "ConversionUploadService", version="v20"
+                "ConversionUploadService", version="v23"
             )
         assert self._client is not None
         return self._client

@@ -5,28 +5,28 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.attribution_model import (
+from google.ads.googleads.v23.enums.types.attribution_model import (
     AttributionModelEnum,
 )
-from google.ads.googleads.v20.enums.types.conversion_action_category import (
+from google.ads.googleads.v23.enums.types.conversion_action_category import (
     ConversionActionCategoryEnum,
 )
-from google.ads.googleads.v20.enums.types.conversion_action_counting_type import (
+from google.ads.googleads.v23.enums.types.conversion_action_counting_type import (
     ConversionActionCountingTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.conversion_action_status import (
+from google.ads.googleads.v23.enums.types.conversion_action_status import (
     ConversionActionStatusEnum,
 )
-from google.ads.googleads.v20.enums.types.conversion_action_type import (
+from google.ads.googleads.v23.enums.types.conversion_action_type import (
     ConversionActionTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.data_driven_model_status import (
+from google.ads.googleads.v23.enums.types.data_driven_model_status import (
     DataDrivenModelStatusEnum,
 )
-from google.ads.googleads.v20.services.services.conversion_action_service import (
+from google.ads.googleads.v23.services.services.conversion_action_service import (
     ConversionActionServiceClient,
 )
-from google.ads.googleads.v20.services.types.conversion_action_service import (
+from google.ads.googleads.v23.services.types.conversion_action_service import (
     MutateConversionActionsResponse,
 )
 

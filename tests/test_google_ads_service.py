@@ -3,15 +3,18 @@
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
 from typing import Any
 
+import json
+
 import pytest
+from google.protobuf import field_mask_pb2
 from tests.google_ads_test_utils import make_google_ads_exception_stub
-from google.ads.googleads.v20.enums.types.response_content_type import (
+from google.ads.googleads.v23.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.summary_row_setting import (
+from google.ads.googleads.v23.enums.types.summary_row_setting import (
     SummaryRowSettingEnum,
 )
-from google.ads.googleads.v20.services.types.google_ads_service import (
+from google.ads.googleads.v23.services.types.google_ads_service import (
     GoogleAdsRow,
     MutateGoogleAdsResponse,
     MutateOperation,
@@ -93,6 +96,43 @@ class TestGoogleAdsService:
         assert result["total_results_count"] == 1
         assert result["field_mask"] == ["campaign.id", "campaign.name"]
         assert result["summary_row"] is None
+
+    async def test_search_field_mask_is_json_serializable_list(
+        self, google_ads_service: Any, mock_context: Any, mock_client: Any
+    ):
+        """Regression: field_mask must be a plain, JSON-serializable list[str].
+
+        Production returned ``response.field_mask.paths`` directly — a protobuf
+        ``RepeatedScalarContainer`` — which FastMCP cannot serialize, failing with
+        "Unable to serialize unknown type: RepeatedScalarContainer". It reproduces
+        even for scalar-only queries because every SELECT response carries a
+        field_mask listing the selected fields.
+        """
+        google_ads_service._client = mock_client
+
+        # A real FieldMask: its .paths is a RepeatedScalarContainer (the production
+        # type). No result rows, so the test isolates the field_mask code path.
+        mock_response = MagicMock()
+        mock_response.results = []
+        mock_response.next_page_token = ""
+        mock_response.total_results_count = 0
+        mock_response.summary_row = None
+        mock_response.field_mask = field_mask_pb2.FieldMask(
+            paths=["customer.id", "customer.descriptive_name"]
+        )
+        mock_client.search.return_value = mock_response  # type: ignore
+
+        result = await google_ads_service.search(
+            ctx=mock_context,
+            customer_id="1234567890",
+            query="SELECT customer.id, customer.descriptive_name FROM customer",
+        )
+
+        # Mirrors what FastMCP does with the tool result — must not raise.
+        json.dumps(result)
+
+        assert isinstance(result["field_mask"], list)
+        assert result["field_mask"] == ["customer.id", "customer.descriptive_name"]
 
     async def test_search_with_pagination(
         self, google_ads_service: Any, mock_context: Any, mock_client: Any

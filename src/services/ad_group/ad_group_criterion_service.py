@@ -4,7 +4,7 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.common.types.criteria import (
+from google.ads.googleads.v23.common.types.criteria import (
     AgeRangeInfo,
     GenderInfo,
     IncomeRangeInfo,
@@ -12,21 +12,21 @@ from google.ads.googleads.v20.common.types.criteria import (
     ParentalStatusInfo,
     UserListInfo,
 )
-from google.ads.googleads.v20.enums.types.ad_group_criterion_status import (
+from google.ads.googleads.v23.enums.types.ad_group_criterion_status import (
     AdGroupCriterionStatusEnum,
 )
-from google.ads.googleads.v20.enums.types.age_range_type import AgeRangeTypeEnum
-from google.ads.googleads.v20.enums.types.gender_type import GenderTypeEnum
-from google.ads.googleads.v20.enums.types.income_range_type import IncomeRangeTypeEnum
-from google.ads.googleads.v20.enums.types.keyword_match_type import KeywordMatchTypeEnum
-from google.ads.googleads.v20.enums.types.parental_status_type import (
+from google.ads.googleads.v23.enums.types.age_range_type import AgeRangeTypeEnum
+from google.ads.googleads.v23.enums.types.gender_type import GenderTypeEnum
+from google.ads.googleads.v23.enums.types.income_range_type import IncomeRangeTypeEnum
+from google.ads.googleads.v23.enums.types.keyword_match_type import KeywordMatchTypeEnum
+from google.ads.googleads.v23.enums.types.parental_status_type import (
     ParentalStatusTypeEnum,
 )
-from google.ads.googleads.v20.resources.types.ad_group_criterion import AdGroupCriterion
-from google.ads.googleads.v20.services.services.ad_group_criterion_service import (
+from google.ads.googleads.v23.resources.types.ad_group_criterion import AdGroupCriterion
+from google.ads.googleads.v23.services.services.ad_group_criterion_service import (
     AdGroupCriterionServiceClient,
 )
-from google.ads.googleads.v20.services.types.ad_group_criterion_service import (
+from google.ads.googleads.v23.services.types.ad_group_criterion_service import (
     AdGroupCriterionOperation,
     MutateAdGroupCriteriaRequest,
     MutateAdGroupCriteriaResponse,
@@ -57,7 +57,7 @@ class AdGroupCriterionService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "AdGroupCriterionService", version="v20"
+                "AdGroupCriterionService", version="v23"
             )
         assert self._client is not None
         return self._client

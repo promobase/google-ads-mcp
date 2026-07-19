@@ -4,10 +4,10 @@ import pytest
 from typing import Any
 from unittest.mock import Mock
 
-from google.ads.googleads.v20.resources.types.product_link import (
+from google.ads.googleads.v23.resources.types.product_link import (
     ProductLink,
 )
-from google.ads.googleads.v20.services.types.product_link_service import (
+from google.ads.googleads.v23.services.types.product_link_service import (
     CreateProductLinkResponse,
     RemoveProductLinkResponse,
 )

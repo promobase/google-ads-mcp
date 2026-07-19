@@ -4,19 +4,19 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.enums.types.conversion_action_category import (
+from google.ads.googleads.v23.enums.types.conversion_action_category import (
     ConversionActionCategoryEnum,
 )
-from google.ads.googleads.v20.enums.types.conversion_origin import (
+from google.ads.googleads.v23.enums.types.conversion_origin import (
     ConversionOriginEnum,
 )
-from google.ads.googleads.v20.resources.types.campaign_conversion_goal import (
+from google.ads.googleads.v23.resources.types.campaign_conversion_goal import (
     CampaignConversionGoal,
 )
-from google.ads.googleads.v20.services.services.campaign_conversion_goal_service import (
+from google.ads.googleads.v23.services.services.campaign_conversion_goal_service import (
     CampaignConversionGoalServiceClient,
 )
-from google.ads.googleads.v20.services.types.campaign_conversion_goal_service import (
+from google.ads.googleads.v23.services.types.campaign_conversion_goal_service import (
     CampaignConversionGoalOperation,
     MutateCampaignConversionGoalsRequest,
     MutateCampaignConversionGoalsResponse,

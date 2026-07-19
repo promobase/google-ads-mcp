@@ -5,16 +5,16 @@ from unittest.mock import Mock
 
 import pytest
 
-from google.ads.googleads.v20.services.services.campaign_asset_set_service import (
+from google.ads.googleads.v23.services.services.campaign_asset_set_service import (
     CampaignAssetSetServiceClient,
 )
-from google.ads.googleads.v20.services.types.campaign_asset_set_service import (
+from google.ads.googleads.v23.services.types.campaign_asset_set_service import (
     CampaignAssetSetOperation,
     MutateCampaignAssetSetsRequest,
     MutateCampaignAssetSetsResponse,
     MutateCampaignAssetSetResult,
 )
-from google.ads.googleads.v20.enums.types.response_content_type import (
+from google.ads.googleads.v23.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
 

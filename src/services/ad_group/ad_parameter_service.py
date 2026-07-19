@@ -4,16 +4,16 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.enums.types.response_content_type import (
+from google.ads.googleads.v23.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
-from google.ads.googleads.v20.resources.types.ad_parameter import (
+from google.ads.googleads.v23.resources.types.ad_parameter import (
     AdParameter,
 )
-from google.ads.googleads.v20.services.services.ad_parameter_service import (
+from google.ads.googleads.v23.services.services.ad_parameter_service import (
     AdParameterServiceClient,
 )
-from google.ads.googleads.v20.services.types.ad_parameter_service import (
+from google.ads.googleads.v23.services.types.ad_parameter_service import (
     AdParameterOperation,
     MutateAdParametersRequest,
     MutateAdParametersResponse,
@@ -44,7 +44,7 @@ class AdParameterService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "AdParameterService", version="v20"
+                "AdParameterService", version="v23"
             )
         assert self._client is not None
         return self._client

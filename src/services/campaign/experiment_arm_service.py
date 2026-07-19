@@ -7,11 +7,11 @@ Experiment arms allow you to test different campaign configurations and compare 
 from typing import Any, List, Optional
 
 from fastmcp import FastMCP
-from google.ads.googleads.v20.resources.types.experiment_arm import ExperimentArm
-from google.ads.googleads.v20.services.services.experiment_arm_service import (
+from google.ads.googleads.v23.resources.types.experiment_arm import ExperimentArm
+from google.ads.googleads.v23.services.services.experiment_arm_service import (
     ExperimentArmServiceClient,
 )
-from google.ads.googleads.v20.services.types.experiment_arm_service import (
+from google.ads.googleads.v23.services.types.experiment_arm_service import (
     ExperimentArmOperation,
     MutateExperimentArmsRequest,
     MutateExperimentArmsResponse,
@@ -34,7 +34,7 @@ class ExperimentArmService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "ExperimentArmService", version="v20"
+                "ExperimentArmService", version="v23"
             )
         assert self._client is not None
         return self._client

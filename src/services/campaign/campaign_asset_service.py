@@ -4,15 +4,15 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.enums.types.asset_field_type import AssetFieldTypeEnum
-from google.ads.googleads.v20.resources.types.campaign_asset import CampaignAsset
-from google.ads.googleads.v20.services.services.campaign_asset_service import (
+from google.ads.googleads.v23.enums.types.asset_field_type import AssetFieldTypeEnum
+from google.ads.googleads.v23.resources.types.campaign_asset import CampaignAsset
+from google.ads.googleads.v23.services.services.campaign_asset_service import (
     CampaignAssetServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.campaign_asset_service import (
+from google.ads.googleads.v23.services.types.campaign_asset_service import (
     CampaignAssetOperation,
     MutateCampaignAssetsRequest,
     MutateCampaignAssetsResponse,
@@ -43,7 +43,7 @@ class CampaignAssetService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "CampaignAssetService", version="v20"
+                "CampaignAssetService", version="v23"
             )
         assert self._client is not None
         return self._client

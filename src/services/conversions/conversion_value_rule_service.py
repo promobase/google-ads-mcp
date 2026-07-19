@@ -6,10 +6,10 @@ from fastmcp import Context, FastMCP
 
 # Note: Value rule types may not be available in v20 - using simplified implementation
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.services.services.conversion_value_rule_service import (
+from google.ads.googleads.v23.services.services.conversion_value_rule_service import (
     ConversionValueRuleServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
 
@@ -32,7 +32,7 @@ class ConversionValueRuleService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "ConversionValueRuleService", version="v20"
+                "ConversionValueRuleService", version="v23"
             )
         assert self._client is not None
         return self._client

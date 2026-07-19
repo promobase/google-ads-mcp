@@ -5,16 +5,16 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.keyword_plan_forecast_interval import (
+from google.ads.googleads.v23.enums.types.keyword_plan_forecast_interval import (
     KeywordPlanForecastIntervalEnum,
 )
-from google.ads.googleads.v20.enums.types.keyword_match_type import (
+from google.ads.googleads.v23.enums.types.keyword_match_type import (
     KeywordMatchTypeEnum,
 )
-from google.ads.googleads.v20.services.services.keyword_plan_service import (
+from google.ads.googleads.v23.services.services.keyword_plan_service import (
     KeywordPlanServiceClient,
 )
-from google.ads.googleads.v20.services.types.keyword_plan_service import (
+from google.ads.googleads.v23.services.types.keyword_plan_service import (
     MutateKeywordPlansResponse,
 )
 

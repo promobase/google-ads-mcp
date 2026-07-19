@@ -5,11 +5,11 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.label_status import LabelStatusEnum
-from google.ads.googleads.v20.services.services.label_service import (
+from google.ads.googleads.v23.enums.types.label_status import LabelStatusEnum
+from google.ads.googleads.v23.services.services.label_service import (
     LabelServiceClient,
 )
-from google.ads.googleads.v20.services.types.label_service import (
+from google.ads.googleads.v23.services.types.label_service import (
     MutateLabelsResponse,
 )
 

@@ -20,7 +20,7 @@ here are some high level resources:
 
 1. we use `uv` for pagkage management, see `pyproject.toml` for details & configs.
 2. after changes run `uv run ruff format .`and `uv run pyright`
-3. Our goal is to provide 1:1 mapping to ALL google ads services, and wrap them to MCP tools for LLMs to interact with. You can use files to help you track progress. use the API reference or the google-ads python codebase to read all the services available, and implement it. For each service, implement tests and make sure they pass. The implementation should be FULLY typed, using generated types from google ads v20 services.
+3. Our goal is to provide 1:1 mapping to ALL google ads services, and wrap them to MCP tools for LLMs to interact with. You can use files to help you track progress. use the API reference or the google-ads python codebase to read all the services available, and implement it. For each service, implement tests and make sure they pass. The implementation should be FULLY typed, using generated types from google ads v23 services.
 
 ## CURRENT TASK
 

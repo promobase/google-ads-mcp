@@ -7,10 +7,10 @@ Brand suggestions help advertisers find relevant brands for their campaigns.
 from typing import Any, List, Optional
 
 from fastmcp import FastMCP
-from google.ads.googleads.v20.services.services.brand_suggestion_service import (
+from google.ads.googleads.v23.services.services.brand_suggestion_service import (
     BrandSuggestionServiceClient,
 )
-from google.ads.googleads.v20.services.types.brand_suggestion_service import (
+from google.ads.googleads.v23.services.types.brand_suggestion_service import (
     SuggestBrandsRequest,
     SuggestBrandsResponse,
 )
@@ -32,7 +32,7 @@ class BrandSuggestionService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "BrandSuggestionService", version="v20"
+                "BrandSuggestionService", version="v23"
             )
         assert self._client is not None
         return self._client

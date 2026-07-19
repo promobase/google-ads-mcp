@@ -3,28 +3,28 @@
 from typing import Any, Dict, List, Optional, Callable, Awaitable
 
 from fastmcp import Context, FastMCP
-from google.ads.googleads.v20.services.services.bidding_seasonality_adjustment_service import (
+from google.ads.googleads.v23.services.services.bidding_seasonality_adjustment_service import (
     BiddingSeasonalityAdjustmentServiceClient,
 )
-from google.ads.googleads.v20.services.types.bidding_seasonality_adjustment_service import (
+from google.ads.googleads.v23.services.types.bidding_seasonality_adjustment_service import (
     MutateBiddingSeasonalityAdjustmentsRequest,
     MutateBiddingSeasonalityAdjustmentsResponse,
     BiddingSeasonalityAdjustmentOperation,
 )
-from google.ads.googleads.v20.resources.types.bidding_seasonality_adjustment import (
+from google.ads.googleads.v23.resources.types.bidding_seasonality_adjustment import (
     BiddingSeasonalityAdjustment,
 )
-from google.ads.googleads.v20.enums.types.seasonality_event_scope import (
+from google.ads.googleads.v23.enums.types.seasonality_event_scope import (
     SeasonalityEventScopeEnum,
 )
 
-from google.ads.googleads.v20.enums.types.device import DeviceEnum
-from google.ads.googleads.v20.enums.types.advertising_channel_type import (
+from google.ads.googleads.v23.enums.types.device import DeviceEnum
+from google.ads.googleads.v23.enums.types.advertising_channel_type import (
     AdvertisingChannelTypeEnum,
 )
 from google.ads.googleads.errors import GoogleAdsException
 
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
 from google.protobuf import field_mask_pb2

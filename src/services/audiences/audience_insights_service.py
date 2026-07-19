@@ -3,32 +3,30 @@
 from typing import Any, Dict, List, Optional, Callable, Awaitable
 
 from fastmcp import Context, FastMCP
-from google.ads.googleads.v20.services.services.audience_insights_service import (
+from google.ads.googleads.v23.services.services.audience_insights_service import (
     AudienceInsightsServiceClient,
 )
-from google.ads.googleads.v20.services.types.audience_insights_service import (
+from google.ads.googleads.v23.services.types.audience_insights_service import (
     GenerateInsightsFinderReportRequest,
     GenerateInsightsFinderReportResponse,
     GenerateAudienceCompositionInsightsRequest,
     GenerateAudienceCompositionInsightsResponse,
     GenerateSuggestedTargetingInsightsRequest,
     GenerateSuggestedTargetingInsightsResponse,
-    BasicInsightsAudience,
     InsightsAudience,
     InsightsAudienceAttributeGroup,
     InsightsAudienceDefinition,
 )
-from google.ads.googleads.v20.common.types.criteria import (
+from google.ads.googleads.v23.common.types.criteria import (
     AgeRangeInfo,
     GenderInfo,
     LocationInfo,
-    UserInterestInfo,
 )
-from google.ads.googleads.v20.enums.types.audience_insights_dimension import (
+from google.ads.googleads.v23.enums.types.audience_insights_dimension import (
     AudienceInsightsDimensionEnum,
 )
-from google.ads.googleads.v20.enums.types.age_range_type import AgeRangeTypeEnum
-from google.ads.googleads.v20.enums.types.gender_type import GenderTypeEnum
+from google.ads.googleads.v23.enums.types.age_range_type import AgeRangeTypeEnum
+from google.ads.googleads.v23.enums.types.gender_type import GenderTypeEnum
 from google.ads.googleads.errors import GoogleAdsException
 
 from src.sdk_client import get_sdk_client
@@ -56,7 +54,7 @@ class AudienceInsightsService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "AudienceInsightsService", version="v20"
+                "AudienceInsightsService", version="v23"
             )
         assert self._client is not None
         return self._client
@@ -95,13 +93,13 @@ class AudienceInsightsService:
             customer_id = format_customer_id(customer_id)
 
             # Create baseline audience
-            baseline_audience = BasicInsightsAudience()
+            baseline_audience = InsightsAudience()
 
             # Add countries
             for country_id in baseline_audience_countries:
                 location = LocationInfo()
                 location.geo_target_constant = f"geoTargetConstants/{country_id}"
-                baseline_audience.country_location.append(location)
+                baseline_audience.country_locations.append(location)
 
             # Add age ranges if provided
             if baseline_audience_ages:
@@ -120,14 +118,14 @@ class AudienceInsightsService:
                 )
                 baseline_audience.gender = gender_info
 
-            # Create specific audience (also BasicInsightsAudience)
-            specific_audience = BasicInsightsAudience()
+            # Create specific audience (also InsightsAudience)
+            specific_audience = InsightsAudience()
 
             # Add countries
             for country_id in specific_audience_countries:
                 location = LocationInfo()
                 location.geo_target_constant = f"geoTargetConstants/{country_id}"
-                specific_audience.country_location.append(location)
+                specific_audience.country_locations.append(location)
 
             # Add age ranges if provided
             if specific_audience_ages:
@@ -146,14 +144,10 @@ class AudienceInsightsService:
                 )
                 specific_audience.gender = gender_info
 
-            # Add user interests if provided
-            if specific_audience_user_interests:
-                for interest_id in specific_audience_user_interests:
-                    interest_info = UserInterestInfo()
-                    interest_info.user_interest_category = (
-                        f"customers/{customer_id}/userInterests/{interest_id}"
-                    )
-                    specific_audience.user_interests.append(interest_info)
+            # Note: In Google Ads API v23, InsightsAudience has no direct
+            # user_interests field; interests are expressed via
+            # topic_audience_combinations. Consistent with the other methods in
+            # this service, user-interest handling is skipped here.
 
             # Create request
             request = GenerateInsightsFinderReportRequest()

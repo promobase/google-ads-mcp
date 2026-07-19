@@ -4,7 +4,7 @@ import pytest
 from typing import Any
 from unittest.mock import Mock
 
-from google.ads.googleads.v20.services.types.keyword_plan_ad_group_service import (
+from google.ads.googleads.v23.services.types.keyword_plan_ad_group_service import (
     KeywordPlanAdGroupOperation,
     MutateKeywordPlanAdGroupsResponse,
     MutateKeywordPlanAdGroupResult,

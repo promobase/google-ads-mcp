@@ -7,13 +7,13 @@ organization and management of targeting criteria.
 from typing import Any, List, Optional
 
 from fastmcp import FastMCP
-from google.ads.googleads.v20.resources.types.ad_group_criterion_label import (
+from google.ads.googleads.v23.resources.types.ad_group_criterion_label import (
     AdGroupCriterionLabel,
 )
-from google.ads.googleads.v20.services.services.ad_group_criterion_label_service import (
+from google.ads.googleads.v23.services.services.ad_group_criterion_label_service import (
     AdGroupCriterionLabelServiceClient,
 )
-from google.ads.googleads.v20.services.types.ad_group_criterion_label_service import (
+from google.ads.googleads.v23.services.types.ad_group_criterion_label_service import (
     AdGroupCriterionLabelOperation,
     MutateAdGroupCriterionLabelsRequest,
     MutateAdGroupCriterionLabelsResponse,
@@ -42,7 +42,7 @@ class AdGroupCriterionLabelService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "AdGroupCriterionLabelService", version="v20"
+                "AdGroupCriterionLabelService", version="v23"
             )
         assert self._client is not None
         return self._client

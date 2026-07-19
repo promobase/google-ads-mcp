@@ -4,8 +4,8 @@ import pytest
 from typing import Any
 from unittest.mock import Mock
 
-from google.ads.googleads.v20.enums.types.goal_config_level import GoalConfigLevelEnum
-from google.ads.googleads.v20.services.types.conversion_goal_campaign_config_service import (
+from google.ads.googleads.v23.enums.types.goal_config_level import GoalConfigLevelEnum
+from google.ads.googleads.v23.services.types.conversion_goal_campaign_config_service import (
     ConversionGoalCampaignConfigOperation,
     MutateConversionGoalCampaignConfigsResponse,
     MutateConversionGoalCampaignConfigResult,

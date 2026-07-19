@@ -6,10 +6,10 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.services.services.conversion_upload_service import (
+from google.ads.googleads.v23.services.services.conversion_upload_service import (
     ConversionUploadServiceClient,
 )
-from google.ads.googleads.v20.services.types.conversion_upload_service import (
+from google.ads.googleads.v23.services.types.conversion_upload_service import (
     UploadCallConversionsResponse,
     UploadClickConversionsResponse,
 )

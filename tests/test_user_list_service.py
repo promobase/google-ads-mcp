@@ -5,19 +5,19 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.customer_match_upload_key_type import (
+from google.ads.googleads.v23.enums.types.customer_match_upload_key_type import (
     CustomerMatchUploadKeyTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.user_list_logical_rule_operator import (
+from google.ads.googleads.v23.enums.types.user_list_logical_rule_operator import (
     UserListLogicalRuleOperatorEnum,
 )
-from google.ads.googleads.v20.enums.types.user_list_membership_status import (
+from google.ads.googleads.v23.enums.types.user_list_membership_status import (
     UserListMembershipStatusEnum,
 )
-from google.ads.googleads.v20.services.services.user_list_service import (
+from google.ads.googleads.v23.services.services.user_list_service import (
     UserListServiceClient,
 )
-from google.ads.googleads.v20.services.types.user_list_service import (
+from google.ads.googleads.v23.services.types.user_list_service import (
     MutateUserListsResponse,
 )
 

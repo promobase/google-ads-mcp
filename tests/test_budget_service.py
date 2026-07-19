@@ -5,13 +5,13 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.budget_delivery_method import (
+from google.ads.googleads.v23.enums.types.budget_delivery_method import (
     BudgetDeliveryMethodEnum,
 )
-from google.ads.googleads.v20.services.services.campaign_budget_service import (
+from google.ads.googleads.v23.services.services.campaign_budget_service import (
     CampaignBudgetServiceClient,
 )
-from google.ads.googleads.v20.services.types.campaign_budget_service import (
+from google.ads.googleads.v23.services.types.campaign_budget_service import (
     MutateCampaignBudgetsResponse,
 )
 

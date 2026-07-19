@@ -4,15 +4,15 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.enums.types.time_type import TimeTypeEnum
-from google.ads.googleads.v20.resources.types.billing_setup import BillingSetup
-from google.ads.googleads.v20.services.services.billing_setup_service import (
+from google.ads.googleads.v23.enums.types.time_type import TimeTypeEnum
+from google.ads.googleads.v23.resources.types.billing_setup import BillingSetup
+from google.ads.googleads.v23.services.services.billing_setup_service import (
     BillingSetupServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.billing_setup_service import (
+from google.ads.googleads.v23.services.types.billing_setup_service import (
     BillingSetupOperation,
     MutateBillingSetupRequest,
     MutateBillingSetupResponse,
@@ -43,7 +43,7 @@ class BillingSetupService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "BillingSetupService", version="v20"
+                "BillingSetupService", version="v23"
             )
         assert self._client is not None
         return self._client

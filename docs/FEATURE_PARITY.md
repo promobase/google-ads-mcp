@@ -1,6 +1,6 @@
-# Google Ads API v20 Feature Parity
+# Google Ads API v23 Feature Parity
 
-This table tracks high-level service parity between Google Ads API v20 and this
+This table tracks high-level service parity between Google Ads API v23 and this
 MCP server. [`TRACKER.md`](../TRACKER.md) remains the source of truth for
 service-by-service implementation notes and next work.
 

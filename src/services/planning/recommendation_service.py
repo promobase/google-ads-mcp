@@ -4,13 +4,13 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.services.services.recommendation_service import (
+from google.ads.googleads.v23.services.services.recommendation_service import (
     RecommendationServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.recommendation_service import (
+from google.ads.googleads.v23.services.types.recommendation_service import (
     ApplyRecommendationOperation,
     ApplyRecommendationRequest,
     ApplyRecommendationResponse,
@@ -42,7 +42,7 @@ class RecommendationService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "RecommendationService", version="v20"
+                "RecommendationService", version="v23"
             )
         assert self._client is not None
         return self._client
@@ -75,7 +75,7 @@ class RecommendationService:
             # Use GoogleAdsService for search
             sdk_client = get_sdk_client()
             google_ads_service: GoogleAdsServiceClient = sdk_client.client.get_service(
-                "GoogleAdsService", version="v20"
+                "GoogleAdsService", version="v23"
             )
 
             # Build query -- only select fields valid in v20 GAQL

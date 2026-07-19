@@ -7,17 +7,17 @@ Conversion goal campaign configs define how campaigns use conversion goals for o
 from typing import Any, List, Optional
 
 from fastmcp import FastMCP
-from google.ads.googleads.v20.enums.types.goal_config_level import GoalConfigLevelEnum
-from google.ads.googleads.v20.enums.types.response_content_type import (
+from google.ads.googleads.v23.enums.types.goal_config_level import GoalConfigLevelEnum
+from google.ads.googleads.v23.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
-from google.ads.googleads.v20.resources.types.conversion_goal_campaign_config import (
+from google.ads.googleads.v23.resources.types.conversion_goal_campaign_config import (
     ConversionGoalCampaignConfig,
 )
-from google.ads.googleads.v20.services.services.conversion_goal_campaign_config_service import (
+from google.ads.googleads.v23.services.services.conversion_goal_campaign_config_service import (
     ConversionGoalCampaignConfigServiceClient,
 )
-from google.ads.googleads.v20.services.types.conversion_goal_campaign_config_service import (
+from google.ads.googleads.v23.services.types.conversion_goal_campaign_config_service import (
     ConversionGoalCampaignConfigOperation,
     MutateConversionGoalCampaignConfigsRequest,
     MutateConversionGoalCampaignConfigsResponse,

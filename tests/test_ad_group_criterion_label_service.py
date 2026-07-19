@@ -4,10 +4,10 @@ import pytest
 from typing import Any
 from unittest.mock import Mock
 
-from google.ads.googleads.v20.services.services.ad_group_criterion_label_service import (
+from google.ads.googleads.v23.services.services.ad_group_criterion_label_service import (
     AdGroupCriterionLabelServiceClient,
 )
-from google.ads.googleads.v20.services.types.ad_group_criterion_label_service import (
+from google.ads.googleads.v23.services.types.ad_group_criterion_label_service import (
     AdGroupCriterionLabelOperation,
     MutateAdGroupCriterionLabelsRequest,
     MutateAdGroupCriterionLabelsResponse,

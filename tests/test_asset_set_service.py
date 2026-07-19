@@ -5,15 +5,15 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.asset_set_status import AssetSetStatusEnum
-from google.ads.googleads.v20.enums.types.asset_set_type import AssetSetTypeEnum
-from google.ads.googleads.v20.services.services.asset_set_service import (
+from google.ads.googleads.v23.enums.types.asset_set_status import AssetSetStatusEnum
+from google.ads.googleads.v23.enums.types.asset_set_type import AssetSetTypeEnum
+from google.ads.googleads.v23.services.services.asset_set_service import (
     AssetSetServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.asset_set_service import (
+from google.ads.googleads.v23.services.types.asset_set_service import (
     MutateAssetSetsResponse,
 )
 

@@ -7,17 +7,17 @@ Keyword plan campaigns define the targeting and settings for keyword planning.
 from typing import Any, List, Optional
 
 from fastmcp import FastMCP
-from google.ads.googleads.v20.enums.types.keyword_plan_network import (
+from google.ads.googleads.v23.enums.types.keyword_plan_network import (
     KeywordPlanNetworkEnum,
 )
-from google.ads.googleads.v20.resources.types.keyword_plan_campaign import (
+from google.ads.googleads.v23.resources.types.keyword_plan_campaign import (
     KeywordPlanCampaign,
     KeywordPlanGeoTarget,
 )
-from google.ads.googleads.v20.services.services.keyword_plan_campaign_service import (
+from google.ads.googleads.v23.services.services.keyword_plan_campaign_service import (
     KeywordPlanCampaignServiceClient,
 )
-from google.ads.googleads.v20.services.types.keyword_plan_campaign_service import (
+from google.ads.googleads.v23.services.types.keyword_plan_campaign_service import (
     KeywordPlanCampaignOperation,
     MutateKeywordPlanCampaignsRequest,
     MutateKeywordPlanCampaignsResponse,
@@ -40,7 +40,7 @@ class KeywordPlanCampaignService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "KeywordPlanCampaignService", version="v20"
+                "KeywordPlanCampaignService", version="v23"
             )
         assert self._client is not None
         return self._client

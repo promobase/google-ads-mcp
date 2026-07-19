@@ -5,10 +5,10 @@ from typing import Any
 
 import pytest
 from tests.google_ads_test_utils import make_google_ads_exception_stub
-from google.ads.googleads.v20.enums.types.manager_link_status import (
+from google.ads.googleads.v23.enums.types.manager_link_status import (
     ManagerLinkStatusEnum,
 )
-from google.ads.googleads.v20.services.types.customer_manager_link_service import (
+from google.ads.googleads.v23.services.types.customer_manager_link_service import (
     MoveManagerLinkResponse,
     MutateCustomerManagerLinkResponse,
     MutateCustomerManagerLinkResult,

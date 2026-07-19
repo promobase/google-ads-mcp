@@ -5,17 +5,17 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.campaign_shared_set_status import (
+from google.ads.googleads.v23.enums.types.campaign_shared_set_status import (
     CampaignSharedSetStatusEnum,
 )
-from google.ads.googleads.v20.enums.types.shared_set_type import SharedSetTypeEnum
-from google.ads.googleads.v20.services.services.campaign_shared_set_service import (
+from google.ads.googleads.v23.enums.types.shared_set_type import SharedSetTypeEnum
+from google.ads.googleads.v23.services.services.campaign_shared_set_service import (
     CampaignSharedSetServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.campaign_shared_set_service import (
+from google.ads.googleads.v23.services.types.campaign_shared_set_service import (
     MutateCampaignSharedSetsResponse,
 )
 

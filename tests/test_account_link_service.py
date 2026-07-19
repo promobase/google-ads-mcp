@@ -5,22 +5,22 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.account_link_status import (
+from google.ads.googleads.v23.enums.types.account_link_status import (
     AccountLinkStatusEnum,
 )
-from google.ads.googleads.v20.enums.types.linked_account_type import (
+from google.ads.googleads.v23.enums.types.linked_account_type import (
     LinkedAccountTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.mobile_app_vendor import (
+from google.ads.googleads.v23.enums.types.mobile_app_vendor import (
     MobileAppVendorEnum,
 )
-from google.ads.googleads.v20.services.services.account_link_service import (
+from google.ads.googleads.v23.services.services.account_link_service import (
     AccountLinkServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.account_link_service import (
+from google.ads.googleads.v23.services.types.account_link_service import (
     CreateAccountLinkResponse,
     MutateAccountLinkResponse,
 )

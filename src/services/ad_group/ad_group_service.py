@@ -4,13 +4,13 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.enums.types.ad_group_status import AdGroupStatusEnum
-from google.ads.googleads.v20.enums.types.ad_group_type import AdGroupTypeEnum
-from google.ads.googleads.v20.resources.types.ad_group import AdGroup
-from google.ads.googleads.v20.services.services.ad_group_service import (
+from google.ads.googleads.v23.enums.types.ad_group_status import AdGroupStatusEnum
+from google.ads.googleads.v23.enums.types.ad_group_type import AdGroupTypeEnum
+from google.ads.googleads.v23.resources.types.ad_group import AdGroup
+from google.ads.googleads.v23.services.services.ad_group_service import (
     AdGroupServiceClient,
 )
-from google.ads.googleads.v20.services.types.ad_group_service import (
+from google.ads.googleads.v23.services.types.ad_group_service import (
     AdGroupOperation,
     MutateAdGroupsRequest,
     MutateAdGroupsResponse,
@@ -42,7 +42,7 @@ class AdGroupService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "AdGroupService", version="v20"
+                "AdGroupService", version="v23"
             )
         assert self._client is not None
         return self._client

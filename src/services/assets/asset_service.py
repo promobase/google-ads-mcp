@@ -9,7 +9,7 @@ import aiohttp
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.common.types.asset_types import (
+from google.ads.googleads.v23.common.types.asset_types import (
     CallAsset,
     CalloutAsset,
     ImageAsset,
@@ -18,15 +18,15 @@ from google.ads.googleads.v20.common.types.asset_types import (
     TextAsset,
     YoutubeVideoAsset,
 )
-from google.ads.googleads.v20.enums.types.asset_type import AssetTypeEnum
-from google.ads.googleads.v20.resources.types.asset import Asset
-from google.ads.googleads.v20.services.services.asset_service import (
+from google.ads.googleads.v23.enums.types.asset_type import AssetTypeEnum
+from google.ads.googleads.v23.resources.types.asset import Asset
+from google.ads.googleads.v23.services.services.asset_service import (
     AssetServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.asset_service import (
+from google.ads.googleads.v23.services.types.asset_service import (
     AssetOperation,
     MutateAssetsRequest,
     MutateAssetsResponse,
@@ -55,7 +55,7 @@ class AssetService:
         """Get the asset service client."""
         if self._client is None:
             sdk_client = get_sdk_client()
-            self._client = sdk_client.client.get_service("AssetService", version="v20")
+            self._client = sdk_client.client.get_service("AssetService", version="v23")
         assert self._client is not None
         return self._client
 
@@ -551,7 +551,7 @@ class AssetService:
 
     def get_mime_type_enum(self, mime_type: str):
         """Convert MIME type string to enum value."""
-        from google.ads.googleads.v20.enums.types.mime_type import MimeTypeEnum
+        from google.ads.googleads.v23.enums.types.mime_type import MimeTypeEnum
 
         mime_type_map = {
             "image/jpeg": MimeTypeEnum.MimeType.IMAGE_JPEG,

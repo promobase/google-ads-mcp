@@ -4,8 +4,8 @@ import pytest
 from typing import Any
 from unittest.mock import Mock
 
-from google.ads.googleads.v20.enums.types.brand_state import BrandStateEnum
-from google.ads.googleads.v20.services.types.brand_suggestion_service import (
+from google.ads.googleads.v23.enums.types.brand_state import BrandStateEnum
+from google.ads.googleads.v23.services.types.brand_suggestion_service import (
     BrandSuggestion,
     SuggestBrandsResponse,
 )

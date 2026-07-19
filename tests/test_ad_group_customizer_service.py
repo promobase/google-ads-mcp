@@ -4,19 +4,19 @@ import pytest
 from typing import Any
 from unittest.mock import Mock
 
-from google.ads.googleads.v20.services.services.ad_group_customizer_service import (
+from google.ads.googleads.v23.services.services.ad_group_customizer_service import (
     AdGroupCustomizerServiceClient,
 )
-from google.ads.googleads.v20.services.types.ad_group_customizer_service import (
+from google.ads.googleads.v23.services.types.ad_group_customizer_service import (
     AdGroupCustomizerOperation,
     MutateAdGroupCustomizersRequest,
     MutateAdGroupCustomizersResponse,
     MutateAdGroupCustomizerResult,
 )
-from google.ads.googleads.v20.enums.types.response_content_type import (
+from google.ads.googleads.v23.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.customizer_attribute_type import (
+from google.ads.googleads.v23.enums.types.customizer_attribute_type import (
     CustomizerAttributeTypeEnum,
 )
 

@@ -4,10 +4,10 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.services.services.reach_plan_service import (
+from google.ads.googleads.v23.services.services.reach_plan_service import (
     ReachPlanServiceClient,
 )
-from google.ads.googleads.v20.services.types.reach_plan_service import (
+from google.ads.googleads.v23.services.types.reach_plan_service import (
     ListPlannableLocationsRequest,
     ListPlannableLocationsResponse,
     ListPlannableProductsRequest,
@@ -38,7 +38,7 @@ class ReachPlanService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "ReachPlanService", version="v20"
+                "ReachPlanService", version="v23"
             )
         assert self._client is not None
         return self._client

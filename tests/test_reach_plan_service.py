@@ -5,10 +5,10 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.services.services.reach_plan_service import (
+from google.ads.googleads.v23.services.services.reach_plan_service import (
     ReachPlanServiceClient,
 )
-from google.ads.googleads.v20.services.types.reach_plan_service import (
+from google.ads.googleads.v23.services.types.reach_plan_service import (
     ListPlannableLocationsResponse,
     ListPlannableProductsResponse,
 )

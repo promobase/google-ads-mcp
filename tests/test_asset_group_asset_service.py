@@ -5,9 +5,9 @@ from typing import Any
 
 import pytest
 from tests.google_ads_test_utils import make_google_ads_exception_stub
-from google.ads.googleads.v20.enums.types.asset_field_type import AssetFieldTypeEnum
-from google.ads.googleads.v20.enums.types.asset_link_status import AssetLinkStatusEnum
-from google.ads.googleads.v20.services.types.asset_group_asset_service import (
+from google.ads.googleads.v23.enums.types.asset_field_type import AssetFieldTypeEnum
+from google.ads.googleads.v23.enums.types.asset_link_status import AssetLinkStatusEnum
+from google.ads.googleads.v23.services.types.asset_group_asset_service import (
     MutateAssetGroupAssetsResponse,
     MutateAssetGroupAssetResult,
 )

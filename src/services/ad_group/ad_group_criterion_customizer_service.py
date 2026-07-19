@@ -4,22 +4,22 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.common.types.customizer_value import (
+from google.ads.googleads.v23.common.types.customizer_value import (
     CustomizerValue,
 )
-from google.ads.googleads.v20.enums.types.customizer_attribute_type import (
+from google.ads.googleads.v23.enums.types.customizer_attribute_type import (
     CustomizerAttributeTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.response_content_type import (
+from google.ads.googleads.v23.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
-from google.ads.googleads.v20.resources.types.ad_group_criterion_customizer import (
+from google.ads.googleads.v23.resources.types.ad_group_criterion_customizer import (
     AdGroupCriterionCustomizer,
 )
-from google.ads.googleads.v20.services.services.ad_group_criterion_customizer_service import (
+from google.ads.googleads.v23.services.services.ad_group_criterion_customizer_service import (
     AdGroupCriterionCustomizerServiceClient,
 )
-from google.ads.googleads.v20.services.types.ad_group_criterion_customizer_service import (
+from google.ads.googleads.v23.services.types.ad_group_criterion_customizer_service import (
     AdGroupCriterionCustomizerOperation,
     MutateAdGroupCriterionCustomizersRequest,
     MutateAdGroupCriterionCustomizersResponse,

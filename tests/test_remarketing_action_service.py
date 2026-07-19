@@ -5,13 +5,13 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.services.services.remarketing_action_service import (
+from google.ads.googleads.v23.services.services.remarketing_action_service import (
     RemarketingActionServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.remarketing_action_service import (
+from google.ads.googleads.v23.services.types.remarketing_action_service import (
     MutateRemarketingActionsResponse,
 )
 

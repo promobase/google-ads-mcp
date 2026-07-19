@@ -5,19 +5,19 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.bidding_strategy_status import (
+from google.ads.googleads.v23.enums.types.bidding_strategy_status import (
     BiddingStrategyStatusEnum,
 )
-from google.ads.googleads.v20.enums.types.bidding_strategy_type import (
+from google.ads.googleads.v23.enums.types.bidding_strategy_type import (
     BiddingStrategyTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.target_impression_share_location import (
+from google.ads.googleads.v23.enums.types.target_impression_share_location import (
     TargetImpressionShareLocationEnum,
 )
-from google.ads.googleads.v20.services.services.bidding_strategy_service import (
+from google.ads.googleads.v23.services.services.bidding_strategy_service import (
     BiddingStrategyServiceClient,
 )
-from google.ads.googleads.v20.services.types.bidding_strategy_service import (
+from google.ads.googleads.v23.services.types.bidding_strategy_service import (
     MutateBiddingStrategiesResponse,
 )
 

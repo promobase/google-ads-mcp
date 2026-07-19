@@ -4,7 +4,7 @@ import pytest
 from typing import Any
 from unittest.mock import Mock
 
-from google.ads.googleads.v20.services.types.experiment_arm_service import (
+from google.ads.googleads.v23.services.types.experiment_arm_service import (
     ExperimentArmOperation,
     MutateExperimentArmsResponse,
     MutateExperimentArmResult,

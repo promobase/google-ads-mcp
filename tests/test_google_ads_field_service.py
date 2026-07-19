@@ -5,11 +5,11 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.resources.types.google_ads_field import GoogleAdsField
-from google.ads.googleads.v20.services.services.google_ads_field_service import (
+from google.ads.googleads.v23.resources.types.google_ads_field import GoogleAdsField
+from google.ads.googleads.v23.services.services.google_ads_field_service import (
     GoogleAdsFieldServiceClient,
 )
-from google.ads.googleads.v20.services.types.google_ads_field_service import (
+from google.ads.googleads.v23.services.types.google_ads_field_service import (
     GetGoogleAdsFieldRequest,
     SearchGoogleAdsFieldsRequest,
 )
@@ -69,7 +69,7 @@ def create_mock_google_ads_field(
     field.is_repeated = is_repeated
 
     # Mock type URL
-    field.type_url = f"type.googleapis.com/google.ads.googleads.v20.resources.{name}"
+    field.type_url = f"type.googleapis.com/google.ads.googleads.v23.resources.{name}"
 
     # Mock selectable_with
     field.selectable_with = ["campaign", "metrics"]

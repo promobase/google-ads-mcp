@@ -4,21 +4,21 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.common.types.criteria import (
+from google.ads.googleads.v23.common.types.criteria import (
     DeviceInfo,
     KeywordInfo,
     LanguageInfo,
     LocationInfo,
 )
-from google.ads.googleads.v20.enums.types.device import DeviceEnum
-from google.ads.googleads.v20.enums.types.keyword_match_type import KeywordMatchTypeEnum
-from google.ads.googleads.v20.resources.types.campaign_criterion import (
+from google.ads.googleads.v23.enums.types.device import DeviceEnum
+from google.ads.googleads.v23.enums.types.keyword_match_type import KeywordMatchTypeEnum
+from google.ads.googleads.v23.resources.types.campaign_criterion import (
     CampaignCriterion,
 )
-from google.ads.googleads.v20.services.services.campaign_criterion_service import (
+from google.ads.googleads.v23.services.services.campaign_criterion_service import (
     CampaignCriterionServiceClient,
 )
-from google.ads.googleads.v20.services.types.campaign_criterion_service import (
+from google.ads.googleads.v23.services.types.campaign_criterion_service import (
     CampaignCriterionOperation,
     MutateCampaignCriteriaRequest,
     MutateCampaignCriteriaResponse,
@@ -49,7 +49,7 @@ class CampaignCriterionService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "CampaignCriterionService", version="v20"
+                "CampaignCriterionService", version="v23"
             )
         assert self._client is not None
         return self._client

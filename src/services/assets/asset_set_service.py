@@ -4,16 +4,16 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.enums.types.asset_set_status import AssetSetStatusEnum
-from google.ads.googleads.v20.enums.types.asset_set_type import AssetSetTypeEnum
-from google.ads.googleads.v20.resources.types.asset_set import AssetSet
-from google.ads.googleads.v20.services.services.asset_set_service import (
+from google.ads.googleads.v23.enums.types.asset_set_status import AssetSetStatusEnum
+from google.ads.googleads.v23.enums.types.asset_set_type import AssetSetTypeEnum
+from google.ads.googleads.v23.resources.types.asset_set import AssetSet
+from google.ads.googleads.v23.services.services.asset_set_service import (
     AssetSetServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.asset_set_service import (
+from google.ads.googleads.v23.services.types.asset_set_service import (
     AssetSetOperation,
     MutateAssetSetsRequest,
     MutateAssetSetsResponse,
@@ -45,7 +45,7 @@ class AssetSetService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "AssetSetService", version="v20"
+                "AssetSetService", version="v23"
             )
         assert self._client is not None
         return self._client

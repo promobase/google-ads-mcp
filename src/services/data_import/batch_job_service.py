@@ -4,11 +4,11 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.resources.types.batch_job import BatchJob
-from google.ads.googleads.v20.services.services.batch_job_service import (
+from google.ads.googleads.v23.resources.types.batch_job import BatchJob
+from google.ads.googleads.v23.services.services.batch_job_service import (
     BatchJobServiceClient,
 )
-from google.ads.googleads.v20.services.types.batch_job_service import (
+from google.ads.googleads.v23.services.types.batch_job_service import (
     AddBatchJobOperationsRequest,
     AddBatchJobOperationsResponse,
     BatchJobOperation,
@@ -17,10 +17,10 @@ from google.ads.googleads.v20.services.types.batch_job_service import (
     MutateBatchJobResponse,
     RunBatchJobRequest,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.google_ads_service import MutateOperation
+from google.ads.googleads.v23.services.types.google_ads_service import MutateOperation
 
 from src.sdk_client import get_sdk_client
 from src.utils import (
@@ -46,7 +46,7 @@ class BatchJobService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "BatchJobService", version="v20"
+                "BatchJobService", version="v23"
             )
         assert self._client is not None
         return self._client

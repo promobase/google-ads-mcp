@@ -3,15 +3,15 @@
 from typing import Any, Dict, List, Optional, Callable, Awaitable
 
 from fastmcp import Context, FastMCP
-from google.ads.googleads.v20.services.services.user_data_service import (
+from google.ads.googleads.v23.services.services.user_data_service import (
     UserDataServiceClient,
 )
-from google.ads.googleads.v20.services.types.user_data_service import (
+from google.ads.googleads.v23.services.types.user_data_service import (
     UploadUserDataRequest,
     UploadUserDataResponse,
     UserDataOperation,
 )
-from google.ads.googleads.v20.common.types.offline_user_data import (
+from google.ads.googleads.v23.common.types.offline_user_data import (
     UserData,
     UserIdentifier,
     TransactionAttribute,
@@ -21,7 +21,7 @@ from google.ads.googleads.v20.common.types.offline_user_data import (
     CustomerMatchUserListMetadata,
     OfflineUserAddressInfo,
 )
-from google.ads.googleads.v20.enums.types.user_identifier_source import (
+from google.ads.googleads.v23.enums.types.user_identifier_source import (
     UserIdentifierSourceEnum,
 )
 from google.ads.googleads.errors import GoogleAdsException
@@ -45,7 +45,7 @@ class UserDataService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "UserDataService", version="v20"
+                "UserDataService", version="v23"
             )
         assert self._client is not None
         return self._client

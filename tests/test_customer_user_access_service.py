@@ -5,14 +5,14 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.access_role import AccessRoleEnum
-from google.ads.googleads.v20.services.services.customer_user_access_service import (
+from google.ads.googleads.v23.enums.types.access_role import AccessRoleEnum
+from google.ads.googleads.v23.services.services.customer_user_access_service import (
     CustomerUserAccessServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.customer_user_access_service import (
+from google.ads.googleads.v23.services.types.customer_user_access_service import (
     MutateCustomerUserAccessResponse,
 )
 

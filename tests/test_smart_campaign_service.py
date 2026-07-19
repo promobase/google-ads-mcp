@@ -5,10 +5,10 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.services.services.smart_campaign_suggest_service import (
+from google.ads.googleads.v23.services.services.smart_campaign_suggest_service import (
     SmartCampaignSuggestServiceClient,
 )
-from google.ads.googleads.v20.services.types.smart_campaign_suggest_service import (
+from google.ads.googleads.v23.services.types.smart_campaign_suggest_service import (
     SuggestKeywordThemesResponse,
     SuggestSmartCampaignAdResponse,
     SuggestSmartCampaignBudgetOptionsResponse,

@@ -7,19 +7,19 @@ Custom conversion goals allow making arbitrary conversion actions biddable.
 from typing import Any, List, Optional
 
 from fastmcp import FastMCP
-from google.ads.googleads.v20.enums.types.custom_conversion_goal_status import (
+from google.ads.googleads.v23.enums.types.custom_conversion_goal_status import (
     CustomConversionGoalStatusEnum,
 )
-from google.ads.googleads.v20.enums.types.response_content_type import (
+from google.ads.googleads.v23.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
-from google.ads.googleads.v20.resources.types.custom_conversion_goal import (
+from google.ads.googleads.v23.resources.types.custom_conversion_goal import (
     CustomConversionGoal,
 )
-from google.ads.googleads.v20.services.services.custom_conversion_goal_service import (
+from google.ads.googleads.v23.services.services.custom_conversion_goal_service import (
     CustomConversionGoalServiceClient,
 )
-from google.ads.googleads.v20.services.types.custom_conversion_goal_service import (
+from google.ads.googleads.v23.services.types.custom_conversion_goal_service import (
     CustomConversionGoalOperation,
     MutateCustomConversionGoalsRequest,
     MutateCustomConversionGoalsResponse,
@@ -41,7 +41,7 @@ class CustomConversionGoalService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "CustomConversionGoalService", version="v20"
+                "CustomConversionGoalService", version="v23"
             )
         assert self._client is not None
         return self._client

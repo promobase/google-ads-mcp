@@ -4,24 +4,24 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.common.types.criteria import (
+from google.ads.googleads.v23.common.types.criteria import (
     ContentLabelInfo,
     KeywordInfo,
     PlacementInfo,
 )
-from google.ads.googleads.v20.enums.types.content_label_type import ContentLabelTypeEnum
-from google.ads.googleads.v20.enums.types.criterion_type import CriterionTypeEnum
-from google.ads.googleads.v20.enums.types.keyword_match_type import KeywordMatchTypeEnum
-from google.ads.googleads.v20.resources.types.customer_negative_criterion import (
+from google.ads.googleads.v23.enums.types.content_label_type import ContentLabelTypeEnum
+from google.ads.googleads.v23.enums.types.criterion_type import CriterionTypeEnum
+from google.ads.googleads.v23.enums.types.keyword_match_type import KeywordMatchTypeEnum
+from google.ads.googleads.v23.resources.types.customer_negative_criterion import (
     CustomerNegativeCriterion,
 )
-from google.ads.googleads.v20.services.services.customer_negative_criterion_service import (
+from google.ads.googleads.v23.services.services.customer_negative_criterion_service import (
     CustomerNegativeCriterionServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.customer_negative_criterion_service import (
+from google.ads.googleads.v23.services.types.customer_negative_criterion_service import (
     CustomerNegativeCriterionOperation,
     MutateCustomerNegativeCriteriaRequest,
     MutateCustomerNegativeCriteriaResponse,

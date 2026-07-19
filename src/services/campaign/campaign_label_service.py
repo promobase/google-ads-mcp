@@ -4,14 +4,14 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.resources.types.campaign_label import CampaignLabel
-from google.ads.googleads.v20.services.services.campaign_label_service import (
+from google.ads.googleads.v23.resources.types.campaign_label import CampaignLabel
+from google.ads.googleads.v23.services.services.campaign_label_service import (
     CampaignLabelServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.campaign_label_service import (
+from google.ads.googleads.v23.services.types.campaign_label_service import (
     CampaignLabelOperation,
     MutateCampaignLabelsRequest,
     MutateCampaignLabelsResponse,
@@ -41,7 +41,7 @@ class CampaignLabelService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "CampaignLabelService", version="v20"
+                "CampaignLabelService", version="v23"
             )
         assert self._client is not None
         return self._client

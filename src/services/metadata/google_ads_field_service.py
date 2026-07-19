@@ -3,15 +3,15 @@
 from typing import Any, Dict, List, Optional, Callable, Awaitable
 
 from fastmcp import Context, FastMCP
-from google.ads.googleads.v20.services.services.google_ads_field_service import (
+from google.ads.googleads.v23.services.services.google_ads_field_service import (
     GoogleAdsFieldServiceClient,
 )
-from google.ads.googleads.v20.services.types.google_ads_field_service import (
+from google.ads.googleads.v23.services.types.google_ads_field_service import (
     GetGoogleAdsFieldRequest,
     SearchGoogleAdsFieldsRequest,
 )
-from google.ads.googleads.v20.resources.types.google_ads_field import GoogleAdsField
-from google.ads.googleads.v20.enums.types.google_ads_field_category import (
+from google.ads.googleads.v23.resources.types.google_ads_field import GoogleAdsField
+from google.ads.googleads.v23.enums.types.google_ads_field_category import (
     GoogleAdsFieldCategoryEnum,
 )
 from google.ads.googleads.errors import GoogleAdsException
@@ -40,7 +40,7 @@ class GoogleAdsFieldService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "GoogleAdsFieldService", version="v20"
+                "GoogleAdsFieldService", version="v23"
             )
         assert self._client is not None
         return self._client

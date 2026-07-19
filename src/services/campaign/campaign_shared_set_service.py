@@ -4,19 +4,19 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.enums.types.campaign_shared_set_status import (
+from google.ads.googleads.v23.enums.types.campaign_shared_set_status import (
     CampaignSharedSetStatusEnum,
 )
-from google.ads.googleads.v20.resources.types.campaign_shared_set import (
+from google.ads.googleads.v23.resources.types.campaign_shared_set import (
     CampaignSharedSet,
 )
-from google.ads.googleads.v20.services.services.campaign_shared_set_service import (
+from google.ads.googleads.v23.services.services.campaign_shared_set_service import (
     CampaignSharedSetServiceClient,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.types.campaign_shared_set_service import (
+from google.ads.googleads.v23.services.types.campaign_shared_set_service import (
     CampaignSharedSetOperation,
     MutateCampaignSharedSetsRequest,
     MutateCampaignSharedSetsResponse,
@@ -47,7 +47,7 @@ class CampaignSharedSetService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "CampaignSharedSetService", version="v20"
+                "CampaignSharedSetService", version="v23"
             )
         assert self._client is not None
         return self._client

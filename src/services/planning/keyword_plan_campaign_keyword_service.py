@@ -7,14 +7,14 @@ Note: Only negative keywords are supported for campaign-level keywords in keywor
 from typing import Any, List, Optional
 
 from fastmcp import FastMCP
-from google.ads.googleads.v20.enums.types.keyword_match_type import KeywordMatchTypeEnum
-from google.ads.googleads.v20.resources.types.keyword_plan_campaign_keyword import (
+from google.ads.googleads.v23.enums.types.keyword_match_type import KeywordMatchTypeEnum
+from google.ads.googleads.v23.resources.types.keyword_plan_campaign_keyword import (
     KeywordPlanCampaignKeyword,
 )
-from google.ads.googleads.v20.services.services.keyword_plan_campaign_keyword_service import (
+from google.ads.googleads.v23.services.services.keyword_plan_campaign_keyword_service import (
     KeywordPlanCampaignKeywordServiceClient,
 )
-from google.ads.googleads.v20.services.types.keyword_plan_campaign_keyword_service import (
+from google.ads.googleads.v23.services.types.keyword_plan_campaign_keyword_service import (
     KeywordPlanCampaignKeywordOperation,
     MutateKeywordPlanCampaignKeywordsRequest,
     MutateKeywordPlanCampaignKeywordsResponse,

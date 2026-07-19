@@ -5,10 +5,10 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.services.services.geo_target_constant_service import (
+from google.ads.googleads.v23.services.services.geo_target_constant_service import (
     GeoTargetConstantServiceClient,
 )
-from google.ads.googleads.v20.services.types.geo_target_constant_service import (
+from google.ads.googleads.v23.services.types.geo_target_constant_service import (
     SuggestGeoTargetConstantsResponse,
 )
 

@@ -4,19 +4,19 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.enums.types.shared_set_status import SharedSetStatusEnum
-from google.ads.googleads.v20.enums.types.shared_set_type import SharedSetTypeEnum
-from google.ads.googleads.v20.resources.types.shared_set import SharedSet
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.enums.types.shared_set_status import SharedSetStatusEnum
+from google.ads.googleads.v23.enums.types.shared_set_type import SharedSetTypeEnum
+from google.ads.googleads.v23.resources.types.shared_set import SharedSet
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
-from google.ads.googleads.v20.services.services.shared_set_service import (
+from google.ads.googleads.v23.services.services.shared_set_service import (
     SharedSetServiceClient,
 )
-from google.ads.googleads.v20.services.services.campaign_shared_set_service import (
+from google.ads.googleads.v23.services.services.campaign_shared_set_service import (
     CampaignSharedSetServiceClient,
 )
-from google.ads.googleads.v20.services.types.shared_set_service import (
+from google.ads.googleads.v23.services.types.shared_set_service import (
     MutateSharedSetsRequest,
     MutateSharedSetsResponse,
     SharedSetOperation,
@@ -48,7 +48,7 @@ class SharedSetService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "SharedSetService", version="v20"
+                "SharedSetService", version="v23"
             )
         assert self._client is not None
         return self._client
@@ -279,13 +279,13 @@ class SharedSetService:
             # Use CampaignSharedSetService
             sdk_client = get_sdk_client()
             campaign_shared_set_service: CampaignSharedSetServiceClient = (
-                sdk_client.client.get_service("CampaignSharedSetService", version="v20")
+                sdk_client.client.get_service("CampaignSharedSetService", version="v23")
             )
 
-            from google.ads.googleads.v20.resources.types.campaign_shared_set import (
+            from google.ads.googleads.v23.resources.types.campaign_shared_set import (
                 CampaignSharedSet,
             )
-            from google.ads.googleads.v20.services.types.campaign_shared_set_service import (
+            from google.ads.googleads.v23.services.types.campaign_shared_set_service import (
                 CampaignSharedSetOperation,
                 MutateCampaignSharedSetsRequest,
             )

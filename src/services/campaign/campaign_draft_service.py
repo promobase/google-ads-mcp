@@ -3,20 +3,20 @@
 from typing import Any, Dict, List, Optional, Callable, Awaitable
 
 from fastmcp import Context, FastMCP
-from google.ads.googleads.v20.services.services.campaign_draft_service import (
+from google.ads.googleads.v23.services.services.campaign_draft_service import (
     CampaignDraftServiceClient,
 )
-from google.ads.googleads.v20.services.types.campaign_draft_service import (
+from google.ads.googleads.v23.services.types.campaign_draft_service import (
     MutateCampaignDraftsRequest,
     MutateCampaignDraftsResponse,
     CampaignDraftOperation,
     ListCampaignDraftAsyncErrorsRequest,
     PromoteCampaignDraftRequest,
 )
-from google.ads.googleads.v20.resources.types.campaign_draft import CampaignDraft
+from google.ads.googleads.v23.resources.types.campaign_draft import CampaignDraft
 from google.ads.googleads.errors import GoogleAdsException
 
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
 from google.protobuf import field_mask_pb2
@@ -45,7 +45,7 @@ class CampaignDraftService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "CampaignDraftService", version="v20"
+                "CampaignDraftService", version="v23"
             )
         assert self._client is not None
         return self._client

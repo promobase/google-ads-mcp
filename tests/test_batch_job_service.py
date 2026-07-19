@@ -5,11 +5,11 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.batch_job_status import BatchJobStatusEnum
-from google.ads.googleads.v20.services.services.batch_job_service import (
+from google.ads.googleads.v23.enums.types.batch_job_status import BatchJobStatusEnum
+from google.ads.googleads.v23.services.services.batch_job_service import (
     BatchJobServiceClient,
 )
-from google.ads.googleads.v20.services.types.batch_job_service import (
+from google.ads.googleads.v23.services.types.batch_job_service import (
     AddBatchJobOperationsResponse,
     ListBatchJobResultsResponse,
     MutateBatchJobResponse,

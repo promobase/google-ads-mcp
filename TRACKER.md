@@ -1,23 +1,23 @@
 # Google Ads MCP Service Implementation Tracker
 
 ## Overview
-This document tracks the implementation progress of all Google Ads API v20 services in the MCP server.
+This document tracks the implementation progress of all Google Ads API v23 services in the MCP server.
 Goal: 1:1 mapping of ALL Google Ads services with full type safety using generated protobuf types.
 
 ## Progress Summary
-- Total Services: 103 (from google-ads-python v20)
-- ✅ Implemented: 90 (87.4%)
-- ❌ Not Implemented: 13 (12.6%)
+- Total Services: 110 (from google-ads-python v23)
+- ✅ Implemented: 90 (81.8%)
+- ❌ Not Implemented: 20 (18.2%) — 13 from the v20 baseline audit plus 7 services added in v23 (`asset_generation`, `automatically_created_asset_removal`, `benchmarks`, `campaign_goal_config`, `goal`, `incentive`, `you_tube_video_upload`), none yet implemented and not enumerated in the per-category list below
 
-**Last Audit Date:** 2026-03-22
-**Audit Method:** Complete analysis of google-ads-python v20 services directory and cross-referenced with implementations
+**Last Audit Date:** 2026-03-22 (v20 baseline, 103 services); v23 re-verified 2026-07-19 (110 services)
+**Audit Method:** Complete analysis of the google-ads-python v23 services directory, cross-referenced with implementations
 **Latest Implementation:** Campaign service refactored for PMax/Search/Display/Shopping/Video with full bidding strategy support. Extension assets (sitelink, callout, structured snippet, call) added to asset service. MaximizeConversionValue bidding strategy added.
 
 ## Type Safety Verification
-✅ **ALL implemented services use full v20 type safety:**
-- Proper imports from `google.ads.googleads.v20.services.types.*`
-- Enum types from `google.ads.googleads.v20.enums.types.*`
-- Resource types from `google.ads.googleads.v20.resources.types.*`
+✅ **ALL implemented services use full v23 type safety:**
+- Proper imports from `google.ads.googleads.v23.services.types.*`
+- Enum types from `google.ads.googleads.v23.enums.types.*`
+- Resource types from `google.ads.googleads.v23.resources.types.*`
 - Type annotations on all methods and parameters
 
 ## Implementation Status by Service
@@ -56,7 +56,7 @@ Goal: 1:1 mapping of ALL Google Ads services with full type safety using generat
 1. ✅ `asset` - Asset management
 2. ✅ `asset_group` - Asset group management (Performance Max)
 3. ✅ `asset_group_asset` - Assets within asset groups
-4. ❌ `asset_group_listing_group_filter` - Not available in v20 SDK
+4. ❌ `asset_group_listing_group_filter` - Available in v23 SDK; not yet implemented
 5. ✅ `asset_group_signal` - Audience signals for asset groups (NEWLY IMPLEMENTED)
 6. ✅ `asset_set` - Asset set management
 7. ❌ `asset_set_asset` - Assets within asset sets
@@ -81,7 +81,7 @@ Goal: 1:1 mapping of ALL Google Ads services with full type safety using generat
 2. ✅ `bidding_seasonality_adjustment` - Seasonal bid adjustments (NEWLY IMPLEMENTED)
 3. ✅ `bidding_strategy` - Bidding strategies
 4. ✅ `budget` (campaign_budget in our impl) - Campaign budget management
-5. ❌ `campaign_budget` - Separate campaign budget service (v20 has both)
+5. ❌ `campaign_budget` - Separate campaign budget service (v23 has both)
 
 ### Campaigns (17 services)
 1. ✅ `campaign` - Campaign management
@@ -223,7 +223,7 @@ Services missing some operations:
 
 ## Implementation Guidelines
 
-1. **Type Safety**: ALL implementations MUST use v20 protobuf types
+1. **Type Safety**: ALL implementations MUST use v23 protobuf types
 2. **Testing**: Each service MUST have comprehensive tests
 3. **Structure**: Follow pattern in `src/sdk_services/<category>/<service>_service.py`
 4. **MCP Tools**: Create lightweight wrappers converting strings to enums
@@ -233,9 +233,9 @@ Services missing some operations:
 ## Notes for Contributors
 
 When implementing a new service:
-1. Check the v20 service types in google-ads-python
+1. Check the v23 service types in google-ads-python
 2. Implement ALL operations for 1:1 API coverage
-3. Use full type annotations with v20 types
+3. Use full type annotations with v23 types
 4. Write comprehensive tests
 5. Update this tracker immediately
 6. Run `uv run ruff format .` and `uv run pyright`

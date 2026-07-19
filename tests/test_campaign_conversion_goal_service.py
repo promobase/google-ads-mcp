@@ -5,13 +5,13 @@ from typing import Any
 
 import pytest
 from tests.google_ads_test_utils import make_google_ads_exception_stub
-from google.ads.googleads.v20.enums.types.conversion_action_category import (
+from google.ads.googleads.v23.enums.types.conversion_action_category import (
     ConversionActionCategoryEnum,
 )
-from google.ads.googleads.v20.enums.types.conversion_origin import (
+from google.ads.googleads.v23.enums.types.conversion_origin import (
     ConversionOriginEnum,
 )
-from google.ads.googleads.v20.services.types.campaign_conversion_goal_service import (
+from google.ads.googleads.v23.services.types.campaign_conversion_goal_service import (
     MutateCampaignConversionGoalsResponse,
     MutateCampaignConversionGoalResult,
 )

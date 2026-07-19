@@ -11,11 +11,11 @@ import pytest
 import pytest_asyncio
 from fastmcp import Context
 from google.ads.googleads.client import GoogleAdsClient
-from google.ads.googleads.v20.errors.types.errors import (
+from google.ads.googleads.v23.errors.types.errors import (
     GoogleAdsError,
     GoogleAdsFailure,
 )
-from google.ads.googleads.v20.services.services.google_ads_service import (
+from google.ads.googleads.v23.services.services.google_ads_service import (
     GoogleAdsServiceClient,
 )
 

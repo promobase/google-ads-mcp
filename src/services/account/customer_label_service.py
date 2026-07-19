@@ -4,11 +4,11 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.resources.types.customer_label import CustomerLabel
-from google.ads.googleads.v20.services.services.customer_label_service import (
+from google.ads.googleads.v23.resources.types.customer_label import CustomerLabel
+from google.ads.googleads.v23.services.services.customer_label_service import (
     CustomerLabelServiceClient,
 )
-from google.ads.googleads.v20.services.types.customer_label_service import (
+from google.ads.googleads.v23.services.types.customer_label_service import (
     CustomerLabelOperation,
     MutateCustomerLabelsRequest,
     MutateCustomerLabelsResponse,
@@ -43,7 +43,7 @@ class CustomerLabelService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "CustomerLabelService", version="v20"
+                "CustomerLabelService", version="v23"
             )
         assert self._client is not None
         return self._client

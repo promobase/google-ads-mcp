@@ -3,17 +3,17 @@
 from typing import Any, Dict, List, Optional, Callable, Awaitable
 
 from fastmcp import Context, FastMCP
-from google.ads.googleads.v20.services.services.conversion_adjustment_upload_service import (
+from google.ads.googleads.v23.services.services.conversion_adjustment_upload_service import (
     ConversionAdjustmentUploadServiceClient,
 )
-from google.ads.googleads.v20.services.types.conversion_adjustment_upload_service import (
+from google.ads.googleads.v23.services.types.conversion_adjustment_upload_service import (
     UploadConversionAdjustmentsRequest,
     UploadConversionAdjustmentsResponse,
     ConversionAdjustment,
     GclidDateTimePair,
     RestatementValue,
 )
-from google.ads.googleads.v20.enums.types.conversion_adjustment_type import (
+from google.ads.googleads.v23.enums.types.conversion_adjustment_type import (
     ConversionAdjustmentTypeEnum,
 )
 from google.ads.googleads.errors import GoogleAdsException

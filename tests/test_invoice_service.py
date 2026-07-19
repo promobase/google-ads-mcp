@@ -5,11 +5,11 @@ from unittest.mock import Mock, patch
 
 import pytest
 from fastmcp import Context
-from google.ads.googleads.v20.enums.types.month_of_year import MonthOfYearEnum
-from google.ads.googleads.v20.services.services.invoice_service import (
+from google.ads.googleads.v23.enums.types.month_of_year import MonthOfYearEnum
+from google.ads.googleads.v23.services.services.invoice_service import (
     InvoiceServiceClient,
 )
-from google.ads.googleads.v20.services.types.invoice_service import (
+from google.ads.googleads.v23.services.types.invoice_service import (
     ListInvoicesResponse,
 )
 

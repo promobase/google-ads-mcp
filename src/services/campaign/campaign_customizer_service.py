@@ -4,20 +4,20 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.common.types.customizer_value import CustomizerValue
-from google.ads.googleads.v20.enums.types.customizer_attribute_type import (
+from google.ads.googleads.v23.common.types.customizer_value import CustomizerValue
+from google.ads.googleads.v23.enums.types.customizer_attribute_type import (
     CustomizerAttributeTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.response_content_type import (
+from google.ads.googleads.v23.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
-from google.ads.googleads.v20.resources.types.campaign_customizer import (
+from google.ads.googleads.v23.resources.types.campaign_customizer import (
     CampaignCustomizer,
 )
-from google.ads.googleads.v20.services.services.campaign_customizer_service import (
+from google.ads.googleads.v23.services.services.campaign_customizer_service import (
     CampaignCustomizerServiceClient,
 )
-from google.ads.googleads.v20.services.types.campaign_customizer_service import (
+from google.ads.googleads.v23.services.types.campaign_customizer_service import (
     CampaignCustomizerOperation,
     MutateCampaignCustomizersRequest,
     MutateCampaignCustomizersResponse,
@@ -52,7 +52,7 @@ class CampaignCustomizerService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "CampaignCustomizerService", version="v20"
+                "CampaignCustomizerService", version="v23"
             )
         assert self._client is not None
         return self._client

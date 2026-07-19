@@ -4,31 +4,31 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v20.enums.types.attribution_model import (
+from google.ads.googleads.v23.enums.types.attribution_model import (
     AttributionModelEnum,
 )
-from google.ads.googleads.v20.enums.types.conversion_action_category import (
+from google.ads.googleads.v23.enums.types.conversion_action_category import (
     ConversionActionCategoryEnum,
 )
-from google.ads.googleads.v20.enums.types.conversion_action_counting_type import (
+from google.ads.googleads.v23.enums.types.conversion_action_counting_type import (
     ConversionActionCountingTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.conversion_action_status import (
+from google.ads.googleads.v23.enums.types.conversion_action_status import (
     ConversionActionStatusEnum,
 )
-from google.ads.googleads.v20.enums.types.conversion_action_type import (
+from google.ads.googleads.v23.enums.types.conversion_action_type import (
     ConversionActionTypeEnum,
 )
-from google.ads.googleads.v20.enums.types.data_driven_model_status import (
+from google.ads.googleads.v23.enums.types.data_driven_model_status import (
     DataDrivenModelStatusEnum,
 )
-from google.ads.googleads.v20.resources.types.conversion_action import (
+from google.ads.googleads.v23.resources.types.conversion_action import (
     ConversionAction,
 )
-from google.ads.googleads.v20.services.services.conversion_action_service import (
+from google.ads.googleads.v23.services.services.conversion_action_service import (
     ConversionActionServiceClient,
 )
-from google.ads.googleads.v20.services.types.conversion_action_service import (
+from google.ads.googleads.v23.services.types.conversion_action_service import (
     ConversionActionOperation,
     MutateConversionActionsRequest,
     MutateConversionActionsResponse,
@@ -60,7 +60,7 @@ class ConversionService:
         if self._client is None:
             sdk_client = get_sdk_client()
             self._client = sdk_client.client.get_service(
-                "ConversionActionService", version="v20"
+                "ConversionActionService", version="v23"
             )
         assert self._client is not None
         return self._client
