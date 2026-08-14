@@ -141,6 +141,7 @@ class CampaignService:
         target_spend_cpc_bid_ceiling_micros: Optional[int] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        contains_eu_political_advertising: EuPoliticalAdvertisingStatusEnum.EuPoliticalAdvertisingStatus = EuPoliticalAdvertisingStatusEnum.EuPoliticalAdvertisingStatus.DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING,
     ) -> Dict[str, Any]:
         """Create a new campaign.
 
@@ -162,6 +163,11 @@ class CampaignService:
             target_spend_cpc_bid_ceiling_micros: CPC ceiling (for TARGET_SPEND)
             start_date: Campaign start date (YYYY-MM-DD)
             end_date: Campaign end date (YYYY-MM-DD)
+            contains_eu_political_advertising: Whether the campaign contains EU
+                political advertising, as required by the API on every campaign
+                create as of v20 (DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING or
+                CONTAINS_EU_POLITICAL_ADVERTISING). Defaults to
+                DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING.
 
         Returns:
             Created campaign details
@@ -178,7 +184,9 @@ class CampaignService:
             if advertising_channel_sub_type is not None:
                 campaign.advertising_channel_sub_type = advertising_channel_sub_type
 
-            campaign.contains_eu_political_advertising = EuPoliticalAdvertisingStatusEnum.EuPoliticalAdvertisingStatus.DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING
+            campaign.contains_eu_political_advertising = (
+                contains_eu_political_advertising
+            )
             campaign.experiment_type = (
                 CampaignExperimentTypeEnum.CampaignExperimentType.BASE
             )
@@ -370,6 +378,7 @@ def create_campaign_tools(
         target_spend_cpc_bid_ceiling_micros: Optional[int] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        contains_eu_political_advertising: str = "DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING",
     ) -> Dict[str, Any]:
         """Create a new campaign. Supports Search, Display, Shopping, Video, and Performance Max.
 
@@ -391,6 +400,14 @@ def create_campaign_tools(
             target_spend_cpc_bid_ceiling_micros: Max CPC ceiling in micros (for TARGET_SPEND)
             start_date: Campaign start date (YYYY-MM-DD)
             end_date: Campaign end date (YYYY-MM-DD)
+            contains_eu_political_advertising: REQUIRED by the Google Ads API on
+                every campaign create as of v20 -- omitting it is not an option,
+                the API rejects creation with "The required field was not
+                present". One of DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING or
+                CONTAINS_EU_POLITICAL_ADVERTISING. Defaults to
+                DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING; set to
+                CONTAINS_EU_POLITICAL_ADVERTISING for campaigns that contain EU
+                political advertising.
 
         Returns:
             Created campaign details with resource_name and campaign_id
@@ -409,6 +426,11 @@ def create_campaign_tools(
             if advertising_channel_sub_type
             else None
         )
+        eu_political_advertising_enum = resolve_enum(
+            EuPoliticalAdvertisingStatusEnum.EuPoliticalAdvertisingStatus,
+            contains_eu_political_advertising,
+            "contains_eu_political_advertising",
+        )
 
         return await service.create_campaign(
             ctx=ctx,
@@ -426,6 +448,7 @@ def create_campaign_tools(
             target_spend_cpc_bid_ceiling_micros=target_spend_cpc_bid_ceiling_micros,
             start_date=start_date,
             end_date=end_date,
+            contains_eu_political_advertising=eu_political_advertising_enum,
         )
 
     async def update_campaign(

@@ -113,6 +113,38 @@ async def test_create_campaign(
 
 
 @pytest.mark.asyncio
+async def test_create_campaign_with_eu_political_advertising_override(
+    campaign_service: CampaignService,
+    mock_sdk_client: Any,
+    mock_ctx: Context,
+) -> None:
+    """Test create_campaign honors an explicit contains_eu_political_advertising."""
+    mock_client, expected = _mock_mutate(campaign_service)
+
+    with patch(
+        "src.services.campaign.campaign_service.serialize_proto_message",
+        return_value=expected,
+    ):
+        result = await campaign_service.create_campaign(
+            ctx=mock_ctx,
+            customer_id="1234567890",
+            name="EU Political Campaign",
+            budget_resource_name="customers/1234567890/campaignBudgets/987654321",
+            advertising_channel_type=AdvertisingChannelTypeEnum.AdvertisingChannelType.SEARCH,
+            status=CampaignStatusEnum.CampaignStatus.PAUSED,
+            contains_eu_political_advertising=EuPoliticalAdvertisingStatusEnum.EuPoliticalAdvertisingStatus.CONTAINS_EU_POLITICAL_ADVERTISING,
+        )
+
+    assert result == expected
+    request = mock_client.mutate_campaigns.call_args[1]["request"]  # type: ignore
+    op = request.operations[0]
+    assert (
+        op.create.contains_eu_political_advertising
+        == EuPoliticalAdvertisingStatusEnum.EuPoliticalAdvertisingStatus.CONTAINS_EU_POLITICAL_ADVERTISING
+    )
+
+
+@pytest.mark.asyncio
 async def test_create_campaign_with_dates(
     campaign_service: CampaignService,
     mock_sdk_client: Any,
@@ -488,6 +520,47 @@ async def test_tool_wrapper_create_campaign(
         == AdvertisingChannelTypeEnum.AdvertisingChannelType.SEARCH
     )
     assert op.create.status == CampaignStatusEnum.CampaignStatus.PAUSED
+    # v20 requires contains_eu_political_advertising on every create; it must
+    # default to DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING when not specified.
+    assert (
+        op.create.contains_eu_political_advertising
+        == EuPoliticalAdvertisingStatusEnum.EuPoliticalAdvertisingStatus.DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING
+    )
+
+
+@pytest.mark.asyncio
+async def test_tool_wrapper_create_campaign_with_eu_political_advertising(
+    campaign_service: CampaignService,
+    mock_sdk_client: Any,
+    mock_ctx: Context,
+) -> None:
+    """Test the tool wrapper honors an explicit contains_eu_political_advertising."""
+    mock_client, expected = _mock_mutate(campaign_service)
+
+    tools = create_campaign_tools(campaign_service)
+    create_campaign_tool = tools[0]
+
+    with patch(
+        "src.services.campaign.campaign_service.serialize_proto_message",
+        return_value=expected,
+    ):
+        result = await create_campaign_tool(
+            ctx=mock_ctx,
+            customer_id="1234567890",
+            name="EU Political Campaign",
+            budget_resource_name="customers/1234567890/campaignBudgets/987654321",
+            advertising_channel_type="SEARCH",
+            status="PAUSED",
+            contains_eu_political_advertising="CONTAINS_EU_POLITICAL_ADVERTISING",
+        )
+
+    assert result == expected
+    request = mock_client.mutate_campaigns.call_args[1]["request"]  # type: ignore
+    op = request.operations[0]
+    assert (
+        op.create.contains_eu_political_advertising
+        == EuPoliticalAdvertisingStatusEnum.EuPoliticalAdvertisingStatus.CONTAINS_EU_POLITICAL_ADVERTISING
+    )
 
 
 @pytest.mark.asyncio
