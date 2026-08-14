@@ -1,10 +1,12 @@
 """Tests for Google Ads service."""
 
+import json
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
 from typing import Any
 
 import pytest
 from tests.google_ads_test_utils import make_google_ads_exception_stub
+from google.ads.googleads.v20.common.types.criteria import TopicInfo
 from google.ads.googleads.v20.enums.types.response_content_type import (
     ResponseContentTypeEnum,
 )
@@ -24,6 +26,7 @@ from src.services.metadata.google_ads_service import (
     GoogleAdsService,
     create_google_ads_tools,
 )
+from src.utils import serialize_proto_message
 
 
 @pytest.fixture
@@ -93,6 +96,44 @@ class TestGoogleAdsService:
         assert result["total_results_count"] == 1
         assert result["field_mask"] == ["campaign.id", "campaign.name"]
         assert result["summary_row"] is None
+
+    async def test_search_field_mask_is_json_serializable(
+        self, google_ads_service: Any, mock_context: Any, mock_client: Any
+    ):
+        """Regression test for the paginated search crash.
+
+        `search()` returned `response.field_mask.paths` verbatim, which is a
+        raw protobuf ``RepeatedScalarContainer`` -- not a plain list. FastMCP
+        cannot JSON-encode that container, so *every* paginated search call
+        (even one selecting only scalar fields) crashed with:
+        "Unable to serialize unknown type: <class
+        'google._upb._message.RepeatedScalarContainer'>". The streaming
+        variant never hit this because it doesn't echo back a field mask.
+        """
+        google_ads_service._client = mock_client
+
+        mock_row = GoogleAdsRow()
+        mock_row.customer.id = 1234567890  # type: ignore
+        mock_row.customer.descriptive_name = "Test Customer"  # type: ignore
+
+        mock_response = SearchGoogleAdsResponse()
+        mock_response.results.append(mock_row)  # type: ignore
+        mock_response.field_mask.paths.extend(  # type: ignore
+            ["customer.id", "customer.descriptive_name"]
+        )
+        mock_client.search.return_value = mock_response  # type: ignore
+
+        result = await google_ads_service.search(
+            ctx=mock_context,
+            customer_id="1234567890",
+            query="SELECT customer.id, customer.descriptive_name FROM customer",
+        )
+
+        assert type(result["field_mask"]) is list
+        assert result["field_mask"] == ["customer.id", "customer.descriptive_name"]
+        # Must actually be JSON-serializable end to end -- this is what
+        # previously blew up when FastMCP tried to encode the tool response.
+        json.dumps(result)
 
     async def test_search_with_pagination(
         self, google_ads_service: Any, mock_context: Any, mock_client: Any
@@ -347,3 +388,23 @@ class TestGoogleAdsTools:
                 call_args["summary_row_setting"]
                 == SummaryRowSettingEnum.SummaryRowSetting.NO_SUMMARY_ROW
             )
+
+
+class TestSerializeProtoMessageRepeatedFields:
+    """Regression tests for repeated-field handling in serialize_proto_message."""
+
+    def test_handles_repeated_scalar_field(self):
+        """A fake row/message with a repeated scalar field (e.g. a topic
+        criterion's ``path``) must serialize to a plain, JSON-serializable
+        list -- not a raw protobuf repeated-field wrapper.
+        """
+        topic = TopicInfo()
+        topic.path.extend(["Arts & Entertainment", "Movies"])  # type: ignore
+
+        result = serialize_proto_message(topic)
+
+        assert result["path"] == ["Arts & Entertainment", "Movies"]
+        assert type(result["path"]) is list
+        # Must be usable by a real JSON encoder, matching what FastMCP does
+        # with tool results.
+        json.dumps(result)

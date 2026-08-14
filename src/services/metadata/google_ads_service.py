@@ -117,7 +117,9 @@ class GoogleAdsService:
                 "next_page_token": response.next_page_token,
                 "total_results_count": response.total_results_count,
                 "summary_row": summary_row,
-                "field_mask": response.field_mask.paths if response.field_mask else [],
+                "field_mask": list(response.field_mask.paths)
+                if response.field_mask
+                else [],
             }
 
         except GoogleAdsException as e:
